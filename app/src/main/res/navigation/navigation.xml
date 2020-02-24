@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/mainMenuFragment">
+
+    <fragment
+        android:id="@+id/mainMenuFragment"
+        android:name="com.example.gestionnairerapportdechantier.mainMenu.MainMenuFragment"
+        android:label="fragment_main_menu"
+        tools:layout="@layout/fragment_main_menu" >
+        <action
+            android:id="@+id/action_mainMenuFragment_to_gestionPersonnelFragment"
+            app:destination="@id/gestionPersonnelFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gestionPersonnelFragment"
+        android:name="com.example.gestionnairerapportdechantier.gestionPersonnel.GestionPersonnelFragment"
+        android:label="fragment_gestion_personnel"
+        tools:layout="@layout/fragment_gestion_personnel" >
+        <action
+            android:id="@+id/action_gestionPersonnelFragment_to_creationPersonnelFragment"
+            app:destination="@id/creationPersonnelFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/creationPersonnelFragment"
+        android:name="com.example.gestionnairerapportdechantier.gestionPersonnel.CreationPersonnelFragment"
+        android:label="fragment_creation_personnel"
+        tools:layout="@layout/fragment_creation_personnel" />
+</navigation>
