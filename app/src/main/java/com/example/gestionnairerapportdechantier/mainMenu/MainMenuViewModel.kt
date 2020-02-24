@@ -25,11 +25,6 @@ class MainMenuViewModel: ViewModel() {
 
     fun onBoutonClicked(){
         _navigation.value = navigationMainMenu.EN_ATTENTE
-        onBoutonNonClicked()
-    }
-
-    fun onBoutonNonClicked(){
-        //RAS
     }
 
 
