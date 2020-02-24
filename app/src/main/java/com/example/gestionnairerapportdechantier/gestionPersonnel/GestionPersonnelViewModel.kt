@@ -40,6 +40,9 @@ class GestionPersonnelViewModel(private val dataSource: PersonnelDao): ViewModel
     }
 
 
+    fun test1(){}
+
+
 
 
 
