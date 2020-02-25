@@ -14,6 +14,7 @@ import com.example.gestionnairerapportdechantier.Database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentGestionPersonnelBinding
 import com.example.gestionnairerapportdechantier.mainMenu.MainMenuViewModel
+import timber.log.Timber
 
 /**
  * A simple [Fragment] subclass.
@@ -41,6 +42,15 @@ class GestionPersonnelFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
+
+        viewModel.listePersonnel.observe(viewLifecycleOwner, Observer { listePersonnel ->
+            listePersonnel?.let{
+                listePersonnel.forEach {
+                    Timber.i("listePersonnel = $it")
+                }
+            }
+        })
+
 
         viewModel.navigationPersonnel.observe(viewLifecycleOwner, Observer { navigation ->
 

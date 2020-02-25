@@ -11,10 +11,10 @@ data class Personnel (
 
     @ColumnInfo(name = "personnel_id")
     @PrimaryKey(autoGenerate = true)
-    var personnelId: Int,
-    var nom: String,
-    var prenom: String,
-    var Fonction: Int
+    var personnelId: Int? = null,
+    var nom: String? = null,
+    var prenom: String? = null,
+    var fonction: Int? = 0
 )
 
 @Entity(tableName = "assocation_personnel_rapport_joutnalier_chantier",

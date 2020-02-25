@@ -12,10 +12,10 @@ import com.example.gestionnairerapportdechantier.entities.Personnel
 interface PersonnelDao {
 
     @Insert
-    fun insert(personnel: Personnel)
+    fun insertPersonnel(personnel: Personnel): Long
 
     @Update
-    fun update(personnel: Personnel)
+    fun updatePersonnel(personnel: Personnel)
 
     @Query("SELECT * FROM personnel")
     fun getAllFromPersonnel(): LiveData<List<Personnel>>

@@ -1,10 +1,13 @@
 package com.example.gestionnairerapportdechantier.gestionPersonnel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.gestionnairerapportdechantier.Database.PersonnelDao
 import com.example.gestionnairerapportdechantier.entities.Personnel
+import kotlinx.coroutines.*
+import timber.log.Timber
 
 
 class GestionPersonnelViewModel(private val dataSource: PersonnelDao): ViewModel(){
@@ -14,9 +17,14 @@ class GestionPersonnelViewModel(private val dataSource: PersonnelDao): ViewModel
         CREATION_PERSONNEL,
         DETAIL_PERSONNEL,
         MODIFICATION_PERSONNEL,
-        EN_ATTENTE
+        EN_ATTENTE,
+        LISTE_PERSONNEL,
+        ENREGISTREMENT_PERSONNEL
     }
 
+
+    private val viewModelJob = Job()
+    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     val listePersonnel = dataSource.getAllFromPersonnel()
 
@@ -27,6 +35,7 @@ class GestionPersonnelViewModel(private val dataSource: PersonnelDao): ViewModel
         get() = this._navigationPersonnel
 
     init{
+        newPersonnel.value = Personnel()
         onBoutonClicked()
     }
 
@@ -39,8 +48,41 @@ class GestionPersonnelViewModel(private val dataSource: PersonnelDao): ViewModel
         _navigationPersonnel.value = navigationMenuPersonnel.EN_ATTENTE
     }
 
+    fun onClickBoutonCreationTermine(){
 
-    fun test1(){}
+        Timber.e("newPersonnel = ${newPersonnel.value?.prenom}")
+        sendNewPersonnelToDB()
+        _navigationPersonnel.value = navigationMenuPersonnel.LISTE_PERSONNEL
+    }
+
+
+    fun onCheckedSwitchChefEquipeChanged( check: Boolean){
+        if(check){
+            newPersonnel.value?.fonction = 1
+        }else{
+            newPersonnel.value?.fonction = 0
+        }
+
+        Timber.i("newPersonnel Fonction = $check")
+        Timber.i("newPersonnel = ${newPersonnel.value?.fonction}")
+    }
+
+
+    fun sendNewPersonnelToDB(){
+        uiScope.launch {
+            withContext(Dispatchers.IO) {
+           var test = dataSource.insertPersonnel(newPersonnel.value!!)
+//                newPersonnel.value = null
+            }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
+
+
 
 
 

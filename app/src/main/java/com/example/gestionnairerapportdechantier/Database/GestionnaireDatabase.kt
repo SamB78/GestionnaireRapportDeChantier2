@@ -13,7 +13,7 @@ import com.example.gestionnairerapportdechantier.entities.*
         AssociationPersonnelRapportJournalierChantier::class,
         RapportJournalierChantier::class,
         RapportChantier::class],
-    version = 2, exportSchema = false)
+    version = 3, exportSchema = false)
 
 abstract class GestionnaireDatabase : RoomDatabase() {
 

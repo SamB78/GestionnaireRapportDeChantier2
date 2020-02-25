@@ -27,5 +27,9 @@
         android:id="@+id/creationPersonnelFragment"
         android:name="com.example.gestionnairerapportdechantier.gestionPersonnel.CreationPersonnelFragment"
         android:label="fragment_creation_personnel"
-        tools:layout="@layout/fragment_creation_personnel" />
+        tools:layout="@layout/fragment_creation_personnel" >
+        <action
+            android:id="@+id/action_creationPersonnelFragment_to_gestionPersonnelFragment"
+            app:destination="@id/gestionPersonnelFragment" />
+    </fragment>
 </navigation>
