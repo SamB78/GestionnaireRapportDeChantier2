@@ -8,21 +8,15 @@
             name="viewModel"
             type="com.example.gestionnairerapportdechantier.gestionPersonnel.GestionPersonnelViewModel" />
 
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".gestionPersonnel.GestionPersonnelFragment">
+        tools:context=".gestionPersonnel.ListePersonnelFragment">
 
         <!-- TODO: Update blank fragment layout -->
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Test"
-            app:layout_constraintBottom_toBottomOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButton"
@@ -33,10 +27,19 @@
             android:layout_marginBottom="20dp"
             android:clickable="true"
             android:focusable="true"
+            android:onClick="@{()-> viewModel.onClickBoutonAjoutPersonnel()}"
             android:src="@android:drawable/ic_menu_add"
-            app:layout_constraintBottom_toBottomOf="@+id/textView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/personnelListe"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:onClick="@{()-> viewModel.onClickBoutonAjoutPersonnel()}"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

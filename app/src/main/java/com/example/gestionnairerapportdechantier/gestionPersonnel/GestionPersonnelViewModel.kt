@@ -34,6 +34,8 @@ class GestionPersonnelViewModel(private val dataSource: PersonnelDao): ViewModel
     val navigationPersonnel: LiveData<navigationMenuPersonnel>
         get() = this._navigationPersonnel
 
+    var personnelIdAModifier: Long = -1
+
     init{
         newPersonnel.value = Personnel()
         onBoutonClicked()
@@ -52,6 +54,7 @@ class GestionPersonnelViewModel(private val dataSource: PersonnelDao): ViewModel
 
         Timber.e("newPersonnel = ${newPersonnel.value?.prenom}")
         sendNewPersonnelToDB()
+
         _navigationPersonnel.value = navigationMenuPersonnel.LISTE_PERSONNEL
     }
 
@@ -72,14 +75,20 @@ class GestionPersonnelViewModel(private val dataSource: PersonnelDao): ViewModel
         uiScope.launch {
             withContext(Dispatchers.IO) {
            var test = dataSource.insertPersonnel(newPersonnel.value!!)
-//                newPersonnel.value = null
             }
+            newPersonnel.value = null
+
         }
     }
 
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+    }
+
+    fun onPersonnelClicked(id: Long){
+        _navigationPersonnel.value = navigationMenuPersonnel.MODIFICATION_PERSONNEL
+        personnelIdAModifier = id
     }
 
 

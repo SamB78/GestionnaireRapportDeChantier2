@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/gestionPersonnelFragment"
-        android:name="com.example.gestionnairerapportdechantier.gestionPersonnel.GestionPersonnelFragment"
+        android:name="com.example.gestionnairerapportdechantier.gestionPersonnel.ListePersonnelFragment"
         android:label="fragment_gestion_personnel"
         tools:layout="@layout/fragment_gestion_personnel" >
         <action
@@ -25,11 +25,16 @@
     </fragment>
     <fragment
         android:id="@+id/creationPersonnelFragment"
-        android:name="com.example.gestionnairerapportdechantier.gestionPersonnel.CreationPersonnelFragment"
+        android:name="com.example.gestionnairerapportdechantier.gestionPersonnel.GestionPersonnelFragment"
         android:label="fragment_creation_personnel"
         tools:layout="@layout/fragment_creation_personnel" >
         <action
             android:id="@+id/action_creationPersonnelFragment_to_gestionPersonnelFragment"
             app:destination="@id/gestionPersonnelFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/detailPersonnelFragment"
+        android:name="com.example.gestionnairerapportdechantier.DetailPersonnelFragment"
+        android:label="fragment_detail_personnel"
+        tools:layout="@layout/fragment_detail_personnel" />
 </navigation>

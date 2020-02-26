@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".gestionPersonnel.CreationPersonnelFragment">
+        tools:context=".gestionPersonnel.GestionPersonnelFragment">
 
         <TextView
             android:id="@+id/textView2"
@@ -68,22 +68,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Annuler"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button3"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/button3" />
 
         <Button
             android:id="@+id/button3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:onClick="@{()-> viewModel.onClickBoutonCreationTermine()}"
             android:text="Valider"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/button"
-            android:onClick="@{()-> viewModel.onClickBoutonCreationTermine()}"/>
+            app:layout_constraintStart_toEndOf="@+id/button" />
 
+        <Button
+            android:id="@+id/suppression"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:text="supprimer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

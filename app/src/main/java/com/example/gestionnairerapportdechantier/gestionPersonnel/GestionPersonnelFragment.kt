@@ -10,62 +10,46 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.example.gestionnairerapportdechantier.Database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.R
-import com.example.gestionnairerapportdechantier.databinding.FragmentGestionPersonnelBinding
-import com.example.gestionnairerapportdechantier.mainMenu.MainMenuViewModel
-import timber.log.Timber
+import com.example.gestionnairerapportdechantier.databinding.FragmentCreationPersonnelBinding
+
 
 /**
  * A simple [Fragment] subclass.
  */
 class GestionPersonnelFragment : Fragment() {
 
-
+    val viewModel: GestionPersonnelViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        val binding = FragmentGestionPersonnelBinding.inflate(inflater,container,false)
+        val binding = FragmentCreationPersonnelBinding.inflate(inflater, container, false)
         binding.executePendingBindings()
 
-        //ViewModelFactory
-        val application = requireNotNull(this.activity).application
-        val dataSource = GestionnaireDatabase.getInstance(application).PersonnelDao
-        val viewModelFactory = GestionPersonnelViewModelFactory(dataSource)
-
-        //ViewModel
-        val viewModel: GestionPersonnelViewModel by activityViewModels(){viewModelFactory}
-
         binding.lifecycleOwner = this
-
         binding.viewModel = viewModel
 
-        viewModel.listePersonnel.observe(viewLifecycleOwner, Observer { listePersonnel ->
-            listePersonnel?.let{
-                listePersonnel.forEach {
-                    Timber.i("listePersonnel = $it")
+
+        viewModel.navigationPersonnel.observe(viewLifecycleOwner, Observer{ navigation ->
+            when(navigation){
+                GestionPersonnelViewModel.navigationMenuPersonnel.ENREGISTREMENT_PERSONNEL->{
+                    Toast.makeText(activity, "Nouvelle entrée dans la BDD", Toast.LENGTH_SHORT)
+                    viewModel.onBoutonClicked()
+                    findNavController().navigate(R.id.action_creationPersonnelFragment_to_gestionPersonnelFragment)
                 }
+                GestionPersonnelViewModel.navigationMenuPersonnel.LISTE_PERSONNEL-> {
+                    findNavController().navigate(R.id.action_creationPersonnelFragment_to_gestionPersonnelFragment)
+                    viewModel.onBoutonClicked()
+                }
+
             }
         })
 
-
-        viewModel.navigationPersonnel.observe(viewLifecycleOwner, Observer { navigation ->
-
-            when(navigation){
-              GestionPersonnelViewModel.navigationMenuPersonnel.CREATION_PERSONNEL ->{
-                  Toast.makeText(activity, "Passage creation Signalement", Toast.LENGTH_SHORT).show()
-                  findNavController().navigate(R.id.action_gestionPersonnelFragment_to_creationPersonnelFragment)
-                  viewModel.onBoutonClicked()
-              }
-        }
-    })
-
-        // Inflate the layout for this fragment
-        return binding.root
-    }
-
+            // Inflate the layout for this fragment
+            return binding.root
+}
 
 }

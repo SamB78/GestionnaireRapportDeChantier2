@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="personnel"
+            type="com.example.gestionnairerapportdechantier.entities.Personnel" />
+
+        <variable
+            name="clickListener"
+            type="com.example.gestionnairerapportdechantier.gestionPersonnel.ListePersonnelListener" />
+
+
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardBackgroundColor="#DBDBDB"
+        app:cardCornerRadius="3dp"
+        android:layout_margin="5dp">
+
+            <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:onClick="@{() -> clickListener.onClick(personnel)}">
+
+                <TextView
+                    android:id="@+id/nom_prenom"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    tools:text="Sam Bertrand" />
+            </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+</layout>
