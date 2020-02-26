@@ -46,6 +46,7 @@ class ListePersonnelFragment : Fragment() {
 
         val adapter = ListePersonnelAdapter(ListePersonnelListener { personnelId ->
             Toast.makeText(context, "$personnelId", Toast.LENGTH_LONG).show()
+            viewModel.onPersonnelClicked(personnelId.toLong())
         })
         binding.personnelListe.adapter = adapter
 
@@ -70,9 +71,10 @@ class ListePersonnelFragment : Fragment() {
                 GestionPersonnelViewModel.navigationMenuPersonnel.CREATION_PERSONNEL ->{
                   Toast.makeText(activity, "Passage creation Signalement", Toast.LENGTH_SHORT).show()
                   findNavController().navigate(R.id.action_gestionPersonnelFragment_to_creationPersonnelFragment)
-                  viewModel.onBoutonClicked()
+//                  viewModel.onBoutonClicked()
               }
                 GestionPersonnelViewModel.navigationMenuPersonnel.MODIFICATION_PERSONNEL->{
+                    findNavController().navigate(R.id.action_gestionPersonnelFragment_to_creationPersonnelFragment)
 
 
                 }

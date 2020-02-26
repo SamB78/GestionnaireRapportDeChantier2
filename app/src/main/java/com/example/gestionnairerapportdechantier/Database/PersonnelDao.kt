@@ -20,6 +20,9 @@ interface PersonnelDao {
     @Query("SELECT * FROM personnel")
     fun getAllFromPersonnel(): LiveData<List<Personnel>>
 
+    @Query("SELECT * FROM personnel WHERE personnel_id  = :id")
+    fun getPersonnelById(id: Long): LiveData<Personnel>
+
 
 
 }

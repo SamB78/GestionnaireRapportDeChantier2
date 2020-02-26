@@ -1,6 +1,5 @@
 package com.example.gestionnairerapportdechantier.gestionPersonnel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -34,44 +33,61 @@ class GestionPersonnelViewModel(private val dataSource: PersonnelDao): ViewModel
     val navigationPersonnel: LiveData<navigationMenuPersonnel>
         get() = this._navigationPersonnel
 
-    var personnelIdAModifier: Long = -1
+//    private var _personnelIdAModifier= MutableLiveData<Long>()
+//    val personnelIdAModifier : LiveData<Long>
+//        get() = _personnelIdAModifier
+
 
     init{
         newPersonnel.value = Personnel()
         onBoutonClicked()
+
+        navigationPersonnel.observeForever {
+            Timber.i("NAVIGATION = $it")
+        }
     }
 
 
     fun onClickBoutonAjoutPersonnel(){
         _navigationPersonnel.value = navigationMenuPersonnel.CREATION_PERSONNEL
+
     }
 
     fun onBoutonClicked() {
         _navigationPersonnel.value = navigationMenuPersonnel.EN_ATTENTE
     }
 
-    fun onClickBoutonCreationTermine(){
-
-        Timber.e("newPersonnel = ${newPersonnel.value?.prenom}")
-        sendNewPersonnelToDB()
-
-        _navigationPersonnel.value = navigationMenuPersonnel.LISTE_PERSONNEL
-    }
-
-
     fun onCheckedSwitchChefEquipeChanged( check: Boolean){
-        if(check){
-            newPersonnel.value?.fonction = 1
-        }else{
-            newPersonnel.value?.fonction = 0
-        }
+
+        newPersonnel.value?.fonction = check
+
 
         Timber.i("newPersonnel Fonction = $check")
         Timber.i("newPersonnel = ${newPersonnel.value?.fonction}")
     }
 
 
-    fun sendNewPersonnelToDB(){
+    fun onClickButtonCreationOrModificationEnded(){
+
+        Timber.e("newPersonnel = ${newPersonnel.value?.prenom}")
+        if(newPersonnel.value?.personnelId == null) sendNewPersonnelToDB()
+        else updatePersonnelInDB()
+
+
+        _navigationPersonnel.value = navigationMenuPersonnel.LISTE_PERSONNEL
+    }
+
+    private fun updatePersonnelInDB() {
+        uiScope.launch {
+            withContext(Dispatchers.IO) {
+                var test = dataSource.updatePersonnel(newPersonnel.value!!)
+            }
+            newPersonnel.value = null
+        }
+    }
+
+
+    private fun sendNewPersonnelToDB(){
         uiScope.launch {
             withContext(Dispatchers.IO) {
            var test = dataSource.insertPersonnel(newPersonnel.value!!)
@@ -81,14 +97,29 @@ class GestionPersonnelViewModel(private val dataSource: PersonnelDao): ViewModel
         }
     }
 
+    fun onPersonnelClicked(id: Long){
+        _navigationPersonnel.value = navigationMenuPersonnel.MODIFICATION_PERSONNEL
+        retrievePersonnelData(id)
+
+    }
+
+    private fun retrievePersonnelData(id: Long){
+        if(id != -1L){
+            dataSource.getPersonnelById(id).observeForever{
+                newPersonnel.value = it
+                Timber.e("Valeur newPersonnel = ${newPersonnel.value}")
+            }
+
+
+        }
+    }
+
+
+
+    // onCleared()
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
-    }
-
-    fun onPersonnelClicked(id: Long){
-        _navigationPersonnel.value = navigationMenuPersonnel.MODIFICATION_PERSONNEL
-        personnelIdAModifier = id
     }
 
 

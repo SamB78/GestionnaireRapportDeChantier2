@@ -14,7 +14,7 @@ data class Personnel (
     var personnelId: Int? = null,
     var nom: String? = null,
     var prenom: String? = null,
-    var fonction: Int? = 0
+    var fonction: Boolean = false
 )
 
 @Entity(tableName = "assocation_personnel_rapport_joutnalier_chantier",
