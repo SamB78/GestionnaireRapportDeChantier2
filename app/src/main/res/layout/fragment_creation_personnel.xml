@@ -6,13 +6,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.gestionnairerapportdechantier.gestionPersonnel.GestionPersonnelViewModel" />
+            type="com.example.gestionnairerapportdechantier.personnel.gestionPersonnel.GestionPersonnelViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".gestionPersonnel.GestionPersonnelFragment">
+        tools:context=".personnel.gestionPersonnel.GestionPersonnelFragment">
 
         <TextView
             android:id="@+id/textView2"
@@ -33,7 +33,7 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:hint="Nom"
-            android:text="@={viewModel.newPersonnel.nom}"
+            android:text="@={viewModel.personnel.nom}"
             app:layout_constraintBottom_toTopOf="@+id/switch1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,7 +46,7 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:hint="Prenom"
-            android:text="@={viewModel.newPersonnel.prenom}"
+            android:text="@={viewModel.personnel.prenom}"
             app:layout_constraintBottom_toTopOf="@+id/editText2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +62,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editText2"
             android:onCheckedChanged="@{(_,i)->viewModel.onCheckedSwitchChefEquipeChanged(i)}"
-            android:checked="@={viewModel.newPersonnel.fonction}"/>
+            android:checked="@={viewModel.personnel.fonction}"/>
 
         <Button
             android:id="@+id/button"

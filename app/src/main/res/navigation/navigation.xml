@@ -11,30 +11,27 @@
         android:label="fragment_main_menu"
         tools:layout="@layout/fragment_main_menu" >
         <action
-            android:id="@+id/action_mainMenuFragment_to_gestionPersonnelFragment"
+            android:id="@+id/action_mainMenuFragment_to_listePersonnelFragment"
+            app:destination="@id/listePersonnelFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/listePersonnelFragment"
+        android:name="com.example.gestionnairerapportdechantier.personnel.listePersonnel.ListePersonnelFragment"
+        android:label="ListePersonnelFragment" >
+        <action
+            android:id="@+id/action_listePersonnelFragment_to_gestionPersonnelFragment"
             app:destination="@id/gestionPersonnelFragment" />
     </fragment>
     <fragment
         android:id="@+id/gestionPersonnelFragment"
-        android:name="com.example.gestionnairerapportdechantier.gestionPersonnel.ListePersonnelFragment"
-        android:label="fragment_gestion_personnel"
-        tools:layout="@layout/fragment_gestion_personnel" >
+        android:name="com.example.gestionnairerapportdechantier.personnel.gestionPersonnel.GestionPersonnelFragment"
+        android:label="GestionPersonnelFragment" >
+        <argument
+            android:name="idPersonnel"
+            app:argType="long"
+            android:defaultValue="-1L" />
         <action
-            android:id="@+id/action_gestionPersonnelFragment_to_creationPersonnelFragment"
-            app:destination="@id/creationPersonnelFragment" />
+            android:id="@+id/action_gestionPersonnelFragment_to_listePersonnelFragment"
+            app:destination="@id/listePersonnelFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/creationPersonnelFragment"
-        android:name="com.example.gestionnairerapportdechantier.gestionPersonnel.GestionPersonnelFragment"
-        android:label="fragment_creation_personnel"
-        tools:layout="@layout/fragment_creation_personnel" >
-        <action
-            android:id="@+id/action_creationPersonnelFragment_to_gestionPersonnelFragment"
-            app:destination="@id/gestionPersonnelFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/detailPersonnelFragment"
-        android:name="com.example.gestionnairerapportdechantier.DetailPersonnelFragment"
-        android:label="fragment_detail_personnel"
-        tools:layout="@layout/fragment_detail_personnel" />
 </navigation>

@@ -40,7 +40,7 @@ class MainMenuFragment : Fragment() {
         viewModel.navigation.observe(viewLifecycleOwner, Observer {
             when (it) {
                 MainMenuViewModel.navigationMainMenu.PASSAGE_PAGE_PERSONNEL -> {
-                    navController.navigate(R.id.action_mainMenuFragment_to_gestionPersonnelFragment)
+                    navController.navigate(R.id.action_mainMenuFragment_to_listePersonnelFragment)
                     viewModel.onBoutonClicked ()
                 }
                 }

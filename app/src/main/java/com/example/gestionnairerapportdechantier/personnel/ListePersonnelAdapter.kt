@@ -1,4 +1,4 @@
-package com.example.gestionnairerapportdechantier.gestionPersonnel
+package com.example.gestionnairerapportdechantier.personnel
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -1,4 +1,4 @@
-package com.example.gestionnairerapportdechantier.gestionPersonnel
+package com.example.gestionnairerapportdechantier.personnel.listePersonnel
 
 
 import android.os.Bundle
@@ -14,7 +14,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.gestionnairerapportdechantier.Database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentGestionPersonnelBinding
-import com.example.gestionnairerapportdechantier.mainMenu.MainMenuViewModel
+import com.example.gestionnairerapportdechantier.personnel.ListePersonnelAdapter
+import com.example.gestionnairerapportdechantier.personnel.ListePersonnelListener
 import timber.log.Timber
 
 /**
@@ -35,19 +36,23 @@ class ListePersonnelFragment : Fragment() {
         //ViewModelFactory
         val application = requireNotNull(this.activity).application
         val dataSource = GestionnaireDatabase.getInstance(application).PersonnelDao
-        val viewModelFactory = GestionPersonnelViewModelFactory(dataSource)
+        val viewModelFactory =
+            ListePersonnelViewModelFactory(
+                dataSource
+            )
 
         //ViewModel
-        val viewModel: GestionPersonnelViewModel by activityViewModels(){viewModelFactory}
+        val viewModel: ListePersonnelViewModel by activityViewModels(){viewModelFactory}
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
         //RecyclerView
 
-        val adapter = ListePersonnelAdapter(ListePersonnelListener { personnelId ->
-            Toast.makeText(context, "$personnelId", Toast.LENGTH_LONG).show()
-            viewModel.onPersonnelClicked(personnelId.toLong())
-        })
+        val adapter =
+            ListePersonnelAdapter(ListePersonnelListener { personnelId ->
+                Toast.makeText(context, "$personnelId", Toast.LENGTH_LONG).show()
+                viewModel.onPersonnelClicked(personnelId.toLong())
+            })
         binding.personnelListe.adapter = adapter
 
         val manager = GridLayoutManager(activity, 1, GridLayoutManager.VERTICAL, false)
@@ -68,14 +73,17 @@ class ListePersonnelFragment : Fragment() {
         viewModel.navigationPersonnel.observe(viewLifecycleOwner, Observer { navigation ->
 
             when(navigation){
-                GestionPersonnelViewModel.navigationMenuPersonnel.CREATION_PERSONNEL ->{
+                ListePersonnelViewModel.navigationMenuPersonnel.CREATION_PERSONNEL ->{
                   Toast.makeText(activity, "Passage creation Signalement", Toast.LENGTH_SHORT).show()
-                  findNavController().navigate(R.id.action_gestionPersonnelFragment_to_creationPersonnelFragment)
-//                  viewModel.onBoutonClicked()
+                  findNavController().navigate(R.id.action_listePersonnelFragment_to_gestionPersonnelFragment)
+                  viewModel.onBoutonClicked()
               }
-                GestionPersonnelViewModel.navigationMenuPersonnel.MODIFICATION_PERSONNEL->{
-                    findNavController().navigate(R.id.action_gestionPersonnelFragment_to_creationPersonnelFragment)
+                ListePersonnelViewModel.navigationMenuPersonnel.MODIFICATION_PERSONNEL ->{
+                    val action = ListePersonnelFragmentDirections.actionListePersonnelFragmentToGestionPersonnelFragment()
+                    action.idPersonnel = viewModel.idPersonnel.value!!
 
+                    findNavController().navigate(action)
+                    viewModel.onBoutonClicked()
 
                 }
         }
