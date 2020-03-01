@@ -33,18 +33,27 @@ class GestionPersonnelViewModel(private val dataSource: PersonnelDao, idPersonne
 
     init {
 
-        if(idPersonnel != -1L){
-            Timber.i("Passage avant récupération dans la dataBase")
+        initializePersonnel(idPersonnel)
+        onBoutonClicked()
+    }
 
-            // Modifier grâce à la solution de Room
-           dataSource.getPersonnelById(idPersonnel).observeForever {
-               personnel.value = it
-           }
-        }else {
-            Timber.i("Passage dans NULL")
+
+    private fun initializePersonnel(id: Long){
+        if(id != -1L) {
+            uiScope.launch {
+                personnel.value = getPersonnelValue(id)
+            }
+        }
+        else{
             personnel.value = Personnel()
         }
-        onBoutonClicked()
+    }
+
+    private suspend fun getPersonnelValue(id: Long): Personnel? {
+        return withContext(Dispatchers.IO){
+            var personnel = dataSource.getPersonnelById(id)
+            personnel
+        }
     }
 
 
@@ -83,9 +92,13 @@ class GestionPersonnelViewModel(private val dataSource: PersonnelDao, idPersonne
     private fun sendNewPersonnelToDB(){
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                var test = dataSource.insertPersonnel(personnel.value!!)
+                dataSource.insertPersonnel(personnel.value!!)
             }
         }
+    }
+
+    fun onClickButtonAnnuler(){
+        _navigationPersonnel.value = navigationGestionPersonnel.ANNULATION
     }
 
 

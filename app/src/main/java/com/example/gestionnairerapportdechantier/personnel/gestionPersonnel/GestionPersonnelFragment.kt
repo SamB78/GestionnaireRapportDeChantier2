@@ -13,7 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.gestionnairerapportdechantier.Database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.R
-import com.example.gestionnairerapportdechantier.databinding.FragmentCreationPersonnelBinding
+import com.example.gestionnairerapportdechantier.databinding.FragmentGestionPersonnelBinding
 import com.example.gestionnairerapportdechantier.personnel.listePersonnel.ListePersonnelViewModel
 import timber.log.Timber
 
@@ -30,7 +30,7 @@ class GestionPersonnelFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val binding = FragmentCreationPersonnelBinding.inflate(inflater, container, false)
+        val binding = FragmentGestionPersonnelBinding.inflate(inflater, container, false)
         binding.executePendingBindings()
 
 

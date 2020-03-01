@@ -13,11 +13,8 @@ class ListePersonnelViewModel(private val dataSource: PersonnelDao): ViewModel()
     enum class navigationMenuPersonnel {
         CREATION_PERSONNEL,
         MODIFICATION_PERSONNEL,
-        EN_ATTENTE,
-        LISTE_PERSONNEL,
-        ENREGISTREMENT_PERSONNEL
+        EN_ATTENTE
     }
-
 
     //Coroutines ?
     private val viewModelJob = Job()
@@ -47,20 +44,14 @@ class ListePersonnelViewModel(private val dataSource: PersonnelDao): ViewModel()
             navigationMenuPersonnel.EN_ATTENTE
     }
 
-
-    // a modifier
     fun onPersonnelClicked(id: Long){
         _idPersonnel.value = id
-        Timber.i("value id = ${_idPersonnel.value}")
         _navigationPersonnel.value = navigationMenuPersonnel.MODIFICATION_PERSONNEL
     }
-
-
 
     // onCleared()
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
-
     }
 }

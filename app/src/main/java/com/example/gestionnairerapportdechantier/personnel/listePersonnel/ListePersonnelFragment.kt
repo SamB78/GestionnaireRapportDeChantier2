@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.gestionnairerapportdechantier.Database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentGestionPersonnelBinding
+import com.example.gestionnairerapportdechantier.databinding.FragmentListePersonnelBinding
 import com.example.gestionnairerapportdechantier.personnel.ListePersonnelAdapter
 import com.example.gestionnairerapportdechantier.personnel.ListePersonnelListener
 import timber.log.Timber
@@ -30,7 +31,7 @@ class ListePersonnelFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val binding = FragmentGestionPersonnelBinding.inflate(inflater,container,false)
+        val binding = FragmentListePersonnelBinding.inflate(inflater,container,false)
         binding.executePendingBindings()
 
         //ViewModelFactory
