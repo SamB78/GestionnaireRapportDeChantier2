@@ -18,12 +18,24 @@
             android:id="@+id/button_gestion_personnel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="288dp"
+            android:onClick="@{()-> viewModel.onClickBoutonPersonnel()}"
             android:text="Gestion Personnel"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.458"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:onClick="@{()-> viewModel.onClickBoutonPersonnel()}"/>
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_gestion_chantiers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{()-> viewModel.onClickBoutonChantier()}"
+            android:layout_marginTop="30dp"
+            android:text="Gestion chantiers"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/button_gestion_personnel"
+            app:layout_constraintStart_toStartOf="@+id/button_gestion_personnel"
+            app:layout_constraintTop_toBottomOf="@+id/button_gestion_personnel"
+            app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

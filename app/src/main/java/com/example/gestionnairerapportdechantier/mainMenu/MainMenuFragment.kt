@@ -43,7 +43,11 @@ class MainMenuFragment : Fragment() {
                     navController.navigate(R.id.action_mainMenuFragment_to_listePersonnelFragment)
                     viewModel.onBoutonClicked ()
                 }
+                MainMenuViewModel.navigationMainMenu.PASSAGE_PAGE_CHANTIERS->{
+                    navController.navigate(R.id.action_mainMenuFragment_to_listeChantiersFragment)
+                    viewModel.onBoutonClicked ()
                 }
+            }
 
         })
 

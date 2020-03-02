@@ -8,7 +8,8 @@ class MainMenuViewModel: ViewModel() {
 
     enum class navigationMainMenu{
         EN_ATTENTE,
-        PASSAGE_PAGE_PERSONNEL
+        PASSAGE_PAGE_PERSONNEL,
+        PASSAGE_PAGE_CHANTIERS
     }
 
     private var _navigation = MutableLiveData<navigationMainMenu>()
@@ -21,6 +22,10 @@ class MainMenuViewModel: ViewModel() {
 
     fun onClickBoutonPersonnel(){
         _navigation.value = navigationMainMenu.PASSAGE_PAGE_PERSONNEL
+    }
+
+    fun onClickBoutonChantier(){
+        _navigation.value = navigationMainMenu.PASSAGE_PAGE_CHANTIERS
     }
 
     fun onBoutonClicked(){
