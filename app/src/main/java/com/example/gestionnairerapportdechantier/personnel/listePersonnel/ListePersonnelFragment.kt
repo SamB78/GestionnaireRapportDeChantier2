@@ -13,10 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.gestionnairerapportdechantier.Database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.R
-import com.example.gestionnairerapportdechantier.databinding.FragmentGestionPersonnelBinding
 import com.example.gestionnairerapportdechantier.databinding.FragmentListePersonnelBinding
-import com.example.gestionnairerapportdechantier.personnel.ListePersonnelAdapter
-import com.example.gestionnairerapportdechantier.personnel.ListePersonnelListener
 import timber.log.Timber
 
 /**
@@ -50,10 +47,11 @@ class ListePersonnelFragment : Fragment() {
         //RecyclerView
 
         val adapter =
-            ListePersonnelAdapter(ListePersonnelListener { personnelId ->
-                Toast.makeText(context, "$personnelId", Toast.LENGTH_LONG).show()
-                viewModel.onPersonnelClicked(personnelId.toLong())
-            })
+            ListePersonnelAdapter(
+                ListePersonnelListener { personnelId ->
+                    Toast.makeText(context, "$personnelId", Toast.LENGTH_LONG).show()
+                    viewModel.onPersonnelClicked(personnelId.toLong())
+                })
         binding.personnelListe.adapter = adapter
 
         val manager = GridLayoutManager(activity, 1, GridLayoutManager.VERTICAL, false)

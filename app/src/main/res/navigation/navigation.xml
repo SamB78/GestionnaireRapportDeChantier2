@@ -43,7 +43,20 @@
     </fragment>
     <fragment
         android:id="@+id/listeChantiersFragment"
-        android:name="com.example.gestionnairerapportdechantier.listeChantiersFragment"
+        android:name="com.example.gestionnairerapportdechantier.chantiers.listeChantiers.ListeChantiersFragment"
         android:label="fragment_liste_chantiers"
-        tools:layout="@layout/fragment_liste_chantiers" />
+        tools:layout="@layout/fragment_liste_chantiers" >
+        <action
+            android:id="@+id/action_listeChantiersFragment_to_gestionChantierFragment"
+            app:destination="@id/gestionChantierFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gestionChantierFragment"
+        android:name="com.example.gestionnairerapportdechantier.chantiers.gestionChantiers.GestionChantierFragment"
+        android:label="fragment_gestion_chantier"
+        tools:layout="@layout/fragment_gestion_chantier" >
+        <action
+            android:id="@+id/action_gestionChantierFragment_to_listeChantiersFragment"
+            app:destination="@id/listeChantiersFragment" />
+    </fragment>
 </navigation>

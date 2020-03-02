@@ -1,4 +1,4 @@
-package com.example.gestionnairerapportdechantier.personnel
+package com.example.gestionnairerapportdechantier.personnel.listePersonnel
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,10 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gestionnairerapportdechantier.databinding.PersonnelItemViewBinding
 import com.example.gestionnairerapportdechantier.entities.Personnel
 
-class ListePersonnelAdapter(val clickListener: ListePersonnelListener): ListAdapter<Personnel, ViewHolder>(ListePersonnelDiffCallBack()){
+class ListePersonnelAdapter(val clickListener: ListePersonnelListener): ListAdapter<Personnel, ViewHolder>(
+    ListePersonnelDiffCallBack()
+){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent)
+        return ViewHolder.from(
+            parent
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -39,10 +43,12 @@ class ListePersonnelDiffCallBack: DiffUtil.ItemCallback<Personnel>() {
 class ViewHolder private constructor(val binding: PersonnelItemViewBinding): RecyclerView.ViewHolder(binding.root) {
 
     companion object{
-        fun from(parent: ViewGroup): ViewHolder{
+        fun from(parent: ViewGroup): ViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = PersonnelItemViewBinding.inflate(layoutInflater, parent, false)
-            return ViewHolder(binding)
+            return ViewHolder(
+                binding
+            )
         }
     }
 

@@ -3,13 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="viewModel"
+            type="com.example.gestionnairerapportdechantier.chantiers.gestionChantiers.GestionChantierViewModel" />
 
     </data>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".chantiers.listeChantiers.ListeChantiersFragment">
+        tools:context=".chantiers.gestionChantiers.GestionChantierFragment">
 
         <!-- TODO: Update blank fragment layout -->
         <TextView

@@ -11,7 +11,7 @@
 
         <variable
             name="clickListener"
-            type="com.example.gestionnairerapportdechantier.personnel.ListePersonnelListener" />
+            type="com.example.gestionnairerapportdechantier.personnel.listePersonnel.ListePersonnelListener" />
 
 
     </data>

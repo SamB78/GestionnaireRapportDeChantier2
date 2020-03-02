@@ -6,7 +6,8 @@ import com.example.gestionnairerapportdechantier.Database.PersonnelDao
 
 class GestionPersonnelViewModelFactory(
     private val dataSource: PersonnelDao,
-    private val idPersonnel: Long): ViewModelProvider.Factory{
+    private val idPersonnel: Long
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(GestionPersonnelViewModel::class.java)) {
             return GestionPersonnelViewModel(
