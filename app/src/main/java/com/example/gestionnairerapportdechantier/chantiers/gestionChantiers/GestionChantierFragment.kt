@@ -34,7 +34,7 @@ class GestionChantierFragment : Fragment() {
 
         //ViewModel
 
-        val viewModel: GestionChantierViewModel by viewModels() { viewModelFactory }
+        val viewModel: GestionChantierViewModel by viewModels { viewModelFactory }
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
