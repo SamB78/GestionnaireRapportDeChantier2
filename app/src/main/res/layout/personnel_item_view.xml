@@ -34,7 +34,7 @@
             android:onClick="@{() -> clickListener.onClick(personnel)}">
 
                 <TextView
-                    android:id="@+id/nom_prenom"
+                    android:id="@+id/nomPrenom"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     tools:text="Sam Bertrand" />

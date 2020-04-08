@@ -16,10 +16,10 @@ interface ChantierDao {
     @Update
     fun update(chantier: Chantier)
 
-    @Query("SELECT * FROM chantier")
+    @Query("SELECT * FROM rapportChantier")
     fun getAllFromChantier(): LiveData<List<Chantier>>
 
-    @Query("SELECT * FROM chantier WHERE chantier_id = :id")
+    @Query("SELECT * FROM rapportChantier WHERE chantier_id = :id")
     fun getChantierById(id: Long): Chantier
 
 

@@ -13,15 +13,10 @@ import androidx.navigation.fragment.findNavController
 import com.example.gestionnairerapportdechantier.Database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentGestionPersonnelBinding
+import kotlinx.android.synthetic.main.fragment_gestion_personnel.*
 import timber.log.Timber
 
-
-/**
- * A simple [Fragment] subclass.
- */
 class GestionPersonnelFragment : Fragment() {
-
-//    val viewModel: GestionPersonnelViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,19 +26,14 @@ class GestionPersonnelFragment : Fragment() {
         val binding = FragmentGestionPersonnelBinding.inflate(inflater, container, false)
         binding.executePendingBindings()
 
-
-        Timber.i("idPersonnel fromBundle = ${GestionPersonnelFragmentArgs.fromBundle(arguments!!).idPersonnel}")
-
         //ViewModelFactory
         val application = requireNotNull(this.activity).application
         val dataSource = GestionnaireDatabase.getInstance(application).PersonnelDao
-        val viewModelFactory = GestionPersonnelViewModelFactory(
-            dataSource, GestionPersonnelFragmentArgs.fromBundle(arguments!!).idPersonnel
-        )
+        val idPersonnel = GestionPersonnelFragmentArgs.fromBundle(arguments!!).idPersonnel
+        val viewModelFactory = GestionPersonnelViewModelFactory(dataSource, idPersonnel)
 
         //ViewModel
-        val viewModel: GestionPersonnelViewModel by viewModels() { viewModelFactory }
-
+        val viewModel: GestionPersonnelViewModel by viewModels { viewModelFactory }
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
@@ -63,7 +53,6 @@ class GestionPersonnelFragment : Fragment() {
 
             }
         })
-
 
         // Inflate the layout for this fragment
         return binding.root

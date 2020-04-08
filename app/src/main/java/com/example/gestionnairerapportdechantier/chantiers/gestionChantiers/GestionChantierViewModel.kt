@@ -31,11 +31,12 @@ class GestionChantierViewModel(private val dataSource: ChantierDao, id: Long = -
 
     init {
         initializeData(id)
+        Timber.i("Chantier initialisé  = ${chantier.value?.numeroChantier}")
         onBoutonClicked()
     }
 
     private fun initializeData(id: Long) {
-        if (id != 1L) {
+        if (id != -1L) {
             uiScope.launch {
                 chantier.value = getChantierValue(id)
             }
@@ -57,7 +58,7 @@ class GestionChantierViewModel(private val dataSource: ChantierDao, id: Long = -
 
     fun onClickButtonCreationOrModificationEnded() {
 
-        Timber.i("Chantier ready to save in DB = ${chantier.value}")
+        Timber.i("Chantier ready to save in DB = ${chantier.value?.nomChantier}")
         if (chantier.value?.chantierId == null) sendNewDataToDB()
         else updateDataInDB()
 
@@ -94,3 +95,4 @@ class GestionChantierViewModel(private val dataSource: ChantierDao, id: Long = -
 
 
 }
+

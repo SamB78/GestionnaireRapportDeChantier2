@@ -25,7 +25,6 @@ class ListePersonnelAdapter(val clickListener: ListePersonnelListener): ListAdap
 }
 
 
-
 // OK
 class ListePersonnelDiffCallBack: DiffUtil.ItemCallback<Personnel>() {
     override fun areItemsTheSame(oldItem: Personnel, newItem: Personnel): Boolean {

@@ -18,10 +18,11 @@
             android:id="@+id/button_gestion_personnel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="288dp"
+            android:layout_marginTop="250dp"
             android:onClick="@{()-> viewModel.onClickBoutonPersonnel()}"
-            android:text="Gestion Personnel"
+            android:text="Gestion du Personnel"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.569"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,13 +30,22 @@
             android:id="@+id/button_gestion_chantiers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{()-> viewModel.onClickBoutonChantier()}"
             android:layout_marginTop="30dp"
-            android:text="Gestion chantiers"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:onClick="@{()-> viewModel.onClickBoutonChantier()}"
+            android:text="Gestion des chantiers"
             app:layout_constraintEnd_toEndOf="@+id/button_gestion_personnel"
             app:layout_constraintStart_toStartOf="@+id/button_gestion_personnel"
-            app:layout_constraintTop_toBottomOf="@+id/button_gestion_personnel"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/button_gestion_personnel" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Rapports de Chantier"
+            app:layout_constraintEnd_toEndOf="@+id/button_gestion_chantiers"
+            app:layout_constraintHorizontal_bias="0.48"
+            app:layout_constraintStart_toStartOf="@+id/button_gestion_chantiers"
+            app:layout_constraintTop_toBottomOf="@+id/button_gestion_chantiers" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

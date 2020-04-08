@@ -7,16 +7,17 @@ import androidx.room.PrimaryKey
 import com.example.gestionnairerapportdechantier.entities.Adresse
 
 @Entity(
-    tableName = "chantier",
+    tableName = "rapportChantier"
 
-    foreignKeys = arrayOf(
-        ForeignKey(
-            entity = Adresse::class,
-            parentColumns = arrayOf("adresse_id"),
-            childColumns = arrayOf("adresse_chantier"),
-            onDelete = ForeignKey.SET_DEFAULT
-        )
-    )
+//    ,
+//    foreignKeys = arrayOf(
+//        ForeignKey(
+//            entity = Adresse::class,
+//            parentColumns = arrayOf("adresse_id"),
+//            childColumns = arrayOf("adresse_chantier"),
+//            onDelete = ForeignKey.SET_DEFAULT
+//        )
+//    )
 )
 
 data class Chantier(
@@ -26,11 +27,11 @@ data class Chantier(
     var chantierId: Int? = null,
 
     @ColumnInfo(name = "numero_chantier")
-    var numeroChantier: Int? = null,
+    var numeroChantier: String? = null,
 
     @ColumnInfo(name = "nom_chantier")
     var nomChantier: String? = null,
 
     @ColumnInfo(name = "adresse_chantier")
-    var adresseChantier: Int? = null
+    var adresseChantier: String? = null
 )

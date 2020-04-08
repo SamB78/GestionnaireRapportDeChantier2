@@ -13,12 +13,13 @@ import com.example.gestionnairerapportdechantier.entities.*
         AssociationPersonnelRapportJournalierChantier::class,
         RapportJournalierChantier::class,
         RapportChantier::class],
-    version = 4, exportSchema = false)
+    version = 11, exportSchema = false)
 
 abstract class GestionnaireDatabase : RoomDatabase() {
 
     abstract val ChantierDao: ChantierDao
     abstract val PersonnelDao: PersonnelDao
+    abstract  val RapportChantierDao: RapportChantierDao
 
     companion object {
 

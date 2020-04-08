@@ -1,24 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
             name="viewModel"
             type="com.example.gestionnairerapportdechantier.chantiers.gestionChantiers.GestionChantierViewModel" />
-
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".chantiers.gestionChantiers.GestionChantierFragment">
+        android:layout_height="match_parent">
 
-        <!-- TODO: Update blank fragment layout -->
+
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ajouter un nouveau chantier"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/editTextNumChantier"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </FrameLayout>
+        <EditText
+            android:id="@+id/editTextNumChantier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Numéro de Chantier"
+            android:inputType="number"
+            app:layout_constraintBottom_toTopOf="@+id/editTextNomChantier"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView3"
+            android:text="@={viewModel.chantier.numeroChantier}"/>
+
+        <EditText
+            android:id="@+id/editTextNomChantier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Nom du chantier"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toTopOf="@+id/editTextAdresseChantier"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextNumChantier"
+            android:text="@={viewModel.chantier.nomChantier}"/>
+
+        <EditText
+            android:id="@+id/editTextAdresseChantier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Adresse"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toTopOf="@+id/buttonAnnuler"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextNomChantier"
+            android:text="@={viewModel.chantier.adresseChantier}"/>
+
+        <Button
+            android:id="@+id/buttonAnnuler"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Annuler"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/buttonEnregistrer"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextAdresseChantier"
+            android:onClick="@{()-> viewModel.onClickButtonAnnuler()}"/>
+
+        <Button
+            android:id="@+id/buttonEnregistrer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{()-> viewModel.onClickButtonCreationOrModificationEnded()}"
+            android:text="Valider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/buttonAnnuler"
+            app:layout_constraintTop_toTopOf="@+id/buttonAnnuler" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

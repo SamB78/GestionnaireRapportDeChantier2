@@ -58,12 +58,14 @@ class ListePersonnelFragment : Fragment() {
         binding.personnelListe.layoutManager = manager
 
 
+
+        // Affichage liste Personnel dans RecyclerView
         viewModel.listePersonnel.observe(viewLifecycleOwner, Observer { listePersonnel ->
             listePersonnel?.let{
                 adapter.submitList(it)
                 listePersonnel.forEach {
 
-                    Timber.i("listePersonnel = $it")
+                    Timber.i("listePersonnels = $it")
                 }
             }
         })

@@ -14,9 +14,6 @@ import com.example.gestionnairerapportdechantier.Database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentGestionChantierBinding
 
-/**
- * A simple [Fragment] subclass.
- */
 class GestionChantierFragment : Fragment() {
 
     override fun onCreateView(
@@ -30,15 +27,17 @@ class GestionChantierFragment : Fragment() {
         //ViewModelFactory
         val application = requireNotNull(this.activity).application
         val dataSource = GestionnaireDatabase.getInstance(application).ChantierDao
-        val viewModelFactory = GestionChantierViewModelFactory(dataSource, -1L)
+        val idChantier = GestionChantierFragmentArgs.fromBundle(arguments!!).idChantier
+        val viewModelFactory = GestionChantierViewModelFactory(dataSource, idChantier)
+
 
         //ViewModel
-
         val viewModel: GestionChantierViewModel by viewModels { viewModelFactory }
-
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+
+        //Navigation
         viewModel.navigation.observe(viewLifecycleOwner, Observer { navigation ->
             when (navigation) {
                 GestionChantierViewModel.gestionNavigation.ENREGISTREMENT_CHANTIER -> {
@@ -54,8 +53,6 @@ class GestionChantierFragment : Fragment() {
             }
         })
 
-
-        // Inflate the layout for this fragment
         return binding.root
     }
 }
