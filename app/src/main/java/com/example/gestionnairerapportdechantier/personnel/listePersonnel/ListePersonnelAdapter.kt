@@ -7,10 +7,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gestionnairerapportdechantier.databinding.PersonnelItemViewBinding
 import com.example.gestionnairerapportdechantier.entities.Personnel
+import timber.log.Timber
 
-class ListePersonnelAdapter(val clickListener: ListePersonnelListener): ListAdapter<Personnel, ViewHolder>(
-    ListePersonnelDiffCallBack()
-){
+class ListePersonnelAdapter(val clickListener: ListePersonnelListener) :
+    ListAdapter<Personnel, ViewHolder>(
+        ListePersonnelDiffCallBack()
+    ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(
@@ -26,12 +28,31 @@ class ListePersonnelAdapter(val clickListener: ListePersonnelListener): ListAdap
 
 
 // OK
-class ListePersonnelDiffCallBack: DiffUtil.ItemCallback<Personnel>() {
+class ListePersonnelDiffCallBack : DiffUtil.ItemCallback<Personnel>() {
+
     override fun areItemsTheSame(oldItem: Personnel, newItem: Personnel): Boolean {
+
+        Timber.e("Passage dans areItemsTheSame")
+        if(oldItem.personnelId == newItem.personnelId)
+        {
+            Timber.e("areItemsTheSame = True")
+        }else{
+            Timber.e("areItemsTheSame = False")
+        }
+
         return oldItem.personnelId == newItem.personnelId
     }
 
     override fun areContentsTheSame(oldItem: Personnel, newItem: Personnel): Boolean {
+
+        Timber.e("Passage dans areContentsTheSame")
+        if(oldItem == newItem)
+        {
+            Timber.e("areContentsTheSame = True newItem = $newItem oldItem = $oldItem")
+        }else{
+            Timber.e("areContentsTheSame = False  = $newItem oldItem = $oldItem")
+        }
+
         return oldItem == newItem
     }
 
@@ -39,9 +60,10 @@ class ListePersonnelDiffCallBack: DiffUtil.ItemCallback<Personnel>() {
 
 
 // OK
-class ViewHolder private constructor(val binding: PersonnelItemViewBinding): RecyclerView.ViewHolder(binding.root) {
+class ViewHolder private constructor(val binding: PersonnelItemViewBinding) :
+    RecyclerView.ViewHolder(binding.root) {
 
-    companion object{
+    companion object {
         fun from(parent: ViewGroup): ViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = PersonnelItemViewBinding.inflate(layoutInflater, parent, false)
@@ -54,15 +76,26 @@ class ViewHolder private constructor(val binding: PersonnelItemViewBinding): Rec
     fun bind(
         item: Personnel,
         clickListener: ListePersonnelListener
-    ){
+    ) {
         binding.clickListener = clickListener
         binding.personnel = item
-        binding.nomPrenom.text = item.prenom + " " + item.nom
+//        binding.nomPrenom.text = item.prenom + " " + item.nom
+//        binding.numero.text = item.numContact
+//
+//        if(item.chefEquipe)
+//        {
+//            binding.role.text = "Chef d'équipe"
+//        }else if(item.interimaire)
+//        {
+//            binding.role.text = "Intérimaire"
+//        }else{
+//            binding.role.text = "Employé"
+//        }
     }
 }
 
 
 //OK
-class ListePersonnelListener(val clickListener: (personnelId: Int)-> Unit){
+class ListePersonnelListener(val clickListener: (personnelId: Int) -> Unit) {
     fun onClick(personnel: Personnel) = clickListener(personnel.personnelId!!)
 }

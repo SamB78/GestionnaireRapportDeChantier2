@@ -1,9 +1,6 @@
 package com.example.gestionnairerapportdechantier.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.example.gestionnairerapportdechantier.entities.Adresse
 
 @Entity(
@@ -32,6 +29,15 @@ data class Chantier(
     @ColumnInfo(name = "nom_chantier")
     var nomChantier: String? = null,
 
-    @ColumnInfo(name = "adresse_chantier")
-    var adresseChantier: String? = null
-)
+    @Embedded
+    var adresseChantier: Adresse = Adresse(),
+    var urlPictureChantier: String? = null,
+    var identiteResponsableSite: String? = null,
+    var numContactResponsableSite: String? = null,
+    var mailContactResponsableSite: String? = null,
+
+    var chefChantierId: Int? = null
+
+
+
+    )

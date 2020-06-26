@@ -9,7 +9,7 @@ import androidx.databinding.InverseMethod
 //    @InverseMethod("stringToInt")
 //    @JvmStatic fun intToString(view: EditText, oldValue: Int, value: Int): String {
 //
-//        return "test"
+//        return "passagelistePersonnelPourRecyclerView"
 //    }
 //
 //    @JvmStatic fun stringToInt(view: EditText, oldValue: String, value: Int): Int {

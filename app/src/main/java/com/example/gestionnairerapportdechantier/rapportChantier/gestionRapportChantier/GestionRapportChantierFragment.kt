@@ -27,7 +27,7 @@ class GestionRapportChantierFragment : Fragment() {
         //ViewModelFactory
         val application = requireNotNull(this.activity).application
         val dataSource = GestionnaireDatabase.getInstance(application).RapportChantierDao
-        val idRapportChantier = -1 as Long
+        val idRapportChantier = -1L
         val viewModelFactory = GestionRapportChantierViewModelFactory(dataSource, idRapportChantier)
 
         //ViewModel

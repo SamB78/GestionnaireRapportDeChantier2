@@ -16,7 +16,7 @@ class ListePersonnelViewModel(private val dataSource: PersonnelDao): ViewModel()
         EN_ATTENTE
     }
 
-    //Coroutines ?
+    //Coroutines
     private val viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 

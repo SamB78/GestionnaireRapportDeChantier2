@@ -47,6 +47,10 @@ class MainMenuFragment : Fragment() {
                     navController.navigate(R.id.action_mainMenuFragment_to_listeChantiersFragment)
                     viewModel.onBoutonClicked ()
                 }
+                MainMenuViewModel.navigationMainMenu.PASSAGE_PAGE_RAPPORTS_CHANTIER->{
+                    navController.navigate(R.id.action_mainMenuFragment_to_listeRapportsChantierFragment)
+                    viewModel.onBoutonClicked ()
+                }
             }
 
         })

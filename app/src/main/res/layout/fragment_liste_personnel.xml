@@ -7,8 +7,6 @@
         <variable
             name="viewModel"
             type="com.example.gestionnairerapportdechantier.personnel.listePersonnel.ListePersonnelViewModel" />
-
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

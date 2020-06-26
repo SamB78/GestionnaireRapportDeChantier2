@@ -3,12 +3,16 @@ package com.example.gestionnairerapportdechantier.chantiers.listeChantiers
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.gestionnairerapportdechantier.Database.AssociationPersonnelChantierDao
 import com.example.gestionnairerapportdechantier.Database.ChantierDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 
-class ListeChantiersViewModel(private val dataSource: ChantierDao) : ViewModel() {
+class ListeChantiersViewModel(
+    private val dataSourceChantier: ChantierDao,
+    private val dataSourceAssociationPersonnelChantier: AssociationPersonnelChantierDao ) :
+    ViewModel() {
 
     enum class navigationMenu {
         CREATION,
@@ -20,7 +24,7 @@ class ListeChantiersViewModel(private val dataSource: ChantierDao) : ViewModel()
     private val viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-    val listeChantiers = dataSource.getAllFromChantier()
+    val listeChantiers = dataSourceChantier.getAllFromChantier()
 
     private var _navigationPersonnel = MutableLiveData<navigationMenu>()
     val navigation: LiveData<navigationMenu>

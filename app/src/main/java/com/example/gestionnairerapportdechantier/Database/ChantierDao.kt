@@ -11,7 +11,7 @@ import com.example.gestionnairerapportdechantier.entities.Chantier
 interface ChantierDao {
 
     @Insert
-    fun insert(chantier: Chantier)
+    fun insert(chantier: Chantier): Long
 
     @Update
     fun update(chantier: Chantier)
@@ -21,6 +21,9 @@ interface ChantierDao {
 
     @Query("SELECT * FROM rapportChantier WHERE chantier_id = :id")
     fun getChantierById(id: Long): Chantier
+
+
+
 
 
 }

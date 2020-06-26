@@ -8,18 +8,19 @@ import com.example.gestionnairerapportdechantier.entities.*
 
 @Database(
     entities = [Chantier::class,
-        Adresse::class,
         Personnel::class,
         AssociationPersonnelRapportJournalierChantier::class,
         RapportJournalierChantier::class,
-        RapportChantier::class],
-    version = 11, exportSchema = false)
+        RapportChantier::class,
+        AssociationPersonnelChantier::class],
+    version = 16, exportSchema = false)
 
 abstract class GestionnaireDatabase : RoomDatabase() {
 
     abstract val ChantierDao: ChantierDao
     abstract val PersonnelDao: PersonnelDao
     abstract  val RapportChantierDao: RapportChantierDao
+    abstract val AssociationPersonnelChantierDao: AssociationPersonnelChantierDao
 
     companion object {
 
@@ -42,6 +43,7 @@ abstract class GestionnaireDatabase : RoomDatabase() {
                 }
                 return instance
             }
+
         }
     }
 }

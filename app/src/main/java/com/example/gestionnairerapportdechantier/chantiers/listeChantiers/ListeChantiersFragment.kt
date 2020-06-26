@@ -14,8 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.gestionnairerapportdechantier.Database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentListeChantiersBinding
-import com.example.gestionnairerapportdechantier.personnel.listePersonnel.ListePersonnelAdapter
-import com.example.gestionnairerapportdechantier.personnel.listePersonnel.ListePersonnelListener
+import timber.log.Timber
 
 /**
  * A simple [Fragment] subclass.
@@ -32,10 +31,12 @@ class ListeChantiersFragment : Fragment() {
 
         //ViewModelFactory
         val application = requireNotNull(this.activity).application
-        val dataSource = GestionnaireDatabase.getInstance(application).ChantierDao
+        val dataSourceChantier = GestionnaireDatabase.getInstance(application).ChantierDao
+        val dataSourceAssociationPersonnelChantier = GestionnaireDatabase.getInstance(application).AssociationPersonnelChantierDao
         val viewModelFactory =
             ListeChantiersViewModelFactory(
-                dataSource
+                dataSourceChantier,
+                dataSourceAssociationPersonnelChantier
             )
 
         //ViewModel
@@ -57,8 +58,9 @@ class ListeChantiersFragment : Fragment() {
         binding.personnelListe.layoutManager = manager
 
         viewModel.listeChantiers.observe(viewLifecycleOwner, Observer { listeChantiers ->
-            listeChantiers?.let{
+            listeChantiers?.let {
                 adapter.submitList(it)
+                Timber.i("Chantiers: $it")
             }
         })
 
@@ -71,15 +73,16 @@ class ListeChantiersFragment : Fragment() {
                     Toast.makeText(activity, "Passage creation Chantier", Toast.LENGTH_SHORT)
                         .show()
 
-                    findNavController().navigate(R.id.action_listeChantiersFragment_to_gestionChantierFragment)
+                    findNavController().navigate(R.id.action_listeChantiersFragment_to_creationChantierNavGraph)
                     viewModel.onBoutonClicked()
                 }
                 ListeChantiersViewModel.navigationMenu.MODIFICATION -> {
                     Toast.makeText(activity, "Passage modification Chantier", Toast.LENGTH_SHORT)
                         .show()
 
-                    val action = ListeChantiersFragmentDirections.actionListeChantiersFragmentToGestionChantierFragment()
-                    action.idChantier = viewModel.idChantier.value!!
+                    val action = ListeChantiersFragmentDirections.actionListeChantiersFragmentToAffichageChantierFragment()
+
+                    action.idChantier  = viewModel.idChantier.value!!
 
                     findNavController().navigate(action)
                     viewModel.onBoutonClicked()

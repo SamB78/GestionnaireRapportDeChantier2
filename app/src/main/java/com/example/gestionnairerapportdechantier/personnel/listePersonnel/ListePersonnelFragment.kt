@@ -22,13 +22,12 @@ import timber.log.Timber
 class ListePersonnelFragment : Fragment() {
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        val binding = FragmentListePersonnelBinding.inflate(inflater,container,false)
+        val binding = FragmentListePersonnelBinding.inflate(inflater, container, false)
         binding.executePendingBindings()
 
         //ViewModelFactory
@@ -40,7 +39,7 @@ class ListePersonnelFragment : Fragment() {
             )
 
         //ViewModel
-        val viewModel: ListePersonnelViewModel by activityViewModels(){viewModelFactory}
+        val viewModel: ListePersonnelViewModel by activityViewModels { viewModelFactory }
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
@@ -58,37 +57,34 @@ class ListePersonnelFragment : Fragment() {
         binding.personnelListe.layoutManager = manager
 
 
-
         // Affichage liste Personnel dans RecyclerView
         viewModel.listePersonnel.observe(viewLifecycleOwner, Observer { listePersonnel ->
-            listePersonnel?.let{
+            listePersonnel?.let {
                 adapter.submitList(it)
-                listePersonnel.forEach {
-
-                    Timber.i("listePersonnels = $it")
-                }
             }
         })
 
 
         viewModel.navigationPersonnel.observe(viewLifecycleOwner, Observer { navigation ->
 
-            when(navigation){
-                ListePersonnelViewModel.navigationMenuPersonnel.CREATION_PERSONNEL ->{
-                  Toast.makeText(activity, "Passage creation Signalement", Toast.LENGTH_SHORT).show()
-                  findNavController().navigate(R.id.action_listePersonnelFragment_to_gestionPersonnelFragment)
-                  viewModel.onBoutonClicked()
-              }
-                ListePersonnelViewModel.navigationMenuPersonnel.MODIFICATION_PERSONNEL ->{
-                    val action = ListePersonnelFragmentDirections.actionListePersonnelFragmentToGestionPersonnelFragment()
+            when (navigation) {
+                ListePersonnelViewModel.navigationMenuPersonnel.CREATION_PERSONNEL -> {
+                    Toast.makeText(activity, "Passage creation Signalement", Toast.LENGTH_SHORT)
+                        .show()
+                    findNavController().navigate(R.id.action_listePersonnelFragment_to_gestionPersonnelFragment)
+                    viewModel.onBoutonClicked()
+                }
+                ListePersonnelViewModel.navigationMenuPersonnel.MODIFICATION_PERSONNEL -> {
+                    val action =
+                        ListePersonnelFragmentDirections.actionListePersonnelFragmentToGestionPersonnelFragment()
                     action.idPersonnel = viewModel.idPersonnel.value!!
 
                     findNavController().navigate(action)
                     viewModel.onBoutonClicked()
 
                 }
-        }
-    })
+            }
+        })
 
         // Inflate the layout for this fragment
         return binding.root

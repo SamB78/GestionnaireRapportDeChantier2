@@ -14,7 +14,8 @@ class GestionPersonnelViewModel(private val dataSource: PersonnelDao, id: Long =
     enum class gestionNavigation {
         ANNULATION,
         ENREGISTREMENT_PERSONNEL,
-        EN_ATTENTE
+        EN_ATTENTE,
+        AJOUT_PHOTO,
     }
 
 
@@ -23,8 +24,7 @@ class GestionPersonnelViewModel(private val dataSource: PersonnelDao, id: Long =
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     var personnel = MutableLiveData<Personnel>()
-
-
+    var imagePersonnel = MutableLiveData<String>()
     //navigation
     private var _navigation =
         MutableLiveData<gestionNavigation>()
@@ -33,7 +33,6 @@ class GestionPersonnelViewModel(private val dataSource: PersonnelDao, id: Long =
 
 
     init {
-
         initializeData(id)
         onBoutonClicked()
     }
@@ -43,6 +42,10 @@ class GestionPersonnelViewModel(private val dataSource: PersonnelDao, id: Long =
         if (id != -1L) {
             uiScope.launch {
                 personnel.value = getPersonnelValue(id)
+
+                personnel.value?.urlPicturepersonnel?.let{
+                imagePersonnel.value = it
+                }
             }
         } else {
             personnel.value = Personnel()
@@ -64,9 +67,13 @@ class GestionPersonnelViewModel(private val dataSource: PersonnelDao, id: Long =
 
     //DELETE AND USE DATABINDING
     fun onCheckedSwitchChefEquipeChanged(check: Boolean) {
-        personnel.value?.fonction = check
-        Timber.i("personnel = ${personnel.value?.fonction}")
+        personnel.value?.chefEquipe = check
+        Timber.i("personnel = ${personnel.value?.chefEquipe}")
 
+    }
+
+    fun onCheckedSwitchInterimaireChanged(check: Boolean) {
+        personnel.value?.interimaire = check
     }
 
 
@@ -107,6 +114,21 @@ class GestionPersonnelViewModel(private val dataSource: PersonnelDao, id: Long =
         super.onCleared()
         viewModelJob.cancel()
 
+    }
+
+    fun onClickAjoutImage(){
+        _navigation.value = gestionNavigation.AJOUT_PHOTO
+    }
+
+    fun ajoutPathImage(imagePath: String) {
+
+        personnel.value?.urlPicturepersonnel = imagePath
+        imagePersonnel.value = imagePath
+    }
+
+    fun onClickDeletePicture(){
+        personnel.value?.urlPicturepersonnel = null
+        imagePersonnel.value = null
     }
 
 }

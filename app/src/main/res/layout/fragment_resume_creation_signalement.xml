@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.gestionnairerapportdechantier.chantiers.creationChantier.CreationChantierViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/buttonSuivant"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_editor_absoluteX="0dp"
+            android:scrollbars="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayoutChamps"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <ImageView
+                    android:id="@+id/imageView7"
+                    imageUrl="@{viewModel.chantier.urlPictureChantier}"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/ic_business_black_24dp"
+                    app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+                    app:layout_constraintStart_toStartOf="@+id/start_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewNomChantier" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/textViewCodePostal"
+                    app:layout_constraintStart_toStartOf="@+id/start_guideline"
+                    app:layout_constraintTop_toTopOf="@+id/textViewRue"
+                    app:srcCompat="@drawable/ic_place_black_24dp" />
+
+                <TextView
+                    android:id="@+id/textViewRue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="@={viewModel.adresse.rue}"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewNumeroChantier"
+                    tools:text="1 Rue des Champs Elysées" />
+
+
+                <TextView
+                    android:id="@+id/textViewNomChantier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@={viewModel.chantier.nomChantier}"
+                    android:textSize="36sp"
+                    app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+                    app:layout_constraintStart_toStartOf="@+id/start_guideline"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Chantier de Paris" />
+
+                <TextView
+                    android:id="@+id/textViewCodePostal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="@={viewModel.adresse.codePostal}"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/textViewVille"
+                    app:layout_constraintEnd_toStartOf="@+id/textViewVille"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewRue"
+                    tools:text="75000" />
+
+                <TextView
+                    android:id="@+id/textViewVille"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@={viewModel.adresse.ville}"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="@+id/textViewRue"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewRue"
+                    tools:text="Paris" />
+
+                <ImageView
+                    android:id="@+id/imageViewIconRespSite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/textViewMailRespSite"
+                    app:layout_constraintEnd_toEndOf="@+id/imageView2"
+                    app:layout_constraintStart_toStartOf="@+id/imageView2"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewRespSite"
+                    app:srcCompat="@drawable/ic_person_black_24dp" />
+
+                <TextView
+                    android:id="@+id/textViewRespSite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="Reponsable du site"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+                    app:layout_constraintStart_toStartOf="@+id/start_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewCodePostal" />
+
+
+                <TextView
+                    android:id="@+id/textViewNomRespSite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="@={viewModel.chantier.identiteResponsableSite}"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@+id/textViewPhoneRespSite"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewRespSite"
+                    tools:text="Jean Patrick" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/start_guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_begin="16dp" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/end_guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_end="16dp" />
+
+                <TextView
+                    android:id="@+id/textViewPhoneRespSite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="@={viewModel.chantier.numContactResponsableSite}"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewRespSite"
+                    tools:text="0612654836" />
+
+                <TextView
+                    android:id="@+id/textViewMailRespSite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="@={viewModel.chantier.mailContactResponsableSite}"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewPhoneRespSite"
+                    tools:text="jeanpatrick@gmail.com" />
+
+                <TextView
+                    android:id="@+id/textViewChefDechantier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="Chef de chantier"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+                    app:layout_constraintStart_toStartOf="@+id/start_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewMailRespSite" />
+
+                <TextView
+                    android:id="@+id/textViewIdentiteChefChantier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="@={viewModel.chefChantierSelectionne.prenom}"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@+id/textViewNumChefChantier"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewChefDechantier"
+                    tools:text="Jean Jacques" />
+
+                <TextView
+                    android:id="@+id/textViewNumChefChantier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="@={viewModel.chefChantierSelectionne.numContact}"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+                    app:layout_constraintTop_toTopOf="@+id/textViewIdentiteChefChantier"
+                    tools:text="0651358965" />
+
+                <TextView
+                    android:id="@+id/textViewMailChefChantier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="@={viewModel.chefChantierSelectionne.mailContact}"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewNumChefChantier"
+                    tools:text="jeanjacques@gmail.com" />
+
+                <ImageView
+                    android:id="@+id/imageView8"
+                    android:layout_width="54dp"
+                    android:layout_height="52dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/textViewMailChefChantier"
+                    app:layout_constraintStart_toStartOf="@+id/start_guideline"
+                    app:layout_constraintTop_toTopOf="@+id/textViewIdentiteChefChantier"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <TextView
+                    android:id="@+id/textViewEquipe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Equipe"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+                    app:layout_constraintStart_toStartOf="@+id/start_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewMailChefChantier" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/personnelListeResume"
+                    android:layout_width="0dp"
+                    android:layout_height="300dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="64dp"
+                    android:scrollbars="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+                    app:layout_constraintStart_toStartOf="@+id/start_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewEquipe" />
+
+                <TextView
+                    android:id="@+id/textViewNumeroChantier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView7"
+                    android:text="@={viewModel.chantier.numeroChantier}"
+                    tools:text="123" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chantier N°"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toStartOf="@+id/textViewNumeroChantier"
+                    app:layout_constraintTop_toTopOf="@+id/textViewNumeroChantier" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.core.widget.NestedScrollView>
+
+        <Button
+            android:id="@+id/buttonModification"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:onClick="@{()-> viewModel.onClickButtonModifier()}"
+            android:text="modifier"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/buttonTerminer"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/buttonTerminer"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:onClick="@{()-> viewModel.onClickButtonCreationOrModificationEnded()}"
+            android:text="Terminer"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/buttonModification" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

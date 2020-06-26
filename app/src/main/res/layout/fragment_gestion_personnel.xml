@@ -13,39 +13,24 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
         tools:context=".personnel.gestionPersonnel.GestionPersonnelFragment">
-
-        <TextView
-            android:id="@+id/textViewAjoutOuEdition"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="Ajouter un membre au personnel"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintBottom_toTopOf="@+id/button3"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewAjoutOuEdition"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintTop_toTopOf="parent"
+            android:scrollbars="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayoutChamps"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#E9E5E8"
+                android:background="#00000000"
                 tools:context=".personnel.gestionPersonnel.GestionPersonnelFragment">
 
 
@@ -53,7 +38,7 @@
                     android:id="@+id/editTextPrenom"
                     android:layout_width="280dp"
                     android:layout_height="56dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="24dp"
                     android:ems="10"
                     android:hint="Prenom"
                     android:inputType="textPersonName"
@@ -101,7 +86,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="phone" />
+                        android:inputType="phone"
+                        android:text="@={viewModel.personnel.numContact}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -119,15 +105,16 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress" />
+                        android:inputType="textEmailAddress"
+                        android:text="@={viewModel.personnel.mailContact}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/switchChefEquipe"
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="48dp"
-                    android:checked="@={viewModel.personnel.fonction}"
+                    android:layout_marginTop="24dp"
+                    android:checked="@={viewModel.personnel.chefEquipe}"
                     android:onCheckedChanged="@{(_,i)->viewModel.onCheckedSwitchChefEquipeChanged(i)}"
                     android:text="Chef d'équipe "
                     android:textSize="18sp"
@@ -139,7 +126,10 @@
                     android:id="@+id/switchInterimaire"
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="16dp"
+
+                    android:checked="@={viewModel.personnel.interimaire}"
+                    android:onCheckedChanged="@{(_,i)->viewModel.onCheckedSwitchInterimaireChanged(i)}"
                     android:text="Intérimaire "
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -159,6 +149,44 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     app:layout_constraintGuide_end="16dp" />
+
+                <Button
+                    android:id="@+id/buttonAddPicture"
+                    style="?attr/materialButtonOutlinedStyle"
+                    isButtonAddPictureVisible="@{viewModel.personnel.urlPicturepersonnel}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="96dp"
+                    android:drawableTop="@drawable/ic_add_a_photo_black_128dp"
+                    android:onClick="@{()-> viewModel.onClickAjoutImage()}"
+                    android:text="Ajouter une photo"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+                    app:layout_constraintStart_toStartOf="@+id/start_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/switchInterimaire" />
+
+                <ImageView
+                    android:id="@+id/imageViewPicturePersonnel"
+                    imageUrl2="@{viewModel.imagePersonnel}"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="64dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/switchInterimaire"
+                    tools:srcCompat="@drawable/ic_person_black_24dp" />
+                <ImageButton
+                    android:id="@+id/imageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="@+id/imageViewPicturePersonnel"
+                    app:layout_constraintTop_toTopOf="@+id/imageViewPicturePersonnel"
+                    app:srcCompat="@drawable/ic_delete_black_24dp"
+                    isButtonDeleteVisible="@{viewModel.imagePersonnel}"
+                    android:onClick="@{()-> viewModel.onClickDeletePicture()}"/>
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
