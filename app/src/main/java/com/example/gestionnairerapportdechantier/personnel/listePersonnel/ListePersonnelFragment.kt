@@ -76,8 +76,7 @@ class ListePersonnelFragment : Fragment() {
                 }
                 ListePersonnelViewModel.navigationMenuPersonnel.MODIFICATION_PERSONNEL -> {
                     val action =
-                        ListePersonnelFragmentDirections.actionListePersonnelFragmentToGestionPersonnelFragment()
-                    action.idPersonnel = viewModel.idPersonnel.value!!
+                        ListePersonnelFragmentDirections.actionListePersonnelFragmentToGestionPersonnelFragment(viewModel.idPersonnel.value!!)
 
                     findNavController().navigate(action)
                     viewModel.onBoutonClicked()

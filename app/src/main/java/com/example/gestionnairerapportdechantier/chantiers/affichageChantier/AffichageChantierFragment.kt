@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.navigation.navGraphViewModels
 import com.example.gestionnairerapportdechantier.Database.GestionnaireDatabase
+import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.chantiers.affichageChantier.detailAffichageChantier.DetailAffichageChantierFragment
 import com.example.gestionnairerapportdechantier.databinding.FragmentAffichageChantierBinding
 import com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.GestionRapportChantierFragment
@@ -49,7 +49,7 @@ class AffichageChantierFragment : Fragment() {
         )
 
         //viewModel
-        val viewModel: AffichageChantierViewModel by activityViewModels{ viewModelFactory}
+        val viewModel: AffichageChantierViewModel by navGraphViewModels(R.id.AffichageChantierNavGraph){ viewModelFactory}
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 

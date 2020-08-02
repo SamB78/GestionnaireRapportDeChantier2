@@ -80,9 +80,9 @@ class ListeChantiersFragment : Fragment() {
                     Toast.makeText(activity, "Passage modification Chantier", Toast.LENGTH_SHORT)
                         .show()
 
-                    val action = ListeChantiersFragmentDirections.actionListeChantiersFragmentToAffichageChantierFragment()
+                    val action = ListeChantiersFragmentDirections.actionListeChantiersFragmentToAffichageChantierNavGraph(viewModel.idChantier.value!!)
 
-                    action.idChantier  = viewModel.idChantier.value!!
+
 
                     findNavController().navigate(action)
                     viewModel.onBoutonClicked()

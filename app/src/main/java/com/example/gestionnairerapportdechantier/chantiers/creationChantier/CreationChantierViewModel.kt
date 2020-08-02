@@ -57,7 +57,7 @@ class CreationChantierViewModel(
         get() = this._listePersonnelAAfficher
 
     //Liste personnel selectionné pour le chantier
-    var _listePersonnelChantier =   mutableListOf<Personnel>()
+    var _listePersonnelChantier = mutableListOf<Personnel>()
     var _listePersonnelChantierValide = MutableLiveData<List<Personnel>>()
     val listePersonnelChantierValide: LiveData<List<Personnel>>
         get() = this._listePersonnelChantierValide
@@ -65,12 +65,11 @@ class CreationChantierViewModel(
 
     //list Association Personnel - chantier
 
-    var associationPersonnelChantier = AssociationPersonnelChantier(0,0)
+    var associationPersonnelChantier = AssociationPersonnelChantier(0, 0)
 
 
     //Image Chantier
     var imageChantier = MutableLiveData<String>()
-
 
 
     //Navigation
@@ -131,8 +130,11 @@ class CreationChantierViewModel(
     fun onClickButtonCreationOrModificationEnded() {
 
         chantier.value?.adresseChantier = adresse.value!!
-        Timber.i("Chantier ready to save in DB = ${chantier.value?.nomChantier}")
-        if (chantier.value?.chantierId == null) sendNewDataToDB()
+        Timber.i("Chantier ready to save in DB = ${chantier.value?.nomChantier}, ${chantier.value?.chantierId}")
+        if (chantier.value?.chantierId == null){
+            Timber.i("Resultat = null")
+            sendNewDataToDB()
+        }
         else updateDataInDB()
 
         _navigation.value = gestionNavigation.ENREGISTREMENT_CHANTIER
@@ -147,13 +149,27 @@ class CreationChantierViewModel(
     }
 
     private fun sendNewDataToDB() {
+        val chantierTest = Chantier(
+            null,
+            "123456",
+            "Chantier de Chantilly",
+            Adresse("12 Rue Francis Carco", "78760", "Jouars"),
+            null,
+            "Henri",
+            null,
+            null,
+            1
+        )
+        var chantierId: Long? = null
         uiScope.launch {
             withContext(Dispatchers.IO) {
-               val chantierId =  dataSourceChantier.insert(chantier.value!!)
-                listePersonnelChantierValide.value?.forEach{
-                    associationPersonnelChantier = AssociationPersonnelChantier(it.personnelId!!, chantierId.toInt())
-                    dataSourceAssociationPersonnelChantier.insertAssociationPersonnelChantier(associationPersonnelChantier)
-                }
+                chantierId = dataSourceChantier.insert(chantier.value!!)
+                Timber.i("ChantierId = $chantierId")
+
+//                listePersonnelChantierValide.value?.forEach{
+//                    associationPersonnelChantier = AssociationPersonnelChantier(it.personnelId!!, chantierId.toInt())
+//                    dataSourceAssociationPersonnelChantier.insertAssociationPersonnelChantier(associationPersonnelChantier)
+//                }
             }
         }
     }
@@ -187,7 +203,7 @@ class CreationChantierViewModel(
 
                 } else {
                     it.isChecked = true
-                   _listePersonnelChantier.add(it)
+                    _listePersonnelChantier.add(it)
                     Timber.i("Personnel = $it")
 
                 }
@@ -201,12 +217,11 @@ class CreationChantierViewModel(
     }
 
 
-
-    fun onClickChoixEquipeValide(){
+    fun onClickChoixEquipeValide() {
         _listePersonnelChantierValide.value = _listePersonnelChantier
 
         Timber.i("Element _listePersonnelChantierValide dans le Timber suivant ")
-        _listePersonnelChantier.forEach{
+        _listePersonnelChantier.forEach {
             Timber.i("Element _listePersonnelChantierValide = $it ")
         }
         _navigation.value = gestionNavigation.CONFIRMATION_ETAPE3
@@ -233,25 +248,26 @@ class CreationChantierViewModel(
         _navigation.value = gestionNavigation.PASSAGE_ETAPE4
     }
 
-    fun onClickAjoutImage(){
+    fun onClickAjoutImage() {
         _navigation.value = gestionNavigation.AJOUT_IMAGE
     }
 
-    fun ajoutPathImage(imagePath: String){
+    fun ajoutPathImage(imagePath: String) {
         chantier.value!!.urlPictureChantier = imagePath
         imageChantier.value = imagePath
         Timber.i("imagePath: $imagePath, chantier.value.url: ${chantier.value?.urlPictureChantier}")
     }
 
-    fun onClickConfirmationEtapeImage(){
+    fun onClickConfirmationEtapeImage() {
+        sendNewDataToDB()
         _navigation.value = gestionNavigation.PASSAGE_ETAPE_RESUME
     }
 
-    fun onClickButtonModifier(){
+    fun onClickButtonModifier() {
         _navigation.value = gestionNavigation.MODIFICATION
     }
 
-    fun onClickDeletePicture(){
+    fun onClickDeletePicture() {
         chantier.value?.urlPictureChantier = null
         imageChantier?.value = null
     }

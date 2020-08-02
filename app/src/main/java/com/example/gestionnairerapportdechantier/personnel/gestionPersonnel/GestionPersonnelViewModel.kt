@@ -97,11 +97,14 @@ class GestionPersonnelViewModel(private val dataSource: PersonnelDao, id: Long =
 
 
     private fun sendNewDataToDB() {
+        var personnelId: Long? = null
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                dataSource.insertPersonnel(personnel.value!!)
+                personnelId = dataSource.insertPersonnel(personnel.value!!)
+                Timber.i("PersonnelId  = $personnelId")
             }
         }
+
     }
 
     fun onClickButtonAnnuler() {

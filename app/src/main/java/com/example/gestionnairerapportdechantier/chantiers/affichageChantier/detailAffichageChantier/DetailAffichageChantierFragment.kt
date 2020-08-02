@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
+import androidx.navigation.navGraphViewModels
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.chantiers.affichageChantier.AffichageChantierViewModel
 import com.example.gestionnairerapportdechantier.databinding.FragmentDetailAffichageChantierBinding
@@ -16,7 +16,7 @@ import com.example.gestionnairerapportdechantier.databinding.FragmentDetailAffic
 
 class DetailAffichageChantierFragment : Fragment() {
 
-    val viewModel: AffichageChantierViewModel by activityViewModels()
+    val viewModel: AffichageChantierViewModel by navGraphViewModels(R.id.AffichageChantierNavGraph)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
