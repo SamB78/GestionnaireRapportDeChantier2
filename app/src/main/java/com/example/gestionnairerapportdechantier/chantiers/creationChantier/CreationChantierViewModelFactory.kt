@@ -2,9 +2,9 @@ package com.example.gestionnairerapportdechantier.chantiers.creationChantier
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.gestionnairerapportdechantier.Database.AssociationPersonnelChantierDao
-import com.example.gestionnairerapportdechantier.Database.ChantierDao
-import com.example.gestionnairerapportdechantier.Database.PersonnelDao
+import com.example.gestionnairerapportdechantier.database.AssociationPersonnelChantierDao
+import com.example.gestionnairerapportdechantier.database.ChantierDao
+import com.example.gestionnairerapportdechantier.database.PersonnelDao
 
 class CreationChantierViewModelFactory(
     private val dataSourceChantier: ChantierDao,

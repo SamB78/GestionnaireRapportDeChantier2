@@ -11,7 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.gestionnairerapportdechantier.Database.GestionnaireDatabase
+import com.example.gestionnairerapportdechantier.database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentListeChantiersBinding
 import timber.log.Timber
@@ -31,8 +31,8 @@ class ListeChantiersFragment : Fragment() {
 
         //ViewModelFactory
         val application = requireNotNull(this.activity).application
-        val dataSourceChantier = GestionnaireDatabase.getInstance(application).ChantierDao
-        val dataSourceAssociationPersonnelChantier = GestionnaireDatabase.getInstance(application).AssociationPersonnelChantierDao
+        val dataSourceChantier = GestionnaireDatabase.getInstance(application).chantierDao
+        val dataSourceAssociationPersonnelChantier = GestionnaireDatabase.getInstance(application).associationPersonnelChantierDao
         val viewModelFactory =
             ListeChantiersViewModelFactory(
                 dataSourceChantier,

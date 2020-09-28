@@ -3,8 +3,8 @@ package com.example.gestionnairerapportdechantier.chantiers.listeChantiers
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.gestionnairerapportdechantier.Database.AssociationPersonnelChantierDao
-import com.example.gestionnairerapportdechantier.Database.ChantierDao
+import com.example.gestionnairerapportdechantier.database.AssociationPersonnelChantierDao
+import com.example.gestionnairerapportdechantier.database.ChantierDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

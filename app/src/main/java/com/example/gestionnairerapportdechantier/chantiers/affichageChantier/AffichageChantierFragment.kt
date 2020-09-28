@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.navGraphViewModels
-import com.example.gestionnairerapportdechantier.Database.GestionnaireDatabase
+import com.example.gestionnairerapportdechantier.database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.chantiers.affichageChantier.detailAffichageChantier.DetailAffichageChantierFragment
 import com.example.gestionnairerapportdechantier.databinding.FragmentAffichageChantierBinding
-import com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.GestionRapportChantierFragment
+import com.example.gestionnairerapportdechantier.rapportChantier.listeRapportsChantier.listeRapportsChantierFragment
 import com.google.android.material.tabs.TabLayoutMediator
 
 /**
@@ -20,7 +20,7 @@ class AffichageChantierFragment : Fragment() {
 
     private val fragmentList = arrayListOf(
         DetailAffichageChantierFragment(),
-        GestionRapportChantierFragment()
+        listeRapportsChantierFragment()
     )
 
     private lateinit var viewModelFactory: AffichageChantierViewModelFactory
@@ -35,21 +35,24 @@ class AffichageChantierFragment : Fragment() {
 
         //ViewModelFactory
         val application = requireNotNull(this.activity).application
-        val dataSourceChantier = GestionnaireDatabase.getInstance(application).ChantierDao
+        val dataSourceChantier = GestionnaireDatabase.getInstance(application).chantierDao
         val dataSourceAssociationPersonnelChantier =
-            GestionnaireDatabase.getInstance(application).AssociationPersonnelChantierDao
-        val dataSourcePersonnel = GestionnaireDatabase.getInstance(application).PersonnelDao
+            GestionnaireDatabase.getInstance(application).associationPersonnelChantierDao
+        val dataSourcePersonnel = GestionnaireDatabase.getInstance(application).personnelDao
+        val dataSourceRapportChantier =
+            GestionnaireDatabase.getInstance(application).rapportChantierDao
         val chantierId = AffichageChantierFragmentArgs.fromBundle(arguments!!).idChantier
 
         viewModelFactory = AffichageChantierViewModelFactory(
             dataSourceChantier,
             dataSourceAssociationPersonnelChantier,
             dataSourcePersonnel,
+            dataSourceRapportChantier,
             chantierId
         )
 
         //viewModel
-        val viewModel: AffichageChantierViewModel by navGraphViewModels(R.id.AffichageChantierNavGraph){ viewModelFactory}
+        val viewModel: AffichageChantierViewModel by navGraphViewModels(R.id.AffichageChantierNavGraph) { viewModelFactory }
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 

@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
-import com.example.gestionnairerapportdechantier.Database.GestionnaireDatabase
+import com.example.gestionnairerapportdechantier.database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentCreationChantier1Binding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -62,9 +62,9 @@ class CreationChantier1Fragment : Fragment() {
 
         //ViewModelFactory
         val application = requireNotNull(this.activity).application
-        val dataSourceChantier = GestionnaireDatabase.getInstance(application).ChantierDao
-        val dataSourcePersonnel = GestionnaireDatabase.getInstance(application).PersonnelDao
-        val dataSourceAssociationPersonnelChantier = GestionnaireDatabase.getInstance(application).AssociationPersonnelChantierDao
+        val dataSourceChantier = GestionnaireDatabase.getInstance(application).chantierDao
+        val dataSourcePersonnel = GestionnaireDatabase.getInstance(application).personnelDao
+        val dataSourceAssociationPersonnelChantier = GestionnaireDatabase.getInstance(application).associationPersonnelChantierDao
         val idChantier = CreationChantier1FragmentArgs.fromBundle(arguments!!).idChantier
         viewModelFactory = CreationChantierViewModelFactory(dataSourceChantier,dataSourcePersonnel,dataSourceAssociationPersonnelChantier, idChantier)
 

@@ -7,7 +7,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.gestionnairerapportdechantier.chantiers.affichageChantier.detailAffichageChantier.DetailAffichageChantierFragment
 import com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.GestionRapportChantierFragment
 
-class AffichageChantierViewerPagerAdapter(fragment: Fragment, private val fragments:ArrayList<Fragment>): FragmentStateAdapter(fragment) {
+class AffichageChantierViewerPagerAdapter(
+    fragment: Fragment,
+    private val fragments: ArrayList<Fragment>
+) : FragmentStateAdapter(fragment) {
 
     override fun createFragment(position: Int): Fragment = fragments[position]
 

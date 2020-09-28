@@ -2,14 +2,16 @@ package com.example.gestionnairerapportdechantier.chantiers.affichageChantier
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.gestionnairerapportdechantier.Database.AssociationPersonnelChantierDao
-import com.example.gestionnairerapportdechantier.Database.ChantierDao
-import com.example.gestionnairerapportdechantier.Database.PersonnelDao
+import com.example.gestionnairerapportdechantier.database.AssociationPersonnelChantierDao
+import com.example.gestionnairerapportdechantier.database.ChantierDao
+import com.example.gestionnairerapportdechantier.database.PersonnelDao
+import com.example.gestionnairerapportdechantier.database.RapportChantierDao
 
 class AffichageChantierViewModelFactory(
     private val dataSourceChantier: ChantierDao,
     private val dataSourceAssociationPersonnelChantier: AssociationPersonnelChantierDao,
     private val dataSourcePersonnel: PersonnelDao,
+    private val dataSourceRapporChantier: RapportChantierDao,
     private val chantierId: Long = -1
 
 ) : ViewModelProvider.Factory {
@@ -19,6 +21,7 @@ class AffichageChantierViewModelFactory(
                 dataSourceChantier,
                 dataSourceAssociationPersonnelChantier,
                 dataSourcePersonnel,
+                dataSourceRapporChantier,
                 chantierId
             ) as T
         }

@@ -3,9 +3,9 @@ package com.example.gestionnairerapportdechantier.chantiers.affichageChantier.de
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.gestionnairerapportdechantier.Database.AssociationPersonnelChantierDao
-import com.example.gestionnairerapportdechantier.Database.ChantierDao
-import com.example.gestionnairerapportdechantier.Database.PersonnelDao
+import com.example.gestionnairerapportdechantier.database.AssociationPersonnelChantierDao
+import com.example.gestionnairerapportdechantier.database.ChantierDao
+import com.example.gestionnairerapportdechantier.database.PersonnelDao
 import com.example.gestionnairerapportdechantier.entities.Adresse
 import com.example.gestionnairerapportdechantier.entities.Chantier
 import com.example.gestionnairerapportdechantier.entities.Personnel
@@ -34,10 +34,10 @@ class DetailAffichageChantierViewModel(
 
 
     //Liste personnel selectionné pour le chantier
-    var _listePersonnelChantier =   mutableListOf<Personnel>()
     var _listePersonnelChantierValide = MutableLiveData<List<Personnel>>()
     val listePersonnelChantierValide: LiveData<List<Personnel>>
         get() = this._listePersonnelChantierValide
+
 
 
     init {
@@ -51,6 +51,7 @@ class DetailAffichageChantierViewModel(
                 chantier.value = getChantierValue(id)
                 adresse.value = chantier.value!!.adresseChantier
                 _chefChantierSelectionne.value = getChefChantierValue(chantier.value!!.chefChantierId)
+                _listePersonnelChantierValide.value = initializeDataPersonnel()
             }
         } else {
             chantier.value = Chantier()
@@ -73,9 +74,20 @@ class DetailAffichageChantierViewModel(
         }
     }
 
-    private fun initializeDataPersonnel() {
-        uiScope.launch {
-           TODO("Implémenter la liste du personnel grace a lassociation")
+    private suspend fun initializeDataPersonnel(): List<Personnel>? {
+        return withContext(Dispatchers.IO) {
+            Timber.i("Entrée initializeDataPersonnel")
+           var listeAssociation = chantier.value?.chantierId?.let {
+               dataSourceAssociationPersonnelChantier.getAssociationPersonnelChantierIdByChantierId(
+                   it
+               )
+           }
+            Timber.i(" listeAssociation: Affichage")
+            listeAssociation?.forEach {
+                Timber.i("listeAssociation =  $it")
+            }
+            var listePersonnel = listeAssociation?.let { dataSourcePersonnel.getPersonnelsByIds(it) }
+            listePersonnel
         }
     }
 

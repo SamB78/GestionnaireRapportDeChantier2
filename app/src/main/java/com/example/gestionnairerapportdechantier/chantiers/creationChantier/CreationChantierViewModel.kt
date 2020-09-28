@@ -3,9 +3,9 @@ package com.example.gestionnairerapportdechantier.chantiers.creationChantier
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.gestionnairerapportdechantier.Database.AssociationPersonnelChantierDao
-import com.example.gestionnairerapportdechantier.Database.ChantierDao
-import com.example.gestionnairerapportdechantier.Database.PersonnelDao
+import com.example.gestionnairerapportdechantier.database.AssociationPersonnelChantierDao
+import com.example.gestionnairerapportdechantier.database.ChantierDao
+import com.example.gestionnairerapportdechantier.database.PersonnelDao
 import com.example.gestionnairerapportdechantier.entities.Adresse
 import com.example.gestionnairerapportdechantier.entities.AssociationPersonnelChantier
 import com.example.gestionnairerapportdechantier.entities.Chantier
@@ -166,10 +166,10 @@ class CreationChantierViewModel(
                 chantierId = dataSourceChantier.insert(chantier.value!!)
                 Timber.i("ChantierId = $chantierId")
 
-//                listePersonnelChantierValide.value?.forEach{
-//                    associationPersonnelChantier = AssociationPersonnelChantier(it.personnelId!!, chantierId.toInt())
-//                    dataSourceAssociationPersonnelChantier.insertAssociationPersonnelChantier(associationPersonnelChantier)
-//                }
+                listePersonnelChantierValide.value?.forEach{
+                    associationPersonnelChantier = AssociationPersonnelChantier(it.personnelId!!, chantierId!!.toInt())
+                    dataSourceAssociationPersonnelChantier.insertAssociationPersonnelChantier(associationPersonnelChantier)
+                }
             }
         }
     }

@@ -2,9 +2,8 @@ package com.example.gestionnairerapportdechantier.chantiers.listeChantiers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.gestionnairerapportdechantier.Database.AssociationPersonnelChantierDao
-import com.example.gestionnairerapportdechantier.Database.ChantierDao
-import com.example.gestionnairerapportdechantier.personnel.listePersonnel.ListePersonnelViewModel
+import com.example.gestionnairerapportdechantier.database.AssociationPersonnelChantierDao
+import com.example.gestionnairerapportdechantier.database.ChantierDao
 
 class ListeChantiersViewModelFactory (private val dataSource: ChantierDao, private val dataSourceAssociationPersonnelChantier: AssociationPersonnelChantierDao): ViewModelProvider.Factory{
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
