@@ -2,7 +2,7 @@ package com.example.gestionnairerapportdechantier.personnel.gestionPersonnel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.gestionnairerapportdechantier.Database.PersonnelDao
+import com.example.gestionnairerapportdechantier.database.PersonnelDao
 
 class GestionPersonnelViewModelFactory(
     private val dataSource: PersonnelDao,

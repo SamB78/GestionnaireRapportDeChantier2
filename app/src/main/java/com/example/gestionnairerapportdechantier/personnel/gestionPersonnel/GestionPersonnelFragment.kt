@@ -17,11 +17,11 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.example.gestionnairerapportdechantier.Database.GestionnaireDatabase
+import com.example.gestionnairerapportdechantier.database.GestionnaireDatabase
+
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentGestionPersonnelBinding
 import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.fragment_gestion_personnel.*
 import timber.log.Timber
 import java.io.File
 import java.io.IOException
@@ -46,7 +46,7 @@ class GestionPersonnelFragment : Fragment() {
 
         //ViewModelFactory
         val application = requireNotNull(this.activity).application
-        val dataSource = GestionnaireDatabase.getInstance(application).PersonnelDao
+        val dataSource = GestionnaireDatabase.getInstance(application).personnelDao
         val idPersonnel = GestionPersonnelFragmentArgs.fromBundle(arguments!!).idPersonnel
         viewModelFactory = GestionPersonnelViewModelFactory(dataSource, idPersonnel)
 

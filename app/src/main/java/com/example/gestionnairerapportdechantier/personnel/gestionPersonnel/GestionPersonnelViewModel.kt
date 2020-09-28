@@ -3,7 +3,7 @@ package com.example.gestionnairerapportdechantier.personnel.gestionPersonnel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.gestionnairerapportdechantier.Database.PersonnelDao
+import com.example.gestionnairerapportdechantier.database.PersonnelDao
 import com.example.gestionnairerapportdechantier.entities.Personnel
 import kotlinx.coroutines.*
 import timber.log.Timber
