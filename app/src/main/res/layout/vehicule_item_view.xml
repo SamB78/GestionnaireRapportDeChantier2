@@ -4,15 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
-            name="personnel"
-            type="com.example.gestionnairerapportdechantier.entities.Personnel" />
-
+            name="vehicule"
+            type="com.example.gestionnairerapportdechantier.entities.Vehicule" />
         <variable
             name="clickListener"
-            type="com.example.gestionnairerapportdechantier.personnel.listePersonnel.ListePersonnelListener" />
-
+            type="com.example.gestionnairerapportdechantier.vehicules.listeVehicules.ListeVehiculeListener"/>
 
     </data>
 
@@ -24,7 +21,6 @@
         android:focusable="true"
         android:checkable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        app:clickedElement="@{personnel.checked}"
         app:cardCornerRadius="3dp"
         android:layout_margin="4dp">
 
@@ -32,7 +28,7 @@
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> clickListener.onClick(personnel)}">
+            android:onClick="@{() -> clickListener.onClick(vehicule)}">
 
             <TextView
                 android:id="@+id/prenom"
@@ -42,29 +38,17 @@
                 android:layout_marginLeft="8dp"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toTopOf="@+id/numero"
-                app:layout_constraintStart_toEndOf="@+id/imageViewPersonnel"
+                app:layout_constraintStart_toEndOf="@+id/imageViewvehicule"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="@{personnel.prenom}"
-                tools:text="Sam" />
+                android:text="@{vehicule.modele}"
+                tools:text="Mercedes Classe G" />
 
-            <TextView
-                android:id="@+id/nom"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginLeft="4dp"
-                android:textSize="24sp"
-                app:layout_constraintBottom_toTopOf="@+id/numero"
-                app:layout_constraintStart_toEndOf="@+id/prenom"
-                app:layout_constraintTop_toTopOf="parent"
-                android:text="@{personnel.nom}"
-                tools:text="Bertrand" />
 
             <TextView
                 android:id="@+id/numero"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{personnel.numContact}"
+                android:text="@{vehicule.immatriculation}"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/role"
                 app:layout_constraintStart_toStartOf="@+id/prenom"
@@ -79,20 +63,18 @@
                 app:layout_constraintStart_toStartOf="@+id/numero"
                 app:layout_constraintTop_toBottomOf="@+id/numero"
                 tools:text="Chef d'équipe"
-                personnelRole="@{personnel}"/>
+                android:text="@{vehicule.type}"/>
 
             <ImageView
-                android:id="@+id/imageViewPersonnel"
-                imageUrlItemViewPersonnel="@{personnel.urlPicturepersonnel}"
+                android:id="@+id/imageViewvehicule"
+                imageUrlItemViewPersonnel="@{vehicule.urlPictureVehicule}"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/avatars"
-
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
-
 </layout>

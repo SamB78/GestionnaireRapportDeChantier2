@@ -11,10 +11,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.gestionnairerapportdechantier.Database.GestionnaireDatabase
+import com.example.gestionnairerapportdechantier.database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentListePersonnelBinding
-import timber.log.Timber
 
 /**
  * A simple [Fragment] subclass.
@@ -32,7 +31,7 @@ class ListePersonnelFragment : Fragment() {
 
         //ViewModelFactory
         val application = requireNotNull(this.activity).application
-        val dataSource = GestionnaireDatabase.getInstance(application).PersonnelDao
+        val dataSource = GestionnaireDatabase.getInstance(application).personnelDao
         val viewModelFactory =
             ListePersonnelViewModelFactory(
                 dataSource
@@ -55,7 +54,6 @@ class ListePersonnelFragment : Fragment() {
 
         val manager = GridLayoutManager(activity, 1, GridLayoutManager.VERTICAL, false)
         binding.personnelListe.layoutManager = manager
-
 
         // Affichage liste Personnel dans RecyclerView
         viewModel.listePersonnel.observe(viewLifecycleOwner, Observer { listePersonnel ->

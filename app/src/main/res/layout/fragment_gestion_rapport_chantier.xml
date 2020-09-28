@@ -16,13 +16,67 @@
         android:layout_height="match_parent"
         tools:context=".rapportChantier.gestionRapportChantier.GestionRapportChantierFragment">
 
-
-        <TextView
-            android:id="@+id/textView3"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/start_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Gestion rapport chantier"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/end_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
+
+        <TextView
+            android:id="@+id/textViewNomChantier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@{viewModel.chantier.nomChantier}"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+            app:layout_constraintStart_toStartOf="@+id/start_guideline"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Chantier de la gare" />
+
+        <TextView
+            android:id="@+id/textViewDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            showDate="@{viewModel._rapportChantier.dateRapportChantier}"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewTextDate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textViewTextDate"
+            tools:text="12 Janvier 2020" />
+
+        <TextView
+            android:id="@+id/textViewTextDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Rapport de chantier du "
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/textViewDate"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewNomChantier" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Gestion du personnel"
+            app:layout_constraintEnd_toStartOf="@+id/end_guideline"
+            app:layout_constraintStart_toStartOf="@+id/start_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/textViewTextDate"
+            android:onClick="@{()-> viewModel.onClickButtonGestionPersonnel()}"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

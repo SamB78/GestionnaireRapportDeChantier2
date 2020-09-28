@@ -1,12 +1,10 @@
-package com.example.gestionnairerapportdechantier.Database
+package com.example.gestionnairerapportdechantier.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.example.gestionnairerapportdechantier.entities.AssociationPersonnelChantier
-import com.example.gestionnairerapportdechantier.entities.Chantier
 import com.example.gestionnairerapportdechantier.entities.Personnel
 
 @Dao
@@ -32,6 +30,6 @@ interface PersonnelDao {
     fun getChefsdeChantier(): LiveData<List<Personnel>>
 
     @Query("SELECT * FROM personnel WHERE personnel_id IN (:listIds)")
-    fun getPersonnelsByIds(listIds: List<Long>): List<Personnel>
+    fun getPersonnelsByIds(listIds: List<Int>): List<Personnel>
 
 }

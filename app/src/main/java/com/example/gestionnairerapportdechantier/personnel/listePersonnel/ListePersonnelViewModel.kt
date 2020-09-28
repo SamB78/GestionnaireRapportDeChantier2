@@ -1,10 +1,8 @@
 package com.example.gestionnairerapportdechantier.personnel.listePersonnel
 
 import androidx.lifecycle.*
-import com.example.gestionnairerapportdechantier.Database.PersonnelDao
-import com.example.gestionnairerapportdechantier.entities.Personnel
+import com.example.gestionnairerapportdechantier.database.PersonnelDao
 import kotlinx.coroutines.*
-import timber.log.Timber
 
 
 class ListePersonnelViewModel(private val dataSource: PersonnelDao): ViewModel(){

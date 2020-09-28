@@ -2,7 +2,7 @@ package com.example.gestionnairerapportdechantier.rapportChantier.listeRapportsC
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.gestionnairerapportdechantier.Database.RapportChantierDao
+import com.example.gestionnairerapportdechantier.database.RapportChantierDao
 
 class ListeRapportsChantierViewModelFactory(
     private val dataSource: RapportChantierDao

@@ -1,4 +1,4 @@
-package com.example.gestionnairerapportdechantier.Database
+package com.example.gestionnairerapportdechantier.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -16,10 +16,10 @@ interface ChantierDao {
     @Update
     fun update(chantier: Chantier)
 
-    @Query("SELECT * FROM rapportChantier")
+    @Query("SELECT * FROM chantier")
     fun getAllFromChantier(): LiveData<List<Chantier>>
 
-    @Query("SELECT * FROM rapportChantier WHERE chantier_id = :id")
+    @Query("SELECT * FROM chantier WHERE chantier_id = :id")
     fun getChantierById(id: Long): Chantier
 
 

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.example.gestionnairerapportdechantier.mainMenu.MainMenuViewModel" />
@@ -18,11 +19,10 @@
             android:id="@+id/button_gestion_personnel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="250dp"
             android:onClick="@{()-> viewModel.onClickBoutonPersonnel()}"
             android:text="Gestion du Personnel"
+            app:layout_constraintBottom_toTopOf="@+id/button_gestion_chantiers"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.569"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,23 +30,42 @@
             android:id="@+id/button_gestion_chantiers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
             android:onClick="@{()-> viewModel.onClickBoutonChantier()}"
             android:text="Gestion des chantiers"
-            app:layout_constraintEnd_toEndOf="@+id/button_gestion_personnel"
+            app:layout_constraintBottom_toTopOf="@+id/button_gestion_rapport_chantiers"
             app:layout_constraintStart_toStartOf="@+id/button_gestion_personnel"
             app:layout_constraintTop_toBottomOf="@+id/button_gestion_personnel" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/button_gestion_rapport_chantiers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:onClick="@{()-> viewModel.onClickBoutonRapportsChantier()}"
             android:text="Rapports de Chantier"
-            app:layout_constraintEnd_toEndOf="@+id/button_gestion_chantiers"
-            app:layout_constraintHorizontal_bias="0.48"
+            app:layout_constraintBottom_toTopOf="@+id/button_gestion_vehicules"
             app:layout_constraintStart_toStartOf="@+id/button_gestion_chantiers"
-            app:layout_constraintTop_toBottomOf="@+id/button_gestion_chantiers"
-            android:onClick="@{()-> viewModel.onClickBoutonRapportsChantier()}"/>
+            app:layout_constraintTop_toBottomOf="@+id/button_gestion_chantiers" />
+
+        <Button
+            android:id="@+id/button_gestion_vehicules"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{()-> viewModel.onClickButtonVehicules()}"
+            android:text="Gestion des Véhicules"
+            app:layout_constraintBottom_toTopOf="@+id/button_gestion_materiel"
+            app:layout_constraintEnd_toEndOf="@+id/button_gestion_rapport_chantiers"
+            app:layout_constraintStart_toStartOf="@+id/button_gestion_rapport_chantiers"
+            app:layout_constraintTop_toBottomOf="@+id/button_gestion_rapport_chantiers" />
+
+        <Button
+            android:id="@+id/button_gestion_materiel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{()-> viewModel.onClickButtonMateriel()}"
+            android:text="Gestion du Matériel"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/button_gestion_vehicules"
+            app:layout_constraintStart_toStartOf="@+id/button_gestion_vehicules"
+            app:layout_constraintTop_toBottomOf="@+id/button_gestion_vehicules" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

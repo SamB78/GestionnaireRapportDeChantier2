@@ -10,7 +10,9 @@ class MainMenuViewModel: ViewModel() {
         EN_ATTENTE,
         PASSAGE_PAGE_PERSONNEL,
         PASSAGE_PAGE_CHANTIERS,
-        PASSAGE_PAGE_RAPPORTS_CHANTIER
+        PASSAGE_PAGE_RAPPORTS_CHANTIER,
+        PASSAGE_PAGE_VEHICULES,
+        PASSAGE_PAGE_MATERIEL
     }
 
     private var _navigation = MutableLiveData<navigationMainMenu>()
@@ -31,6 +33,14 @@ class MainMenuViewModel: ViewModel() {
 
     fun onClickBoutonRapportsChantier(){
         _navigation.value = navigationMainMenu.PASSAGE_PAGE_RAPPORTS_CHANTIER
+    }
+
+    fun onClickButtonVehicules(){
+        _navigation.value = navigationMainMenu.PASSAGE_PAGE_VEHICULES
+    }
+
+    fun onClickButtonMateriel(){
+        _navigation.value = navigationMainMenu.PASSAGE_PAGE_MATERIEL
     }
 
     fun onBoutonClicked(){

@@ -11,8 +11,7 @@
 
         <variable
             name="clickListener"
-            type="com.example.gestionnairerapportdechantier.personnel.listePersonnel.ListePersonnelListener" />
-
+            type="com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.gestionPersonnel.GestionHeuresPersonnelListener" />
 
     </data>
 
@@ -20,31 +19,30 @@
         android:id="@+id/card_view1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
+        android:layout_margin="4dp"
         android:checkable="true"
+        android:clickable="false"
+        android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        app:clickedElement="@{personnel.checked}"
         app:cardCornerRadius="3dp"
-        android:layout_margin="4dp">
+        app:clickedElement="@{personnel.checked}"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="@{() -> clickListener.onClick(personnel)}">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/prenom"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
+                android:text="@{personnel.prenom}"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toTopOf="@+id/numero"
                 app:layout_constraintStart_toEndOf="@+id/imageViewPersonnel"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="@{personnel.prenom}"
                 tools:text="Sam" />
 
             <TextView
@@ -52,47 +50,67 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:layout_marginLeft="4dp"
+                android:text="@{personnel.nom}"
                 android:textSize="24sp"
-                app:layout_constraintBottom_toTopOf="@+id/numero"
                 app:layout_constraintStart_toEndOf="@+id/prenom"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="@{personnel.nom}"
                 tools:text="Bertrand" />
 
-            <TextView
-                android:id="@+id/numero"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@{personnel.numContact}"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toTopOf="@+id/role"
-                app:layout_constraintStart_toStartOf="@+id/prenom"
-                app:layout_constraintTop_toBottomOf="@+id/nom"
-                tools:text="06 51 84 33 15" />
 
             <TextView
                 android:id="@+id/role"
+                personnelRole="@{personnel}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@+id/numero"
-                app:layout_constraintTop_toBottomOf="@+id/numero"
-                tools:text="Chef d'équipe"
-                personnelRole="@{personnel}"/>
+                app:layout_constraintStart_toStartOf="@+id/prenom"
+                app:layout_constraintTop_toBottomOf="@+id/nom"
+                tools:text="Chef d'équipe" />
 
             <ImageView
                 android:id="@+id/imageViewPersonnel"
                 imageUrlItemViewPersonnel="@{personnel.urlPicturepersonnel}"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:onClick="@{() -> clickListener.onClickPlus(personnel)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars"
+                tools:srcCompat="@tools:sample/avatars" />
 
-                />
+            <ImageButton
+                android:id="@+id/imageButton2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:onClick="@{() -> clickListener.onClickPlus(personnel)}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/ic_add_black_24dp" />
+
+            <ImageButton
+                android:id="@+id/imageButton3"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:onClick="@{() -> clickListener.onClickMoins(personnel)}"
+                app:layout_constraintEnd_toStartOf="@+id/editTextNumber"
+                app:layout_constraintTop_toTopOf="@+id/imageButton2"
+                app:srcCompat="@drawable/ic_baseline_remove_24" />
+
+            <TextView
+                android:id="@+id/editTextNumber"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:ems="10"
+                android:gravity="center"
+                android:text="@{`` +personnel.nombreHeuresTravaillees}"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toStartOf="@+id/imageButton2"
+                app:layout_constraintTop_toTopOf="@+id/imageButton2"
+                tools:text="0" />
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
-
 </layout>

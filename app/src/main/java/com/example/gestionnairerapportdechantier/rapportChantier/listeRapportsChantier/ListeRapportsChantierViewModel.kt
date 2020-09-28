@@ -3,16 +3,18 @@ package com.example.gestionnairerapportdechantier.rapportChantier.listeRapportsC
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.gestionnairerapportdechantier.Database.RapportChantierDao
+import com.example.gestionnairerapportdechantier.database.RapportChantierDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 
-class ListeRapportsChantierViewModel(private val dataSource: RapportChantierDao) : ViewModel() {
+class ListeRapportsChantierViewModel(private val dataSourceRapporChantier: RapportChantierDao) : ViewModel() {
 
     enum class navigationMenu {
         CREATION,
         MODIFICATION,
+        AJOUT,
+        SELECTION_DATE,
         EN_ATTENTE
     }
 
@@ -21,7 +23,7 @@ class ListeRapportsChantierViewModel(private val dataSource: RapportChantierDao)
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
 
-    var listeRapportChantier = dataSource.getAllFromChantier()
+    var listeRapportChantier = dataSourceRapporChantier.getAllFromChantier()
 
     private var _navigation = MutableLiveData<navigationMenu>()
     val navigation: LiveData<navigationMenu>
@@ -36,6 +38,10 @@ class ListeRapportsChantierViewModel(private val dataSource: RapportChantierDao)
     }
 
     fun onClickBoutonAjoutRapportChantier(){
+        _navigation.value = navigationMenu.SELECTION_DATE
+    }
+
+    fun onDateSelected(){
         _navigation.value = navigationMenu.CREATION
     }
 

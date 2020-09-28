@@ -4,7 +4,7 @@ import androidx.room.*
 import com.example.gestionnairerapportdechantier.entities.Adresse
 
 @Entity(
-    tableName = "rapportChantier"
+    tableName = "chantier"
 
 //    ,
 //    foreignKeys = arrayOf(

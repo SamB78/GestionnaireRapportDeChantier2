@@ -1,26 +1,36 @@
-package com.example.gestionnairerapportdechantier.Database
+package com.example.gestionnairerapportdechantier.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.gestionnairerapportdechantier.entities.*
+
 
 @Database(
     entities = [Chantier::class,
         Personnel::class,
-        AssociationPersonnelRapportJournalierChantier::class,
-        RapportJournalierChantier::class,
+        AssociationPersonnelRapportChantier::class,
         RapportChantier::class,
-        AssociationPersonnelChantier::class],
-    version = 17, exportSchema = false)
+        AssociationPersonnelChantier::class,
+        Vehicule::class,
+        Materiel::class],
+    version = 24, exportSchema = false
+)
+
+@TypeConverters(LocalDateTimeConverter::class)
 
 abstract class GestionnaireDatabase : RoomDatabase() {
 
-    abstract val ChantierDao: ChantierDao
-    abstract val PersonnelDao: PersonnelDao
-    abstract  val RapportChantierDao: RapportChantierDao
-    abstract val AssociationPersonnelChantierDao: AssociationPersonnelChantierDao
+    abstract val chantierDao: ChantierDao
+    abstract val personnelDao: PersonnelDao
+    abstract val vehiculeDao: VehiculeDao
+    abstract val materielDao: MaterielDao
+    abstract val rapportChantierDao: RapportChantierDao
+    abstract val associationPersonnelChantierDao: AssociationPersonnelChantierDao
+    abstract val associationPersonnelRapportChantierDao: AssociationPersonnelRapportChantierDao
+
 
     companion object {
 

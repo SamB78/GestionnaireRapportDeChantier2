@@ -79,18 +79,6 @@ class ViewHolder private constructor(val binding: PersonnelItemViewBinding) :
     ) {
         binding.clickListener = clickListener
         binding.personnel = item
-//        binding.nomPrenom.text = item.prenom + " " + item.nom
-//        binding.numero.text = item.numContact
-//
-//        if(item.chefEquipe)
-//        {
-//            binding.role.text = "Chef d'équipe"
-//        }else if(item.interimaire)
-//        {
-//            binding.role.text = "Intérimaire"
-//        }else{
-//            binding.role.text = "Employé"
-//        }
     }
 }
 

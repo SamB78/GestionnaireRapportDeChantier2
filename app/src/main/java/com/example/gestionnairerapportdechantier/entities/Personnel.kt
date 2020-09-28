@@ -17,11 +17,13 @@ data class Personnel(
     var interimaire: Boolean = false,
     var urlPicturepersonnel: String? = null,
     @Ignore
-    var isChecked: Boolean = false
+    var isChecked: Boolean = false,
+    @Ignore
+    var nombreHeuresTravaillees: Int = 0
 )
 
 @Entity(
-    tableName = "assocation_personnel_rapport_joutnalier_chantier",
+    tableName = "assocation_personnel_rapport_chantier",
     foreignKeys =
     [ForeignKey(
         entity = Personnel::class,
@@ -29,22 +31,22 @@ data class Personnel(
         childColumns = arrayOf("personnel_id"),
         onDelete = ForeignKey.CASCADE
     ), ForeignKey(
-        entity = RapportJournalierChantier::class,
-        parentColumns = arrayOf("rapport_journalier_chantier_id"),
-        childColumns = arrayOf("rapport_journalier_chantier_id"),
+        entity = RapportChantier::class,
+        parentColumns = arrayOf("rapport_chantier_id"),
+        childColumns = arrayOf("rapport_chantier_id"),
         onDelete = ForeignKey.CASCADE
     )]
 )
-data class AssociationPersonnelRapportJournalierChantier(
+data class AssociationPersonnelRapportChantier(
 
     @PrimaryKey(autoGenerate = true)
-    var associationId: Int,
+    var associationId: Int? = null,
     @ColumnInfo(name = "personnel_id")
     var personnelId: Int,
-    @ColumnInfo(name = "rapport_journalier_chantier_id")
-    var rapportJournalierChantierID: Int,
+    @ColumnInfo(name = "rapport_chantier_id")
+    var rapportChantierID: Int,
     @ColumnInfo(name = "nb_heures_travaillees")
-    var NbHeuresTravaillees: Float
+    var NbHeuresTravaillees: Int = 0
 )
 
 @Entity(
