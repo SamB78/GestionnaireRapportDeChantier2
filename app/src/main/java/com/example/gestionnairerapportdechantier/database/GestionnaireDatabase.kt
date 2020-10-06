@@ -14,9 +14,10 @@ import com.example.gestionnairerapportdechantier.entities.*
         AssociationPersonnelRapportChantier::class,
         RapportChantier::class,
         AssociationPersonnelChantier::class,
+        AssociationMaterielRapportChantier::class,
         Vehicule::class,
         Materiel::class],
-    version = 24, exportSchema = false
+    version = 28, exportSchema = false
 )
 
 @TypeConverters(LocalDateTimeConverter::class)
@@ -30,6 +31,7 @@ abstract class GestionnaireDatabase : RoomDatabase() {
     abstract val rapportChantierDao: RapportChantierDao
     abstract val associationPersonnelChantierDao: AssociationPersonnelChantierDao
     abstract val associationPersonnelRapportChantierDao: AssociationPersonnelRapportChantierDao
+    abstract val associationMaterielRapportChantierDao: AssociationMaterielRapportChantierDao
 
 
     companion object {

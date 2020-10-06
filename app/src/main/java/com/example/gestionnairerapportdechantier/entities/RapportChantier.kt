@@ -1,9 +1,6 @@
 package com.example.gestionnairerapportdechantier.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.example.gestionnairerapportdechantier.entities.Chantier
 import java.time.LocalDate
 import java.util.*
@@ -35,27 +32,42 @@ data class RapportChantier(
     var rapportChantierId: Int? = null,
     @ColumnInfo(name = "chantier_id")
     var chantierId: Int? = null,
-    @ColumnInfo(name="chef_chantier_id")
+    @ColumnInfo(name = "chef_chantier_id")
     var chefChantierId: Int? = null,
     @ColumnInfo(name = "date_rapport_chantier")
     var dateRapportChantier: LocalDate? = null,
-    var meteo: String? = null,
-    var observations: String? = null,
+    @Embedded
+    var meteo: Meteo = Meteo(),
+    @Embedded
+    var infosMaterielRapportChantier: InfosRapportChantier = InfosRapportChantier(),
 
-    @ColumnInfo(name = "securite_respect_port_epi")
-    var securiteRespectPortEPI: Boolean? = null,
-
-    @ColumnInfo(name = "securite_balisage")
-    var securiteBalisage: Boolean? = null,
-
-    @ColumnInfo(name = "environnement_proprete")
-    var environnementProprete: Boolean? = null,
-
-    @ColumnInfo(name = "environnement_non_pollution")
-    var environnementNonPollution: Boolean? = null
+    var observations: String? = null
 
 
+)
 
+data class InfosRapportChantier(
 
+    var securiteRespectPortEPI: Boolean = false,
+
+    var securiteBalisage: Boolean = false,
+
+    var environnementProprete: Boolean = false,
+
+    var environnementNonPollution: Boolean = false,
+
+    var propreteVehicule: Boolean = false,
+
+    var entretienMateriel: Boolean = false,
+
+    var renduCarnetDeBord: Boolean = false,
+
+    var renduBonCarburant: Boolean = false,
+
+    var renduBonDecharge: Boolean = false,
+
+    var feuillesInterimaires: Boolean = false,
+
+    var bonDeCommande: Boolean = false
 
 )

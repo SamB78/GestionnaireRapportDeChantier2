@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.example.gestionnairerapportdechantier.entities.RapportChantier
 
 @Dao
@@ -12,7 +13,7 @@ interface RapportChantierDao {
     @Insert
     fun insert(rapportChantier: RapportChantier): Long
 
-    @Insert
+    @Update
     fun update(rapportChantier: RapportChantier)
 
 

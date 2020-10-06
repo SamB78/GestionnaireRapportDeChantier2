@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.Toast.makeText
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentGestionRapportChantierPersonnelBinding
 import com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.GestionRapportChantierViewModel
+import com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.autresInformations.AutresInformations2FragmentDirections
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
 
@@ -39,18 +41,26 @@ class GestionRapportChantierPersonnelFragment : Fragment() {
                 when (GestionHeuresPersonnelListener.click) {
                     -1 -> {
                         val onClickResult = viewModel.onClickMoinsHorairesTravailles(personnelId)
-                        if(!onClickResult){
-                            Snackbar.make(view!!, "Vous êtes déjà à 0 heures travaillées", Snackbar.LENGTH_SHORT).show()
+                        if (!onClickResult) {
+                            Snackbar.make(
+                                view!!,
+                                "Vous êtes déjà à 0 heures travaillées",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
                         }
 
                     }
                     +1 -> {
-                        val onClickResult  = viewModel.onClickPlusHorairesTravailles(personnelId)
-                        if(!onClickResult){
-                            Snackbar.make(view!!, " Vous ne pouvez pas travailler plus de 8 heures !", Snackbar.LENGTH_SHORT).show()
+                        val onClickResult = viewModel.onClickPlusHorairesTravailles(personnelId)
+                        if (!onClickResult) {
+                            Snackbar.make(
+                                view!!,
+                                " Vous ne pouvez pas travailler plus de 8 heures !",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
                         }
                     }
-                    else ->{
+                    else -> {
                         Toast.makeText(context, "$personnelId +0", Toast.LENGTH_LONG).show()
                     }
                 }
@@ -75,7 +85,20 @@ class GestionRapportChantierPersonnelFragment : Fragment() {
                 }
             })
 
+        //Navigation
+        viewModel.navigation.observe(viewLifecycleOwner, Observer { navigation ->
+            when (navigation) {
+                GestionRapportChantierViewModel.GestionNavigation.VALIDATION_GESTION_PERSONNEL -> {
+                    val action =
+                        AutresInformations2FragmentDirections.actionAutresInformations2FragmentToGestionRapportChantierFragment(
+                            -1L, null
+                        )
+                    findNavController().navigate(action)
 
+                    viewModel.onBoutonClicked()
+                }
+            }
+        })
         return binding.root
     }
 

@@ -6,12 +6,12 @@
     <data>
 
         <variable
-            name="personnel"
-            type="com.example.gestionnairerapportdechantier.entities.Personnel" />
+            name="item"
+            type="com.example.gestionnairerapportdechantier.entities.Materiel" />
 
         <variable
-            name="clickListener"
-            type="com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.gestionPersonnel.GestionHeuresPersonnelListener" />
+            name="viewModel"
+            type="com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.GestionRapportChantierViewModel" />
 
     </data>
 
@@ -24,8 +24,7 @@
         android:clickable="false"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardCornerRadius="3dp"
-        app:clickedElement="@{personnel.checked}">
+        app:cardCornerRadius="3dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
@@ -37,88 +36,61 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="@{personnel.prenom}"
+                android:text="@{item.marque}"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toTopOf="@+id/numero"
                 app:layout_constraintStart_toEndOf="@+id/imageViewPersonnel"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Sam" />
+                tools:text="Renault" />
 
             <TextView
                 android:id="@+id/nom"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="@{personnel.nom}"
+                android:text="@{item.modele}"
                 android:textSize="24sp"
                 app:layout_constraintStart_toEndOf="@+id/prenom"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Bertrand" />
+                tools:text="Clio" />
 
 
             <TextView
                 android:id="@+id/role"
-                personnelRole="@{personnel}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:text="@{item.type}"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="@+id/prenom"
                 app:layout_constraintTop_toBottomOf="@+id/nom"
-                tools:text="Chef d'équipe" />
+                tools:text="Voiture" />
 
             <ImageView
                 android:id="@+id/imageViewPersonnel"
-                imageUrlItemViewPersonnel="@{personnel.urlPicturepersonnel}"
+                imageUrlItemViewPersonnel="@{item.urlPictureMateriel}"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:onClick="@{() -> clickListener.onClickPlus(personnel)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/avatars" />
 
-            <ImageButton
-                android:id="@+id/imageButton2"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:onClick="@{() -> clickListener.onClickPlus(personnel)}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@drawable/ic_add_black_24dp" />
-
-            <ImageButton
-                android:id="@+id/imageButton3"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:onClick="@{() -> clickListener.onClickMoins(personnel)}"
-                app:layout_constraintEnd_toStartOf="@+id/editTextNumber"
-                app:layout_constraintTop_toTopOf="@+id/imageButton2"
-                app:srcCompat="@drawable/ic_baseline_remove_24" />
-
-            <TextView
-                android:id="@+id/editTextNumber"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:ems="10"
-                android:gravity="center"
-                android:text="@{`` +personnel.nombreHeuresTravaillees}"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toStartOf="@+id/imageButton2"
-                app:layout_constraintTop_toTopOf="@+id/imageButton2"
-                tools:text="0" />
-
             <it.sephiroth.android.library.numberpicker.NumberPicker
+                android:id="@+id/numberPicker"
                 style="@style/NumberPicker.Filled"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:progress="5"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:progress="50"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/imageButton3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:picker_max="100"
+                app:picker_min="0"
                 app:picker_orientation="horizontal"
                 app:picker_stepSize="2"
-                app:picker_tracker="exponential" />
+                app:picker_tracker="exponential"
+                android:value = "5"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,4 +21,8 @@ interface MaterielDao {
 
     @Query("SELECT * FROM materiel WHERE id  = :id")
     fun getMaterielById(id: Long): Materiel
+
+    @Query("SELECT * FROM materiel WHERE id  IN (:listIds)")
+    fun getMaterielByIds(listIds: List<Int>): List<Materiel>
+
 }

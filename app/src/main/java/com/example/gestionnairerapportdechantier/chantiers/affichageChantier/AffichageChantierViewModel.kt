@@ -10,7 +10,6 @@ import com.example.gestionnairerapportdechantier.database.RapportChantierDao
 import com.example.gestionnairerapportdechantier.entities.Adresse
 import com.example.gestionnairerapportdechantier.entities.Chantier
 import com.example.gestionnairerapportdechantier.entities.Personnel
-import com.example.gestionnairerapportdechantier.entities.RapportChantier
 import com.example.gestionnairerapportdechantier.rapportChantier.listeRapportsChantier.ListeRapportsChantierViewModel
 import kotlinx.coroutines.*
 import timber.log.Timber

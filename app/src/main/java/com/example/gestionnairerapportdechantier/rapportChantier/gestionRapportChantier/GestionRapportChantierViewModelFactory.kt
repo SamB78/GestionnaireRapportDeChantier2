@@ -8,8 +8,10 @@ class GestionRapportChantierViewModelFactory(
     private val dataSourceRapportChantier: RapportChantierDao,
     private val dataSourceChantier: ChantierDao,
     private val dataSourcePersonnel: PersonnelDao,
+    private val dataSourceMateriel: MaterielDao,
     private val dataSourceAssociationPersonnelChantier: AssociationPersonnelChantierDao,
     private val associationPersonnelRapportChantierDao: AssociationPersonnelRapportChantierDao,
+    private val associationMaterielRapportChantierDao: AssociationMaterielRapportChantierDao,
     private val idRapportChantier: Long,
     private val idChantier: Int,
     private val dateRapportChantier: String?
@@ -20,8 +22,10 @@ class GestionRapportChantierViewModelFactory(
                 dataSourceRapportChantier,
                 dataSourceChantier,
                 dataSourcePersonnel,
+                dataSourceMateriel,
                 dataSourceAssociationPersonnelChantier,
                 associationPersonnelRapportChantierDao,
+                associationMaterielRapportChantierDao,
                 idRapportChantier,
                 idChantier,
                 dateRapportChantier

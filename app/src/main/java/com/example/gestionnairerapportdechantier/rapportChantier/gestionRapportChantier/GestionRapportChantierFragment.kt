@@ -32,21 +32,25 @@ class GestionRapportChantierFragment : Fragment() {
         val dataSourceRapportChantier =
             GestionnaireDatabase.getInstance(application).rapportChantierDao
         val dataSourceChantier = GestionnaireDatabase.getInstance(application).chantierDao
+        val dataSourceMateriel= GestionnaireDatabase.getInstance(application).materielDao
         val idRapportChantier =
             GestionRapportChantierFragmentArgs.fromBundle(arguments!!).idRapportChantier
         val dataSourceAssociationPersonnelChantier =
             GestionnaireDatabase.getInstance(application).associationPersonnelChantierDao
         val dataSourcePersonnel = GestionnaireDatabase.getInstance(application).personnelDao
         val dataSourceAssociationPersonnelRapportChantier = GestionnaireDatabase.getInstance(application).associationPersonnelRapportChantierDao
-
+        val dataSourceAssociationMaterielRapportChantierDao = GestionnaireDatabase.getInstance(application).associationMaterielRapportChantierDao
         val idChantier = GestionRapportChantierFragmentArgs.fromBundle(arguments!!).idChantier
         val dateRapportChantier = GestionRapportChantierFragmentArgs.fromBundle(arguments!!).date
+
         val viewModelFactory = GestionRapportChantierViewModelFactory(
             dataSourceRapportChantier,
             dataSourceChantier,
             dataSourcePersonnel,
+            dataSourceMateriel,
             dataSourceAssociationPersonnelChantier,
             dataSourceAssociationPersonnelRapportChantier,
+            dataSourceAssociationMaterielRapportChantierDao,
             idRapportChantier,
             idChantier,
             dateRapportChantier
@@ -65,9 +69,20 @@ class GestionRapportChantierFragment : Fragment() {
                     findNavController().navigate(R.id.action_gestionRapportChantierFragment_to_gestionRapportChantierPersonnelFragment)
                     viewModel.onBoutonClicked()
                 }
+                GestionRapportChantierViewModel.GestionNavigation.PASSAGE_AUTRES_INFORMATIONS -> {
+                    findNavController().navigate(R.id.action_gestionRapportChantierFragment_to_autresInformationsFragment)
+                    viewModel.onBoutonClicked()
+                }
+                GestionRapportChantierViewModel.GestionNavigation.PASSAGE_OBSERVATIONS -> {
+                    findNavController().navigate(R.id.action_gestionRapportChantierFragment_to_observationsRapportChantier)
+                    viewModel.onBoutonClicked()
+                }
+                GestionRapportChantierViewModel.GestionNavigation.PASSAGE_GESTION_MATERIEL-> {
+                    findNavController().navigate(R.id.action_gestionRapportChantierFragment_to_gestionRapportChantierMaterielFragment)
+                    viewModel.onBoutonClicked()
+                }
             }
         })
-
 
         return binding.root
     }

@@ -3,6 +3,7 @@ package com.example.gestionnairerapportdechantier.rapportChantier.gestionRapport
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.database.*
 import com.example.gestionnairerapportdechantier.entities.*
 import kotlinx.coroutines.*
@@ -14,18 +15,33 @@ class GestionRapportChantierViewModel(
     private val dataSourceRapportChantier: RapportChantierDao,
     private val dataSourceChantier: ChantierDao,
     private val dataSourcePersonnel: PersonnelDao,
+    private val dataSourceMateriel: MaterielDao,
     private val dataSourceAssociationPersonnelChantier: AssociationPersonnelChantierDao,
     private val dataSourceAssociationPersonnelRapportChantierDao: AssociationPersonnelRapportChantierDao,
+    private val dataSourceAssociationMaterielRapportChantierDao: AssociationMaterielRapportChantierDao,
     rapportChantierId: Long = -1L,
     val chantierId: Int = -1,
     val date: String? = null
 ) : ViewModel() {
 
     enum class GestionNavigation {
-        ANNULATION,
         PASSAGE_GESTION_PERSONNEL,
         VALIDATION_GESTION_PERSONNEL,
+
+        PASSAGE_AUTRES_INFORMATIONS,
+        PASSAGE_ETAPE_2_AUTRES_INFORMATIONS,
+        VALIDATION_AUTRES_INFORMATIONS,
+
+        PASSAGE_OBSERVATIONS,
+        VALIDATION_OBSERVATIONS,
+
+        PASSAGE_GESTION_MATERIEL,
+        PASSAGE_AJOUT_MATERIEL,
+        VALIDATION_AJOUT_MATERIEL,
+
         ENREGISTREMENT_CHANTIER,
+
+        ANNULATION,
         EN_ATTENTE
     }
 
@@ -33,23 +49,30 @@ class GestionRapportChantierViewModel(
     private val viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
+    var infosRapportChantier = MutableLiveData<InfosRapportChantier>()
+    var meteo = MutableLiveData<Meteo>()
+    var observations = MutableLiveData<String>()
 
-    var _rapportChantier = MutableLiveData<RapportChantier>()
+    private var _rapportChantier = MutableLiveData<RapportChantier>()
     val rapportChantier: LiveData<RapportChantier>
         get() = this._rapportChantier
 
     var _listeAssociationsPersonnelRapportsChantier =
         mutableListOf<AssociationPersonnelRapportChantier>()
 
-    var _chantier = MutableLiveData<Chantier>()
+    private var _chantier = MutableLiveData<Chantier>()
     val chantier: LiveData<Chantier>
         get() = this._chantier
 
     //Liste personnel selectionné pour le chantier
-    var _listePersonnelChantier = mutableListOf<Personnel>()
-    var _listePersonnelChantierValide = MutableLiveData<List<Personnel>>()
+    private var _listePersonnelChantierValide = MutableLiveData<List<Personnel>>()
     val listePersonnelChantierValide: LiveData<List<Personnel>>
         get() = this._listePersonnelChantierValide
+
+
+    private var _listeMaterielRapportChantier = MutableLiveData<List<Materiel>>()
+    val listeMaterielRapportChantier: LiveData<List<Materiel>>
+        get() = this._listeMaterielRapportChantier
 
 
     //Navigation
@@ -64,30 +87,39 @@ class GestionRapportChantierViewModel(
         initializeData(rapportChantierId, date)
         Timber.i("rapportChantier initialisé  = ${_rapportChantier.value?.chantierId}")
         Timber.i("Nom chantier = {${chantier.value?.nomChantier}}")
+        infosRapportChantier.value = InfosRapportChantier()
+        meteo.value = Meteo()
         onBoutonClicked()
     }
 
-    private fun initializeData(id: Long, date: String?) {
+    private fun initializeData(rapportChantierId: Long, date: String?) {
         when {
-            id != -1L -> {
+            rapportChantierId != -1L -> {
                 // Si Rapport de Chantier existe déjà
                 uiScope.launch {
-                    _rapportChantier.value = getRapportChantierValue(id)
-                    Timber.i("Rapport chantier = ${_rapportChantier.value?.chantierId}, id transfere = $id")
+                    _rapportChantier.value = getRapportChantierValue(rapportChantierId)
+                    Timber.i("Rapport chantier = ${_rapportChantier.value?.chantierId}, id transfere = $rapportChantierId")
                     _chantier.value = getChantier(_rapportChantier.value?.chantierId)
                     _rapportChantier.value?.chantierId?.let {
                         _listePersonnelChantierValide.value = initializeDataPersonnel(it)
                     }
                     generateOldAssociationsPersonnelRapportChantier()
+                    _listeMaterielRapportChantier.value = initializeDataMateriel(_rapportChantier.value!!.rapportChantierId!!.toLong())
                 }
             }
             date != null -> {
                 // Si nouveau rapport de Chantier
-                _rapportChantier.value = RapportChantier(null, chantierId, null, LocalDate.parse(date, DateTimeFormatter.ISO_DATE))
+                _rapportChantier.value = RapportChantier(
+                    null,
+                    chantierId,
+                    null,
+                    LocalDate.parse(date, DateTimeFormatter.ISO_DATE)
+                )
                 uiScope.launch {
                     _chantier.value = getChantier(chantierId)
                     _listePersonnelChantierValide.value = initializeDataPersonnel(chantierId)
                     _rapportChantier.value!!.rapportChantierId = sendNewDataToDB2()
+                    _listeMaterielRapportChantier.value = initializeDataMateriel(_rapportChantier.value!!.rapportChantierId!!.toLong())
                     Timber.i("rapportChantierId = ${_rapportChantier.value!!.rapportChantierId}")
                     generateNewAssociationsPersonnelRapportChantier()
 
@@ -106,17 +138,25 @@ class GestionRapportChantierViewModel(
                 dataSourceAssociationPersonnelChantier.getAssociationPersonnelChantierIdByChantierId(
                     chantierId
                 )
-            Timber.i(" listeAssociation: Affichage")
-            listeAssociation?.forEach {
-                Timber.i("listeAssociation =  $it")
-            }
             var listePersonnel =
-                listeAssociation?.let { dataSourcePersonnel.getPersonnelsByIds(it) }
-            listePersonnel?.forEach {
-                Timber.i("listePersonnel: ${it.nom}")
-            }
+                listeAssociation.let { dataSourcePersonnel.getPersonnelsByIds(it) }
             listePersonnel
         }
+    }
+
+    private suspend fun initializeDataMateriel(rapportChantierId: Long): List<Materiel>? {
+        return withContext(Dispatchers.IO) {
+            Timber.i("Entrée initializeDataMateriel")
+            var listeAssociation =
+                dataSourceAssociationMaterielRapportChantierDao.getAssociationsMaterielRapportChantierIdsByRapportChantierId(
+                    rapportChantierId
+                )
+            var listeMateriel =
+                listeAssociation.let { dataSourceMateriel.getMaterielByIds(it) }
+
+            listeMateriel
+        }
+
     }
 
     private suspend fun getChantier(chantierId: Int?): Chantier? {
@@ -204,6 +244,11 @@ class GestionRapportChantierViewModel(
 
     }
 
+    fun onBoutonClicked() {
+        _navigation.value = GestionNavigation.EN_ATTENTE
+    }
+
+
     fun onClickButtonValidationGestionPersonnel() {
 
         _listePersonnelChantierValide.value?.forEach { listePersonnelChantierValide ->
@@ -223,11 +268,6 @@ class GestionRapportChantierViewModel(
         }
 
         _navigation.value = GestionNavigation.VALIDATION_GESTION_PERSONNEL
-    }
-
-
-    fun onBoutonClicked() {
-        _navigation.value = GestionNavigation.EN_ATTENTE
     }
 
     fun onClickButtonCreationOrModificationEnded() {
@@ -270,10 +310,10 @@ class GestionRapportChantierViewModel(
         _navigation.value = GestionNavigation.PASSAGE_GESTION_PERSONNEL
     }
 
-
-    fun onClickButtonAnnuler() {
-        _navigation.value = GestionNavigation.ANNULATION
+    fun onClickButtonAutresInformations() {
+        _navigation.value = GestionNavigation.PASSAGE_AUTRES_INFORMATIONS
     }
+
 
     fun onClickPlusHorairesTravailles(personnelId: Int): Boolean {
 
@@ -290,12 +330,10 @@ class GestionRapportChantierViewModel(
             Timber.i("Valeur nbHeuresTravaillees = ${_listePersonnelChantierValide.value!!.find { it.personnelId == personnelId }} ")
 
             return true
-        }
-        else {
+        } else {
             return false
         }
     }
-
 
     fun onClickMoinsHorairesTravailles(personnelId: Int): Boolean {
 
@@ -313,6 +351,101 @@ class GestionRapportChantierViewModel(
         } else {
             return false
         }
+    }
+
+
+    fun radioGroupsSecurtie(id: Int) {
+        when (id) {
+            R.id.radioButtonEPI1 -> infosRapportChantier.value?.securiteRespectPortEPI = true
+            R.id.radioButtonEPI2 -> infosRapportChantier.value?.securiteRespectPortEPI = false
+            R.id.radioButtonBalisage1 -> infosRapportChantier.value?.securiteBalisage = true
+            R.id.radioButtonBalisage2 -> infosRapportChantier.value?.securiteBalisage = false
+        }
+    }
+
+    fun radioGroupsEnvironnement(id: Int) {
+        when (id) {
+            R.id.radioButtonProprete1 -> infosRapportChantier.value?.environnementProprete = true
+            R.id.radioButtonProprete2 -> infosRapportChantier.value?.environnementProprete = false
+            R.id.radioButtonNonPollution1 -> infosRapportChantier.value?.environnementNonPollution =
+                true
+            R.id.radioButtonNonPollution2 -> infosRapportChantier.value?.environnementNonPollution =
+                false
+        }
+    }
+
+    fun radioGroupsMateriel(id: Int) {
+        when (id) {
+            R.id.radioButtonPropreteVehicule1 -> infosRapportChantier.value?.propreteVehicule =
+                true
+            R.id.radioButtonPropreteVehicule2 -> infosRapportChantier.value?.propreteVehicule =
+                false
+
+            R.id.radioButtonEntretienMateriel1 -> infosRapportChantier.value?.propreteVehicule =
+                true
+            R.id.radioButtonEntretienMateriel2 -> infosRapportChantier.value?.propreteVehicule =
+                false
+
+            R.id.radioButtonRenduCarnet1 -> infosRapportChantier.value?.renduCarnetDeBord = true
+            R.id.radioButtonRenduCarnet2 -> infosRapportChantier.value?.renduCarnetDeBord = false
+
+            R.id.radioButtonRenduBonDecharge1 -> infosRapportChantier.value?.renduBonDecharge =
+                true
+            R.id.radioButtonRenduBonDecharge2 -> infosRapportChantier.value?.renduBonDecharge =
+                false
+
+            R.id.radioButtonRenduBonCarburant1 -> infosRapportChantier.value?.renduBonCarburant =
+                true
+            R.id.radioButtonRenduBonCarburant2 -> infosRapportChantier.value?.renduBonCarburant =
+                false
+
+            R.id.radioButtonRenduFeuillesInterimaire1 -> infosRapportChantier.value?.feuillesInterimaires =
+                true
+            R.id.radioButtonRenduFeuillesInterimaire2 -> infosRapportChantier.value?.feuillesInterimaires =
+                false
+
+            R.id.radioButtonRenduBonDeCommande1 -> infosRapportChantier.value?.bonDeCommande = true
+            R.id.radioButtonRenduBonDeCommande2 -> infosRapportChantier.value?.bonDeCommande =
+                false
+
+        }
+    }
+
+    fun onClickPassageEtape2AutresInformations() {
+        _navigation.value = GestionNavigation.PASSAGE_ETAPE_2_AUTRES_INFORMATIONS
+    }
+
+    fun onClickValiderAutresInformations() {
+        Timber.i("Autres informations dans le rapport de chantier: ${infosRapportChantier.value?.renduBonCarburant}")
+//        _rapportChantier.value?.infosMaterielRapportChantier = infosRapportChantier.value!!
+        Timber.i("informations dans le rapport de chantier: ${_rapportChantier.value}")
+        Timber.i("Autres informations dans le rapport de chantier: ${infosRapportChantier.value}")
+
+        if (_rapportChantier.value?.chantierId == null) sendNewDataToDB()
+        else updateDataInDB()
+
+        _navigation.value = GestionNavigation.VALIDATION_AUTRES_INFORMATIONS
+    }
+
+    fun onClickButtonObservations() {
+        _navigation.value = GestionNavigation.PASSAGE_OBSERVATIONS
+    }
+
+    fun onClickButtonValiderObservations() {
+        _rapportChantier.value?.meteo = meteo.value!!
+        _rapportChantier.value?.observations = observations.value
+    }
+
+    fun onClickButtonGestionMateriel() {
+        _navigation.value = GestionNavigation.PASSAGE_GESTION_MATERIEL
+    }
+
+    fun onClickButtonAddMateriel() {
+        _navigation.value = GestionNavigation.PASSAGE_AJOUT_MATERIEL
+    }
+
+    fun onClickButtonAnnuler() {
+        _navigation.value = GestionNavigation.ANNULATION
     }
 
 
