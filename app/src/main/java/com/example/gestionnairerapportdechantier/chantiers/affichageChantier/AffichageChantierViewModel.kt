@@ -10,15 +10,17 @@ import com.example.gestionnairerapportdechantier.database.RapportChantierDao
 import com.example.gestionnairerapportdechantier.entities.Adresse
 import com.example.gestionnairerapportdechantier.entities.Chantier
 import com.example.gestionnairerapportdechantier.entities.Personnel
+import com.example.gestionnairerapportdechantier.entities.RapportChantier
 import com.example.gestionnairerapportdechantier.rapportChantier.listeRapportsChantier.ListeRapportsChantierViewModel
 import kotlinx.coroutines.*
 import timber.log.Timber
 
-class AffichageChantierViewModel(private val dataSourceChantier: ChantierDao,
-                                 private val dataSourceAssociationPersonnelChantier: AssociationPersonnelChantierDao,
-                                 private val dataSourcePersonnel: PersonnelDao,
-                                 private val dataSourceRapporChantier: RapportChantierDao,
-                                 private val idChantier: Long = -1
+class AffichageChantierViewModel(
+    private val dataSourceChantier: ChantierDao,
+    private val dataSourceAssociationPersonnelChantier: AssociationPersonnelChantierDao,
+    private val dataSourcePersonnel: PersonnelDao,
+    private val dataSourceRapporChantier: RapportChantierDao,
+    private val idChantier: Long = -1
 ) : ViewModel() {
 
     enum class navigationMenu {
@@ -28,6 +30,7 @@ class AffichageChantierViewModel(private val dataSourceChantier: ChantierDao,
         SELECTION_DATE,
         EN_ATTENTE
     }
+
     //Coroutines
     private val viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -48,12 +51,14 @@ class AffichageChantierViewModel(private val dataSourceChantier: ChantierDao,
 
 
     //Liste personnel selectionné pour le chantier
-    var _listePersonnelChantier =   mutableListOf<Personnel>()
+    var _listePersonnelChantier = mutableListOf<Personnel>()
     var _listePersonnelChantierValide = MutableLiveData<List<Personnel>>()
     val listePersonnelChantierValide: LiveData<List<Personnel>>
         get() = this._listePersonnelChantierValide
 
-    var listeRapportsChantiers = dataSourceRapporChantier.getAllFromChantier()
+    var _listeRapportsChantiers = MutableLiveData<List<RapportChantier>>(emptyList())
+    val listeRapportsChantiers: LiveData<List<RapportChantier>>
+        get() = this._listeRapportsChantiers
 
     private var _navigation = MutableLiveData<ListeRapportsChantierViewModel.navigationMenu>()
     val navigation: LiveData<ListeRapportsChantierViewModel.navigationMenu>
@@ -65,7 +70,9 @@ class AffichageChantierViewModel(private val dataSourceChantier: ChantierDao,
 
 
     init {
-        initializeData(idChantier)
+//        RetrieveRapportChantiers(idChantier)
+//        initializeData(idChantier)
+        onResumeGestionMaterielFragment()
         Timber.i("Chantier initialisé  = ${chantier.value?.numeroChantier}")
         onBoutonClicked()
     }
@@ -75,7 +82,8 @@ class AffichageChantierViewModel(private val dataSourceChantier: ChantierDao,
             uiScope.launch {
                 chantier.value = getChantierValue(id)
                 adresse.value = chantier.value!!.adresseChantier
-                _chefChantierSelectionne.value = getChefChantierValue(chantier.value!!.chefChantierId)
+                _chefChantierSelectionne.value =
+                    getChefChantierValue(chantier.value!!.chefChantierId)
                 _listePersonnelChantierValide.value = initializeDataPersonnel()
             }
         } else {
@@ -83,6 +91,14 @@ class AffichageChantierViewModel(private val dataSourceChantier: ChantierDao,
             adresse.value = Adresse()
         }
 
+    }
+
+    private fun RetrieveRapportChantiers(idChantier: Long) {
+        uiScope.launch {
+            _listeRapportsChantiers.value = withContext(Dispatchers.IO) {
+                dataSourceRapporChantier.getAllFromRapportChantierByChantierId(idChantier)
+            }
+        }
     }
 
     private suspend fun getChefChantierValue(chefChantierId: Int?): Personnel {
@@ -111,27 +127,34 @@ class AffichageChantierViewModel(private val dataSourceChantier: ChantierDao,
             listeAssociation?.forEach {
                 Timber.i("listeAssociation =  $it")
             }
-            var listePersonnel = listeAssociation?.let { dataSourcePersonnel.getPersonnelsByIds(it) }
+            var listePersonnel =
+                listeAssociation?.let { dataSourcePersonnel.getPersonnelsByIds(it) }
             listePersonnel
         }
     }
 
-    fun onClickBoutonAjoutRapportChantier(){
+    fun onClickBoutonAjoutRapportChantier() {
         _navigation.value = ListeRapportsChantierViewModel.navigationMenu.SELECTION_DATE
     }
 
-    fun onDateSelected(){
+    fun onDateSelected() {
         _navigation.value = ListeRapportsChantierViewModel.navigationMenu.CREATION
     }
 
-    fun onRapportChantierClicked(id: Long){
-        _idRapportChantier.value = id
+    fun onRapportChantierClicked(rapportChantier: RapportChantier) {
+        _idRapportChantier.value = rapportChantier.rapportChantierId!!.toLong()
         _navigation.value = ListeRapportsChantierViewModel.navigationMenu.MODIFICATION
     }
 
     fun onBoutonClicked() {
         _navigation.value = ListeRapportsChantierViewModel.navigationMenu.EN_ATTENTE
     }
+
+    fun onResumeGestionMaterielFragment() {
+        RetrieveRapportChantiers(idChantier)
+        initializeData(idChantier)
+    }
+
 
 
     // onCleared()

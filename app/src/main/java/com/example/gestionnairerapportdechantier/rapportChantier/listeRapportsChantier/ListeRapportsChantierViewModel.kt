@@ -23,7 +23,7 @@ class ListeRapportsChantierViewModel(private val dataSourceRapporChantier: Rappo
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
 
-    var listeRapportChantier = dataSourceRapporChantier.getAllFromChantier()
+    var listeRapportChantier = dataSourceRapporChantier.getAllFromRapportChantierLiveData()
 
     private var _navigation = MutableLiveData<navigationMenu>()
     val navigation: LiveData<navigationMenu>

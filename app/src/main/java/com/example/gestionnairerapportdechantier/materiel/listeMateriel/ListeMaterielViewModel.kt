@@ -22,7 +22,7 @@ class ListeMaterielViewModel(private val dataSource: MaterielDao) : ViewModel() 
     private val viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-    val listeMateriel = dataSource.getAllFromMateriel()
+    val listeMateriel = dataSource.getAllFromMaterielLiveData()
 
     private var _navigationMateriel = MutableLiveData<navigationMenuMateriel>()
     val navigationMateriel: LiveData<navigationMenuMateriel>

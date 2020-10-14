@@ -51,8 +51,8 @@ class ViewHolder private constructor(val binding: RapportChantierItemViewBinding
         item: RapportChantier,
         clickListener: ListeRapportChantiersListener
     ) {
-        binding.clickListener = clickListener
-        binding.rapportChantier = item
+//        binding.clickListener = clickListener
+        binding.item = item
     }
 }
 

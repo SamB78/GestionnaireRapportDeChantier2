@@ -17,7 +17,7 @@ import com.example.gestionnairerapportdechantier.entities.*
         AssociationMaterielRapportChantier::class,
         Vehicule::class,
         Materiel::class],
-    version = 28, exportSchema = false
+    version = 29, exportSchema = false
 )
 
 @TypeConverters(LocalDateTimeConverter::class)

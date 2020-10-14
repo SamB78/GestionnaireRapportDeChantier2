@@ -101,6 +101,9 @@ dependencies {
     //Number SlidingPicker
     implementation 'com.github.sephiroth74:NumberSlidingPicker:v1.0.3'
 
+    //FloxBoxLayout
+    implementation 'com.google.android:flexbox:2.0.1'
+
 
 }
 

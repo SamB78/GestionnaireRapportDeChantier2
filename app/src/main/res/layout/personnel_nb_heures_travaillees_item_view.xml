@@ -109,17 +109,6 @@
                 app:layout_constraintTop_toTopOf="@+id/imageButton2"
                 tools:text="0" />
 
-            <it.sephiroth.android.library.numberpicker.NumberPicker
-                style="@style/NumberPicker.Filled"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:progress="5"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/imageButton3"
-                app:picker_orientation="horizontal"
-                app:picker_stepSize="2"
-                app:picker_tracker="exponential" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

@@ -39,9 +39,19 @@ data class RapportChantier(
     @Embedded
     var meteo: Meteo = Meteo(),
     @Embedded
-    var infosMaterielRapportChantier: InfosRapportChantier = InfosRapportChantier(),
+    var infosRapportChantier: InfosRapportChantier = InfosRapportChantier(),
 
-    var observations: String? = null
+    var observations: String? = null,
+
+    var totalMOPersonnel: Int = 0,
+    var totalMOInterimaire: Int = 0,
+    var totalMO: Int = 0,
+    var totalHeuresMaterielSociete: Int = 0,
+    var totalHeuresMaterielLocation: Int = 0,
+    var totalHeuresMateriel: Int = 0,
+    var totalMateriaux: Int = 0,
+    var totalSousTraitant: Int = 0,
+    var totalRapportChantier: Int = 0
 
 
 )

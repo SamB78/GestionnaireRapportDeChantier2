@@ -105,6 +105,11 @@ fun setTextDependingPersonnelRole(textView: TextView, personnel: Personnel) {
     }
 }
 
+@BindingAdapter("setTextFromFunction")
+fun setTextFromFunction(textView: TextView, text: String) {
+    textView.text = text
+}
+
 
 @BindingAdapter("showDate")
 fun setTextFromDate(textView: TextView, date: LocalDate?) {

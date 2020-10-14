@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.chantiers.affichageChantier.AffichageChantierViewModel
@@ -25,6 +27,23 @@ class observationsRapportChantierFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+        //Navigation
+
+        viewModel.navigation.observe(viewLifecycleOwner, Observer { navigation ->
+            when (navigation) {
+
+                GestionRapportChantierViewModel.GestionNavigation.VALIDATION_OBSERVATIONS -> {
+                    val action =
+                        observationsRapportChantierFragmentDirections.actionObservationsRapportChantierToGestionRapportChantierFragment(
+                            -1L,
+                            null
+                        )
+                    findNavController().navigate(action)
+                    viewModel.onBoutonClicked()
+                }
+            }
+
+        })
 
 
         // Inflate the layout for this fragment

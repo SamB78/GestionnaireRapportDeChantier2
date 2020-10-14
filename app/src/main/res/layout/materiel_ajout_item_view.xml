@@ -5,15 +5,13 @@
 
     <data>
 
-        <import type="androidx.lifecycle.LiveData" />
-
         <variable
             name="item"
             type="com.example.gestionnairerapportdechantier.entities.Materiel" />
 
         <variable
             name="viewModel"
-            type="com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.GestionRapportChantierViewModel" />
+            type="com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.gestionMateriel.ajoutMateriel.GestionRapportChantierAjoutMaterielViewModel" />
 
     </data>
 
@@ -26,7 +24,9 @@
         android:clickable="false"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardCornerRadius="3dp">
+        android:onClick="@{() -> viewModel.onClickMateriel(item)}"
+        app:cardCornerRadius="3dp"
+        app:clickedElement="@{item.checked}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
@@ -76,21 +76,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/avatars" />
-
-            <it.sephiroth.android.library.numberpicker.NumberPicker
-                android:id="@+id/numberPicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:progress="@{item.nombreHeuresUtilisees}"
-                android:onProgressChanged="@{(picker, progress, fromUser) -> viewModel.onMaterielProgressChanged(progress, item)}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:picker_max="100"
-                app:picker_min="0"
-                app:picker_orientation="vertical"
-                app:picker_tracker="exponential"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

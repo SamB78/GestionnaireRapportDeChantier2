@@ -90,7 +90,7 @@ class GestionRapportChantierPersonnelFragment : Fragment() {
             when (navigation) {
                 GestionRapportChantierViewModel.GestionNavigation.VALIDATION_GESTION_PERSONNEL -> {
                     val action =
-                        AutresInformations2FragmentDirections.actionAutresInformations2FragmentToGestionRapportChantierFragment(
+                        GestionRapportChantierPersonnelFragmentDirections.actionGestionRapportChantierPersonnelFragmentToGestionRapportChantierFragment(
                             -1L, null
                         )
                     findNavController().navigate(action)

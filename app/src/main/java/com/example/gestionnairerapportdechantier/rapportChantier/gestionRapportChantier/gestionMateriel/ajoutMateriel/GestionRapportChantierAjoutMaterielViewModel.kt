@@ -5,8 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.gestionnairerapportdechantier.database.AssociationMaterielRapportChantierDao
 import com.example.gestionnairerapportdechantier.database.MaterielDao
+import com.example.gestionnairerapportdechantier.entities.AssociationMaterielRapportChantier
 import com.example.gestionnairerapportdechantier.entities.Materiel
 import kotlinx.coroutines.*
+import timber.log.Timber
 
 
 class GestionRapportChantierAjoutMaterielViewModel(
@@ -30,33 +32,54 @@ class GestionRapportChantierAjoutMaterielViewModel(
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
 
-    lateinit var listeMateriel: LiveData<List<Materiel>>
+    var listeMateriel = MutableLiveData<List<Materiel>>(emptyList())
+    var listeMaterielAjoutable = MutableLiveData<MutableList<Materiel>>()
 
-    private var _listeMaterielAjoutable = MutableLiveData<MutableList<Materiel>>()
-    val listeMaterielAjoutable: LiveData<MutableList<Materiel>>
-        get() = this._listeMaterielAjoutable
+    //Equivalent pour _listeMaterielAjoutable
+    var listeMaterielAAfficher = MutableLiveData<List<Materiel>>(emptyList())
 
 
     init {
+        Timber.i("Passage Init")
+        listeMaterielAjoutable.value = mutableListOf<Materiel>()
         onBoutonClicked()
+//        initializeData(rapportChantierId)
     }
 
-    private fun initializeData(rapportChantierId: Long) {
-        var mutableListOfListeMateriel = mutableListOf<Materiel>()
+    fun initializeData(rapportChantierId: Long) {
+        listeMaterielAjoutable.value = mutableListOf<Materiel>()
+        var mutableListOfListeMateriel: MutableList<Materiel> = mutableListOf<Materiel>()
         lateinit var listeMaterielDejaAjoute: List<Materiel>
         uiScope.launch {
-            getListeMateriel()
-            mutableListOfListeMateriel = listeMateriel.value as MutableList<Materiel>
+            listeMateriel.value = getListeMaterielWithReturn()
+            mutableListOfListeMateriel.addAll(listeMateriel.value as MutableList<Materiel>)
+
             listeMaterielDejaAjoute = getListeMaterielDejaAjoute(rapportChantierId)
             mutableListOfListeMateriel.removeAll(listeMaterielDejaAjoute)
-            _listeMaterielAjoutable.value = mutableListOfListeMateriel
+            listeMaterielAjoutable.value = mutableListOfListeMateriel
+
+            Timber.i("RapportChantierId: $rapportChantierId")
+
+
+            listeMaterielAjoutable.value!!.forEach {
+                Timber.i("listeMaterielAjoutable = $it")
+            }
+
         }
 
     }
 
     private suspend fun getListeMateriel() {
         withContext(Dispatchers.IO) {
-            listeMateriel = dataSourceMateriel.getAllFromMateriel()
+            listeMateriel.postValue(dataSourceMateriel.getAllFromMateriel())
+        }
+    }
+
+    private suspend fun getListeMaterielWithReturn(): List<Materiel> {
+        return withContext(Dispatchers.IO) {
+            var listeMateriel = dataSourceMateriel.getAllFromMateriel()
+
+            listeMateriel
         }
     }
 
@@ -70,6 +93,40 @@ class GestionRapportChantierAjoutMaterielViewModel(
                 dataSourceMateriel.getMaterielByIds(listeMaterielIdsDejaAjoute)
 
             listeMaterielDejaAjoute
+        }
+    }
+
+    fun onClickMateriel(materiel: Materiel) {
+        listeMaterielAjoutable.value!!.find { it.id == materiel.id }?.isChecked =
+            !materiel.isChecked
+
+        listeMaterielAjoutable.value!!.filter { it.id == materiel.id }.forEach {
+            Timber.i("Value isChecked = ${it.isChecked}")
+        }
+
+        listeMaterielAjoutable.value = listeMaterielAjoutable.value
+    }
+
+    fun onClickEnregistrer() {
+        uiScope.launch {
+            var associationMaterielRapportChantier = AssociationMaterielRapportChantier(null, 0, 0)
+
+            listeMaterielAjoutable.value!!.filter { it.isChecked }.forEach {
+                associationMaterielRapportChantier.materielId = it.id!!
+                associationMaterielRapportChantier.rapportChantierID = rapportChantierId.toInt()
+                Timber.i("associationMaterielRapportChantier = $associationMaterielRapportChantier")
+                saveAssociation(associationMaterielRapportChantier)
+            }
+        }
+        _navigation.value = navigationMenu.VALIDATION
+
+    }
+
+    private suspend fun saveAssociation(associationMaterielRapportChantier: AssociationMaterielRapportChantier) {
+        withContext(Dispatchers.IO) {
+            dataSourceAssociationMaterielRapportChantierDao.insertAssociationMaterielRapportChantier(
+                associationMaterielRapportChantier
+            )
         }
     }
 

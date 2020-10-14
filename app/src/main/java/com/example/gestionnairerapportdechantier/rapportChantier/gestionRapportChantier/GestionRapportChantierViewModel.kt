@@ -37,7 +37,7 @@ class GestionRapportChantierViewModel(
 
         PASSAGE_GESTION_MATERIEL,
         PASSAGE_AJOUT_MATERIEL,
-        VALIDATION_AJOUT_MATERIEL,
+        VALIDATION_GESTION_MATERIEL,
 
         ENREGISTREMENT_CHANTIER,
 
@@ -49,16 +49,15 @@ class GestionRapportChantierViewModel(
     private val viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-    var infosRapportChantier = MutableLiveData<InfosRapportChantier>()
-    var meteo = MutableLiveData<Meteo>()
-    var observations = MutableLiveData<String>()
-
+    // Rapport chantier
     private var _rapportChantier = MutableLiveData<RapportChantier>()
     val rapportChantier: LiveData<RapportChantier>
         get() = this._rapportChantier
 
-    var _listeAssociationsPersonnelRapportsChantier =
-        mutableListOf<AssociationPersonnelRapportChantier>()
+    var infosRapportChantier = MutableLiveData<InfosRapportChantier>()
+    var meteo = MutableLiveData<Meteo>()
+    var observations = MutableLiveData<String>()
+
 
     private var _chantier = MutableLiveData<Chantier>()
     val chantier: LiveData<Chantier>
@@ -69,14 +68,19 @@ class GestionRapportChantierViewModel(
     val listePersonnelChantierValide: LiveData<List<Personnel>>
         get() = this._listePersonnelChantierValide
 
-
-    private var _listeMaterielRapportChantier = MutableLiveData<List<Materiel>>()
+    // Liste materiel lié au rapport de chantier
+    var _listeMaterielRapportChantier = MutableLiveData<List<Materiel>>(emptyList())
     val listeMaterielRapportChantier: LiveData<List<Materiel>>
         get() = this._listeMaterielRapportChantier
 
+    // Associations Materiel et Personnel
+    var _listeAssociationsPersonnelRapportsChantier =
+        mutableListOf<AssociationPersonnelRapportChantier>()
+    var _listeAssociationsMaterielRapportsChantier =
+        MutableLiveData<List<AssociationMaterielRapportChantier>>()
+
 
     //Navigation
-
     private var _navigation = MutableLiveData<GestionNavigation>()
     val navigation: LiveData<GestionNavigation>
         get() = _navigation
@@ -104,7 +108,7 @@ class GestionRapportChantierViewModel(
                         _listePersonnelChantierValide.value = initializeDataPersonnel(it)
                     }
                     generateOldAssociationsPersonnelRapportChantier()
-                    _listeMaterielRapportChantier.value = initializeDataMateriel(_rapportChantier.value!!.rapportChantierId!!.toLong())
+                    initializeDataMateriel(_rapportChantier.value!!.rapportChantierId!!.toLong())
                 }
             }
             date != null -> {
@@ -119,7 +123,7 @@ class GestionRapportChantierViewModel(
                     _chantier.value = getChantier(chantierId)
                     _listePersonnelChantierValide.value = initializeDataPersonnel(chantierId)
                     _rapportChantier.value!!.rapportChantierId = sendNewDataToDB2()
-                    _listeMaterielRapportChantier.value = initializeDataMateriel(_rapportChantier.value!!.rapportChantierId!!.toLong())
+                    initializeDataMateriel(_rapportChantier.value!!.rapportChantierId!!.toLong())
                     Timber.i("rapportChantierId = ${_rapportChantier.value!!.rapportChantierId}")
                     generateNewAssociationsPersonnelRapportChantier()
 
@@ -128,6 +132,22 @@ class GestionRapportChantierViewModel(
             else -> {
                 Timber.e("ERROR: PAS DE DATE OU D'ID")
             }
+        }
+    }
+
+    /////////////////////// INITIALISATION DONNEES ////////////////////////////////////////
+
+    private suspend fun getChantier(chantierId: Int?): Chantier? {
+        return withContext(Dispatchers.IO) {
+            var chantier = chantierId?.toLong()?.let { dataSourceChantier.getChantierById(it) }
+            chantier
+        }
+    }
+
+    private suspend fun getRapportChantierValue(id: Long): RapportChantier? {
+        return withContext(Dispatchers.IO) {
+            var rapportChantier = dataSourceRapportChantier.getRapportChantierById(id)
+            rapportChantier
         }
     }
 
@@ -141,35 +161,6 @@ class GestionRapportChantierViewModel(
             var listePersonnel =
                 listeAssociation.let { dataSourcePersonnel.getPersonnelsByIds(it) }
             listePersonnel
-        }
-    }
-
-    private suspend fun initializeDataMateriel(rapportChantierId: Long): List<Materiel>? {
-        return withContext(Dispatchers.IO) {
-            Timber.i("Entrée initializeDataMateriel")
-            var listeAssociation =
-                dataSourceAssociationMaterielRapportChantierDao.getAssociationsMaterielRapportChantierIdsByRapportChantierId(
-                    rapportChantierId
-                )
-            var listeMateriel =
-                listeAssociation.let { dataSourceMateriel.getMaterielByIds(it) }
-
-            listeMateriel
-        }
-
-    }
-
-    private suspend fun getChantier(chantierId: Int?): Chantier? {
-        return withContext(Dispatchers.IO) {
-            var chantier = chantierId?.toLong()?.let { dataSourceChantier.getChantierById(it) }
-            chantier
-        }
-    }
-
-    private suspend fun getRapportChantierValue(id: Long): RapportChantier? {
-        return withContext(Dispatchers.IO) {
-            var rapportChantier = dataSourceRapportChantier.getChantierById(id)
-            rapportChantier
         }
     }
 
@@ -230,90 +221,62 @@ class GestionRapportChantierViewModel(
 
                 _listeAssociationsPersonnelRapportsChantier.add(associationPersonnelRapportChantier)
             }
-//            //A UTILISER POUR L'AFFICHAGE d'un rapport de chantier existant déjà
-//
-//            _listeAssociationsPersonnelRapportsChantier.forEach { associationPersonnelRapportChantier ->
-//                Timber.i("Liste association Personnel Rapport chantier: $associationPersonnelRapportChantier")
-//
-//                _listePersonnelChantierValide.value!!.find { it.personnelId == associationPersonnelRapportChantier.personnelId }?.nombreHeuresTravaillees =
-//                    associationPersonnelRapportChantier.NbHeuresTravaillees
-//
-//
-//            }
         }
 
     }
 
-    fun onBoutonClicked() {
-        _navigation.value = GestionNavigation.EN_ATTENTE
-    }
-
-
-    fun onClickButtonValidationGestionPersonnel() {
-
-        _listePersonnelChantierValide.value?.forEach { listePersonnelChantierValide ->
-
-            _listeAssociationsPersonnelRapportsChantier.find { it.personnelId == listePersonnelChantierValide.personnelId }?.NbHeuresTravaillees =
-                listePersonnelChantierValide.nombreHeuresTravaillees
-        }
-
+    fun initializeDataMateriel(rapportChantierId: Long) {
         uiScope.launch {
-            withContext(Dispatchers.IO) {
-                dataSourceAssociationPersonnelRapportChantierDao.updateListAssociationPersonnelRapportChantier(
-                    _listeAssociationsPersonnelRapportsChantier
+
+            _listeAssociationsMaterielRapportsChantier.value =
+                initializeListAssociationMaterielRapportChantier(rapportChantierId)
+
+            _listeMaterielRapportChantier.value =
+                initializeListMateriel(
+                    _listeAssociationsMaterielRapportsChantier.value!!,
+                    _rapportChantier.value!!.rapportChantierId!!.toLong()
                 )
+            _listeMaterielRapportChantier.value!!.forEach {
+                Timber.i("_listeMaterielRapportChantier = $it")
             }
 
-
-        }
-
-        _navigation.value = GestionNavigation.VALIDATION_GESTION_PERSONNEL
-    }
-
-    fun onClickButtonCreationOrModificationEnded() {
-        Timber.i("Chantier ready to save in DB = ${_rapportChantier.value?.chantierId}")
-        if (_rapportChantier.value?.chantierId == null) sendNewDataToDB()
-        else updateDataInDB()
-
-        _navigation.value = GestionNavigation.ENREGISTREMENT_CHANTIER
-
-        //OPTIMISATION POSSUBLE AVEC LES PRIVATE SUSPEND FUN
-    }
-
-    private fun updateDataInDB() {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                dataSourceRapportChantier.update(_rapportChantier.value!!)
-            }
         }
     }
 
-    private fun sendNewDataToDB(): Int? {
-        var value: Long? = null
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                value = dataSourceRapportChantier.insert(_rapportChantier.value!!)
-            }
-        }
-        return value?.toInt()
-    }
-
-    private suspend fun sendNewDataToDB2(): Int {
+    private suspend fun initializeListAssociationMaterielRapportChantier(rapportChantierId: Long): List<AssociationMaterielRapportChantier> {
         return withContext(Dispatchers.IO) {
-            val value = dataSourceRapportChantier.insert(_rapportChantier.value!!)
-            value.toInt()
+            var listeAssociation =
+                dataSourceAssociationMaterielRapportChantierDao.getAssociationsMaterielRapportChantierByRapportChantierId(
+                    rapportChantierId
+                )
+            listeAssociation
         }
     }
 
+    private suspend fun initializeListMateriel(
+        listeAssociation: List<AssociationMaterielRapportChantier>,
+        rapportChantierId: Long
+    ): List<Materiel>? {
+        return withContext(Dispatchers.IO) {
+
+            var listeMateriel = mutableListOf<Materiel>()
+
+            listeAssociation.forEach {
+                val materiel = dataSourceMateriel.getMaterielById(it.materielId.toLong())
+                materiel.nombreHeuresUtilisees = it.NbHeuresUtilisees
+                listeMateriel.add(materiel)
+            }
+            listeMateriel
+        }
+
+    }
+
+
+/////////////////////// GESTION PERSONNEL ////////////////////////////////////////
 
     fun onClickButtonGestionPersonnel() {
         _navigation.value = GestionNavigation.PASSAGE_GESTION_PERSONNEL
     }
-
-    fun onClickButtonAutresInformations() {
-        _navigation.value = GestionNavigation.PASSAGE_AUTRES_INFORMATIONS
-    }
-
 
     fun onClickPlusHorairesTravailles(personnelId: Int): Boolean {
 
@@ -353,6 +316,149 @@ class GestionRapportChantierViewModel(
         }
     }
 
+    fun onClickButtonValidationGestionPersonnel() {
+
+        var nombreTotalHeuresTravailles: Int = 0
+        var nombreTotalHeuresInterimTravailles: Int = 0
+        _listePersonnelChantierValide.value?.forEach { listePersonnelChantierValide ->
+
+            _listeAssociationsPersonnelRapportsChantier.find { it.personnelId == listePersonnelChantierValide.personnelId }?.NbHeuresTravaillees =
+                listePersonnelChantierValide.nombreHeuresTravaillees
+
+            when (listePersonnelChantierValide.interimaire) {
+                true -> {
+                    nombreTotalHeuresInterimTravailles += listePersonnelChantierValide.nombreHeuresTravaillees
+                }
+                false -> {
+                    nombreTotalHeuresTravailles += listePersonnelChantierValide.nombreHeuresTravaillees
+                }
+            }
+
+        }
+
+        uiScope.launch {
+            withContext(Dispatchers.IO) {
+                dataSourceAssociationPersonnelRapportChantierDao.updateListAssociationPersonnelRapportChantier(
+                    _listeAssociationsPersonnelRapportsChantier
+                )
+            }
+        }
+
+        _navigation.value = GestionNavigation.VALIDATION_GESTION_PERSONNEL
+
+        _rapportChantier.value!!.totalMOInterimaire = nombreTotalHeuresInterimTravailles
+        _rapportChantier.value!!.totalMOPersonnel = nombreTotalHeuresTravailles
+        updateDataInDB()
+    }
+
+    /////////////////////// GESTION MATERIEL ////////////////////////////////////////
+
+    fun onClickButtonGestionMateriel() {
+        _navigation.value = GestionNavigation.PASSAGE_GESTION_MATERIEL
+    }
+
+    fun onClickButtonAddMateriel() {
+        _navigation.value = GestionNavigation.PASSAGE_AJOUT_MATERIEL
+    }
+
+
+    fun onMaterielProgressChanged(progress: Int, materiel: Materiel) {
+
+        _listeMaterielRapportChantier.value!!.find { it.id == materiel.id }?.nombreHeuresUtilisees =
+            progress
+        Timber.i("Valeurs $progress materiel = ${_listeMaterielRapportChantier.value!!.find { it.id == materiel.id }?.nombreHeuresUtilisees}")
+    }
+
+
+    fun onClickButtonValidationGestionMateriel() {
+        Timber.i("onClickButtonValidationGestionMateriel")
+
+        var nombreTotalHeuresUtilisees: Int = 0
+        var nombreTotalHeuresInterimTravailles: Int = 0
+
+        _listeMaterielRapportChantier.value?.forEach { listeMaterielRapportChantier ->
+
+            _listeAssociationsMaterielRapportsChantier.value?.find { it.materielId == listeMaterielRapportChantier.id }?.NbHeuresUtilisees =
+                listeMaterielRapportChantier.nombreHeuresUtilisees
+
+
+            nombreTotalHeuresUtilisees += listeMaterielRapportChantier.nombreHeuresUtilisees
+        }
+
+
+
+        uiScope.launch {
+            withContext(Dispatchers.IO) {
+                dataSourceAssociationMaterielRapportChantierDao.updateListAssociationMaterielRapportChantier(
+                    _listeAssociationsMaterielRapportsChantier.value!!
+                )
+            }
+        }
+
+        _navigation.value = GestionNavigation.VALIDATION_GESTION_MATERIEL
+        _rapportChantier.value!!.totalHeuresMaterielSociete = nombreTotalHeuresUtilisees
+        updateDataInDB()
+
+    }
+
+    fun onResumeGestionMaterielFragment() {
+        Timber.i("onResume")
+        initializeDataMateriel(_rapportChantier.value!!.rapportChantierId!!.toLong())
+    }
+
+    /////////////////////// SAUVEGARDE DE DONNEES ////////////////////////////////////////
+
+    fun onClickButtonCreationOrModificationEnded() {
+        Timber.i("Chantier ready to save in DB = ${_rapportChantier.value?.chantierId}")
+        if (_rapportChantier.value?.chantierId == null) sendNewDataToDB()
+        else updateDataInDB()
+
+        _navigation.value = GestionNavigation.ENREGISTREMENT_CHANTIER
+
+        //OPTIMISATION POSSUBLE AVEC LES PRIVATE SUSPEND FUN
+    }
+
+    private fun updateDataInDB() {
+        _rapportChantier.value!!.totalHeuresMateriel =
+            _rapportChantier.value!!.totalHeuresMaterielSociete + _rapportChantier.value!!.totalHeuresMaterielLocation
+
+        _rapportChantier.value!!.totalMO =
+            _rapportChantier.value!!.totalMOInterimaire + _rapportChantier.value!!.totalMOPersonnel
+
+        _rapportChantier.value!!.totalRapportChantier =
+            _rapportChantier.value!!.totalHeuresMateriel + _rapportChantier.value!!.totalMO
+
+        uiScope.launch {
+            withContext(Dispatchers.IO) {
+                dataSourceRapportChantier.update(_rapportChantier.value!!)
+            }
+        }
+    }
+
+    private fun sendNewDataToDB(): Int? {
+        var value: Long? = null
+        uiScope.launch {
+            withContext(Dispatchers.IO) {
+                value = dataSourceRapportChantier.insert(_rapportChantier.value!!)
+            }
+        }
+        return value?.toInt()
+    }
+
+    private suspend fun sendNewDataToDB2(): Int {
+        return withContext(Dispatchers.IO) {
+            val value = dataSourceRapportChantier.insert(_rapportChantier.value!!)
+            value.toInt()
+        }
+    }
+
+    /////////////////////// SECURITE & ENVIRONNEMENT ////////////////////////////////////////
+
+    fun onClickButtonAutresInformations() {
+
+        infosRapportChantier.value = _rapportChantier.value?.infosRapportChantier
+        _navigation.value = GestionNavigation.PASSAGE_AUTRES_INFORMATIONS
+    }
 
     fun radioGroupsSecurtie(id: Int) {
         when (id) {
@@ -416,38 +522,38 @@ class GestionRapportChantierViewModel(
     }
 
     fun onClickValiderAutresInformations() {
-        Timber.i("Autres informations dans le rapport de chantier: ${infosRapportChantier.value?.renduBonCarburant}")
-//        _rapportChantier.value?.infosMaterielRapportChantier = infosRapportChantier.value!!
-        Timber.i("informations dans le rapport de chantier: ${_rapportChantier.value}")
-        Timber.i("Autres informations dans le rapport de chantier: ${infosRapportChantier.value}")
+        _rapportChantier.value!!.infosRapportChantier = infosRapportChantier.value!!
 
-        if (_rapportChantier.value?.chantierId == null) sendNewDataToDB()
-        else updateDataInDB()
-
+        updateDataInDB()
         _navigation.value = GestionNavigation.VALIDATION_AUTRES_INFORMATIONS
     }
 
+    /////////////////////// OBSERVATIONS ////////////////////////////////////////
+
     fun onClickButtonObservations() {
+
+        meteo.value = _rapportChantier.value?.meteo
+        observations.value = _rapportChantier.value?.observations
         _navigation.value = GestionNavigation.PASSAGE_OBSERVATIONS
     }
 
     fun onClickButtonValiderObservations() {
         _rapportChantier.value?.meteo = meteo.value!!
         _rapportChantier.value?.observations = observations.value
+        _navigation.value = GestionNavigation.VALIDATION_OBSERVATIONS
+
+        updateDataInDB()
     }
 
-    fun onClickButtonGestionMateriel() {
-        _navigation.value = GestionNavigation.PASSAGE_GESTION_MATERIEL
-    }
-
-    fun onClickButtonAddMateriel() {
-        _navigation.value = GestionNavigation.PASSAGE_AJOUT_MATERIEL
-    }
 
     fun onClickButtonAnnuler() {
         _navigation.value = GestionNavigation.ANNULATION
     }
 
+
+    fun onBoutonClicked() {
+        _navigation.value = GestionNavigation.EN_ATTENTE
+    }
 
     // onCleared()
     override fun onCleared() {
@@ -456,9 +562,9 @@ class GestionRapportChantierViewModel(
 
     }
 
+
     companion object {
         const val MAX_HEURES_TRAVAILLEES: Int = 8
         const val MIN_HEURES_TRAVAILLEES: Int = 0
     }
-
 }

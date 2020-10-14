@@ -18,10 +18,16 @@ interface RapportChantierDao {
 
 
     @Query("SELECT * FROM rappport_chantier")
-    fun getAllFromChantier(): LiveData<List<RapportChantier>>
+    fun getAllFromRapportChantierLiveData(): LiveData<List<RapportChantier>>
+
+    @Query("SELECT * FROM rappport_chantier")
+    fun getAllFromRapportChantier(): List<RapportChantier>
+
+    @Query("SELECT * FROM rappport_chantier WHERE chantier_id = :idChantier")
+    fun getAllFromRapportChantierByChantierId(idChantier: Long): List<RapportChantier>
 
     @Query("SELECT * FROM rappport_chantier WHERE rapport_chantier_id = :id")
-    fun getChantierById(id: Long): RapportChantier
+    fun getRapportChantierById(id: Long): RapportChantier
 
 
 

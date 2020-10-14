@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.gestionnairerapportdechantier.databinding.NbHeuresTravailleesItemViewBinding
+import com.example.gestionnairerapportdechantier.databinding.PersonnelNbHeuresTravailleesItemViewBinding
 import com.example.gestionnairerapportdechantier.entities.Personnel
 
 class GestionHeuresPersonnelAdapter(val clickListener: GestionHeuresPersonnelListener) :
@@ -33,13 +33,13 @@ class GestionHeuresPersonnelDiffCallBack : DiffUtil.ItemCallback<Personnel>() {
     }
 }
 
-class ViewHolder private constructor(val binding: NbHeuresTravailleesItemViewBinding) :
+class ViewHolder private constructor(val binding: PersonnelNbHeuresTravailleesItemViewBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     companion object {
         fun from(parent: ViewGroup): ViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
-            val binding = NbHeuresTravailleesItemViewBinding.inflate(layoutInflater, parent, false)
+            val binding = PersonnelNbHeuresTravailleesItemViewBinding.inflate(layoutInflater, parent, false)
             return ViewHolder(
                 binding
             )

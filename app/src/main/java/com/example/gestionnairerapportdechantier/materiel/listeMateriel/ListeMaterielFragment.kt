@@ -53,6 +53,7 @@ class ListeMaterielFragment : Fragment() {
         binding.materielListe.layoutManager = manager
 
         //Affichage liste Materiel dans le RecyclerView
+
         viewModel.listeMateriel.observe(viewLifecycleOwner, Observer { listeMateriel ->
             listeMateriel?.let {
                 adapter.submitList(it)

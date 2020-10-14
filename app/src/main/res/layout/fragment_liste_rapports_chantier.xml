@@ -4,6 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.example.gestionnairerapportdechantier.R" />
+
         <variable
             name="viewModel"
             type="com.example.gestionnairerapportdechantier.chantiers.affichageChantier.AffichageChantierViewModel" />
@@ -35,7 +37,12 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:items="@{viewModel.listeRapportsChantiers}"
+            app:layoutId="@{R.layout.rapport_chantier_item_view}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:vm="@{viewModel}"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -33,24 +33,19 @@ import java.util.*
  */
 class listeRapportsChantierFragment : Fragment() {
 
+    //ViewModel
+    val viewModel: AffichageChantierViewModel by navGraphViewModels(R.id.AffichageChantierNavGraph)
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        val binding = FragmentListeRapportsChantierBinding.inflate(inflater)
-        binding.executePendingBindings()
+        val binding = FragmentListeRapportsChantierBinding.inflate(inflater, container, false)
 
-
-        //ViewModelFactory
-//        val application = requireNotNull(this.activity).application
-//        val dataSource = GestionnaireDatabase.getInstance(application).RapportChantierDao
-//        val viewModelFactory = ListeRapportsChantierViewModelFactory(dataSource)
-
-        //ViewModel
-        val viewModel: AffichageChantierViewModel by navGraphViewModels(R.id.AffichageChantierNavGraph)
-        binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+        binding.executePendingBindings()
 
         // Calendrier
         var date = ""
@@ -76,26 +71,26 @@ class listeRapportsChantierFragment : Fragment() {
 
         //RecyclerView
 
-        val adapter =
-            ListeRapportChantiersAdapter(
-                ListeRapportChantiersListener { rapportChantierId ->
-                    viewModel.onRapportChantierClicked(rapportChantierId.toLong())
-                    Timber.i("test")
-                }
-            )
-        binding.rapportChantiersListe.adapter = adapter
-
-        val manager = GridLayoutManager(activity, 1, GridLayoutManager.VERTICAL, false)
-        binding.rapportChantiersListe.layoutManager = manager
-
-        viewModel.listeRapportsChantiers.observe(
-            viewLifecycleOwner,
-            Observer { listeRapportsChantiers ->
-                listeRapportsChantiers?.let {
-                    adapter.submitList(it)
-                    Timber.i("Rapports de chantiers: $it")
-                }
-            })
+//        val adapter =
+//            ListeRapportChantiersAdapter(
+//                ListeRapportChantiersListener { rapportChantierId ->
+//                    viewModel.onRapportChantierClicked(rapportChantierId.toLong())
+//                    Timber.i("test")
+//                }
+//            )
+//        binding.rapportChantiersListe.adapter = adapter
+//
+//        val manager = GridLayoutManager(activity, 1, GridLayoutManager.VERTICAL, false)
+//        binding.rapportChantiersListe.layoutManager = manager
+//
+//        viewModel.listeRapportsChantiers.observe(
+//            viewLifecycleOwner,
+//            Observer { listeRapportsChantiers ->
+//                listeRapportsChantiers?.let {
+//                    adapter.submitList(it)
+//                    Timber.i("Rapports de chantiers: $it")
+//                }
+//            })
 
 
         //navigation
@@ -158,6 +153,12 @@ class listeRapportsChantierFragment : Fragment() {
 
         // Inflate the layout for this fragment
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Timber.i("onResume()")
+        viewModel.onResumeGestionMaterielFragment()
     }
 
 

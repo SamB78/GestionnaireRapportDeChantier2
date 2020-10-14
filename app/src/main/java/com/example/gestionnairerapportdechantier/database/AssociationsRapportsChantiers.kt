@@ -57,6 +57,7 @@ interface AssociationMaterielRapportChantierDao {
         rapportChantierId: Long
     ): List<Int>
 
+
     @Query("SELECT materiel_id FROM assocation_materiel_rapport_chantier WHERE  rapport_chantier_id = :rapportChantierId")
     fun getMaterielIdsByRapportChantierId(
         rapportChantierId: Long

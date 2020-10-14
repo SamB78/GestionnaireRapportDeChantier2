@@ -1,9 +1,6 @@
 package com.example.gestionnairerapportdechantier.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 import java.time.LocalDate
 
 @Entity(tableName = "materiel")
@@ -15,7 +12,12 @@ data class Materiel (
     var numeroSerie: String? = null,
     var type: String? = null,
     var miseEnCirculation: LocalDate? = null,
-    var urlPictureMateriel : String? = null
+    var urlPictureMateriel : String? = null,
+    @Ignore
+    var isChecked: Boolean = false,
+    @Ignore
+    var nombreHeuresUtilisees: Int = 0
+
 )
 
 @Entity(
@@ -42,5 +44,5 @@ data class AssociationMaterielRapportChantier(
     @ColumnInfo(name = "rapport_chantier_id")
     var rapportChantierID: Int,
     @ColumnInfo(name = "nb_heures_travaillees")
-    var NbHeuresTravaillees: Int = 0
+    var NbHeuresUtilisees: Int = 0
 )
