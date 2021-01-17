@@ -17,19 +17,15 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_view1"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/stroke_color"
-        app:cardElevation="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
-        android:checkable="true"
-        android:clickable="true"
-        android:focusable="true"
-        app:shapeAppearance="?attr/shapeAppearanceLargeComponent"
         android:foreground="?android:attr/selectableItemBackground"
-        android:onClick="@{() -> viewModel.onRapportChantierClicked(item)}"
-        app:cardCornerRadius="3dp">
+        app:cardCornerRadius="3dp"
+        app:cardElevation="0dp"
+        app:shapeAppearance="?attr/shapeAppearanceLargeComponent"
+        app:strokeColor="@color/stroke_color"
+        app:strokeWidth="1dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -52,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Rapport de chantier du "
+                android:text="Rapport du "
                 android:textColor="@android:color/primary_text_light"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -66,10 +62,12 @@
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{item.dateRapportChantier.toString()}"
+                android:layout_marginEnd="8dp"
+                date="@{item.dateRapportChantier}"
                 android:textColor="#000000"
                 android:textSize="24sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView"
                 app:layout_constraintTop_toTopOf="@+id/textView"
                 tools:text="18/02/2020" />
@@ -357,9 +355,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Soleil"
                     android:checked="@={item.meteo.soleil}"
                     android:clickable="false"
+                    android:text="Soleil"
                     android:textColor="?android:attr/textColorSecondary"
                     android:textSize="14sp" />
 
@@ -368,9 +366,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Pluie"
                     android:checked="@={item.meteo.pluie}"
                     android:clickable="false"
+                    android:text="Pluie"
                     android:textColor="?android:attr/textColorSecondary" />
 
                 <CheckBox
@@ -378,8 +376,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:clickable="false"
                     android:checked="@={item.meteo.vent}"
+                    android:clickable="false"
                     android:text="Vent"
                     android:textColor="?android:attr/textColorSecondary" />
 
@@ -388,9 +386,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:checked="@={item.meteo.gel}"
                     android:clickable="false"
                     android:text="Gel"
-                    android:checked="@={item.meteo.gel}"
                     android:textColor="?android:attr/textColorSecondary" />
 
                 <CheckBox
@@ -398,14 +396,35 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:checked="@={item.meteo.neige}"
                     android:clickable="false"
                     android:text="Neige"
-                    android:checked="@={item.meteo.neige}"
                     android:textColor="?android:attr/textColorSecondary" />
             </com.google.android.flexbox.FlexboxLayout>
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/flexboxLayout">
 
+                <com.google.android.material.button.MaterialButton
+                    style="?attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:onClick="@{() -> viewModel.onButtonClickEditRapportChantier(item)}"
+                    android:text="Editer" />
 
+                <com.google.android.material.button.MaterialButton
+                    style="?attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> viewModel.onButtonClickConsultRapportChantier(item)}"
+                    android:text="Consulter" />
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

@@ -20,12 +20,15 @@ import androidx.navigation.fragment.findNavController
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.databinding.FragmentGestionMaterielBinding
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.theartofdev.edmodo.cropper.CropImage
 import timber.log.Timber
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -71,12 +74,25 @@ class GestionMaterielFragment : Fragment() {
                     val localDate = LocalDate.of(year, month, day)
                     date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                     Timber.i("Date pre VM = $date")
-                    viewModel.onDateSelected(localDate)
+//                    viewModel.onDateSelected(localDate)
                     binding.invalidateAll()
 
                 }, year, month, day)
             }
         dpd?.datePicker?.maxDate = System.currentTimeMillis()
+
+
+        // Create the date picker builder and set the title
+        val builder = MaterialDatePicker.Builder.datePicker()
+        // create the date picker
+        val datePicker = builder.build()
+        var date2: Long = 0
+        // set listener when date is selected
+        datePicker.addOnPositiveButtonClickListener {
+
+
+            viewModel.onDateSelected(Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate())
+        }
 
         viewModel.navigation.observe(viewLifecycleOwner, Observer { navigation ->
             when (navigation) {
@@ -94,7 +110,7 @@ class GestionMaterielFragment : Fragment() {
                 }
                 GestionMaterielViewModel.gestionNavigation.CHOIX_DATE_IMMAT -> {
                     viewModel.onBoutonClicked()
-                    dpd?.show()
+                    datePicker.show(activity?.supportFragmentManager!!, "MyTAG")
                 }
             }
 

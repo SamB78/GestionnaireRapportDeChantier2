@@ -68,7 +68,7 @@ class BaseAdapter(val data: List<Any>, private val lid: Int, val vm: ViewModel) 
 //                view.layoutManager = layoutManager
             if (view.layoutManager == null) {
                 val layoutManager = LinearLayoutManager(view.context)
-                view.layoutManager = layoutManager
+                view.layoutManager = layoutManager  
             }
 
             //view.adapter = ChoiceAdapter(vm!!.choices,vm,{x:RecoResult -> vm!!.selectItem(x)})

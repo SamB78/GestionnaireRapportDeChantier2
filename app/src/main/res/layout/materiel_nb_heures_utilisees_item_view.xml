@@ -20,7 +20,7 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_view1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="140dp"
         android:layout_margin="4dp"
         android:checkable="true"
         android:clickable="false"
@@ -31,18 +31,18 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/prenom"
+                android:id="@+id/numChantier"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="@{item.marque}"
                 android:textSize="24sp"
-                app:layout_constraintBottom_toTopOf="@+id/numero"
+                app:layout_constraintBottom_toTopOf="@+id/adresse"
                 app:layout_constraintStart_toEndOf="@+id/imageViewPersonnel"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/imageViewPersonnel"
                 tools:text="Renault" />
 
             <TextView
@@ -52,19 +52,19 @@
                 android:layout_marginStart="4dp"
                 android:text="@{item.modele}"
                 android:textSize="24sp"
-                app:layout_constraintStart_toEndOf="@+id/prenom"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/numChantier"
+                app:layout_constraintTop_toTopOf="@+id/numChantier"
                 tools:text="Clio" />
 
 
             <TextView
-                android:id="@+id/role"
+                android:id="@+id/codePostal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@{item.type}"
                 android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@+id/prenom"
-                app:layout_constraintTop_toBottomOf="@+id/nom"
+                app:layout_constraintStart_toStartOf="@+id/numChantier"
+                app:layout_constraintTop_toBottomOf="@+id/numChantier"
                 tools:text="Voiture" />
 
             <ImageView
@@ -72,6 +72,7 @@
                 imageUrlItemViewPersonnel="@{item.urlPictureMateriel}"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:layout_marginStart="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -81,16 +82,27 @@
                 android:id="@+id/numberPicker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:progress="@{item.nombreHeuresUtilisees}"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:onProgressChanged="@{(picker, progress, fromUser) -> viewModel.onMaterielProgressChanged(progress, item)}"
+                android:progress="@{item.nombreHeuresUtilisees}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:picker_max="100"
                 app:picker_min="0"
                 app:picker_orientation="vertical"
-                app:picker_tracker="exponential"/>
+                app:picker_tracker="exponential" />
+
+            <ImageButton
+                android:id="@+id/imageButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="5dp"
+                android:onClick="@{() ->viewModel.onClickDeleteMateriel(item)}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_delete_black_24dp" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

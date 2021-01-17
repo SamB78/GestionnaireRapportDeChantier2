@@ -6,4 +6,6 @@ data class Adresse (
     var codePostal: String? = null,
     var ville: String? = null,
     var pays: String? = "France"
-)
+){
+    fun adresseToString(): String = "$rue $ville"
+}

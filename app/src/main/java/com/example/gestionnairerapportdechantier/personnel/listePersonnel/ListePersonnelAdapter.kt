@@ -32,12 +32,12 @@ class ListePersonnelDiffCallBack : DiffUtil.ItemCallback<Personnel>() {
 
     override fun areItemsTheSame(oldItem: Personnel, newItem: Personnel): Boolean {
 
-        Timber.e("Passage dans areItemsTheSame")
+        Timber.i("Passage dans areItemsTheSame")
         if(oldItem.personnelId == newItem.personnelId)
         {
-            Timber.e("areItemsTheSame = True")
+            Timber.i("areItemsTheSame = True")
         }else{
-            Timber.e("areItemsTheSame = False")
+            Timber.i("areItemsTheSame = False")
         }
 
         return oldItem.personnelId == newItem.personnelId
@@ -45,12 +45,12 @@ class ListePersonnelDiffCallBack : DiffUtil.ItemCallback<Personnel>() {
 
     override fun areContentsTheSame(oldItem: Personnel, newItem: Personnel): Boolean {
 
-        Timber.e("Passage dans areContentsTheSame")
+        Timber.i("Passage dans areContentsTheSame")
         if(oldItem == newItem)
         {
-            Timber.e("areContentsTheSame = True newItem = $newItem oldItem = $oldItem")
+            Timber.i("areContentsTheSame = True newItem = $newItem oldItem = $oldItem")
         }else{
-            Timber.e("areContentsTheSame = False  = $newItem oldItem = $oldItem")
+            Timber.i("areContentsTheSame = False  = $newItem oldItem = $oldItem")
         }
 
         return oldItem == newItem

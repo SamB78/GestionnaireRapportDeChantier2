@@ -17,10 +17,12 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.example.gestionnairerapportdechantier.MainActivity
 import com.example.gestionnairerapportdechantier.database.GestionnaireDatabase
 
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentGestionPersonnelBinding
+import com.example.gestionnairerapportdechantier.utils.hideKeyboard
 import com.theartofdev.edmodo.cropper.CropImage
 import timber.log.Timber
 import java.io.File
@@ -56,6 +58,7 @@ class GestionPersonnelFragment : Fragment() {
 
 
         viewModel.navigation.observe(viewLifecycleOwner, Observer { navigation ->
+            hideKeyboard(activity as MainActivity)
             when (navigation) {
                 GestionPersonnelViewModel.gestionNavigation.ENREGISTREMENT_PERSONNEL -> {
                     Toast.makeText(activity, "Nouvelle entrée dans la BDD", Toast.LENGTH_SHORT)
@@ -82,31 +85,25 @@ class GestionPersonnelFragment : Fragment() {
     private fun selectImage() {
 
         //if system os is Marshmallow or Above, we need to request runtime permission
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_DENIED ||
-                ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-                == PackageManager.PERMISSION_DENIED
-            ) {
-                //permission was not enabled
-                val permission = arrayOf(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-                //show popup to request permission
-                requestPermissions(permission, PERMISSION_CODE)
-            } else {
-                //permission already granted
-                CropImage.activity()
-                    .setAspectRatio(1,1)
-                    .start(context!!, this);
-            }
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+            == PackageManager.PERMISSION_DENIED ||
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            == PackageManager.PERMISSION_DENIED
+        ) {
+            //permission was not enabled
+            val permission = arrayOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            //show popup to request permission
+            requestPermissions(permission, PERMISSION_CODE)
         } else {
-            //system os is < marshmallow
+            //permission already granted
             CropImage.activity()
+                .setAspectRatio(1,1)
                 .start(context!!, this);
         }
 

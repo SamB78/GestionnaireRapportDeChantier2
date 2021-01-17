@@ -1,22 +1,27 @@
 package com.example.gestionnairerapportdechantier.chantiers.creationChantier
 
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import com.example.gestionnairerapportdechantier.MainActivity
 import com.example.gestionnairerapportdechantier.database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentCreationChantier1Binding
+import com.example.gestionnairerapportdechantier.utils.hideKeyboard
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class CreationChantier1Fragment : Fragment() {
 
     private lateinit var viewModelFactory: CreationChantierViewModelFactory
-    val viewModel: CreationChantierViewModel by navGraphViewModels(R.id.creationChantierNavGraph){ viewModelFactory }
+    val viewModel: CreationChantierViewModel by navGraphViewModels(R.id.creationChantierNavGraph) { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
@@ -29,7 +34,7 @@ class CreationChantier1Fragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.action_favorite->{
+        R.id.action_favorite -> {
             MaterialAlertDialogBuilder(context)
                 .setTitle("Annulation")
                 .setMessage("Souhaitez vous annuler la création du nouveau chantier ?")
@@ -43,12 +48,12 @@ class CreationChantier1Fragment : Fragment() {
                 }
                 .show()
             true
-        }else-> {
-        super.onOptionsItemSelected(item)
+        }
+        else -> {
+            super.onOptionsItemSelected(item)
 
         }
     }
-
 
 
     override fun onCreateView(
@@ -64,16 +69,24 @@ class CreationChantier1Fragment : Fragment() {
         val application = requireNotNull(this.activity).application
         val dataSourceChantier = GestionnaireDatabase.getInstance(application).chantierDao
         val dataSourcePersonnel = GestionnaireDatabase.getInstance(application).personnelDao
-        val dataSourceAssociationPersonnelChantier = GestionnaireDatabase.getInstance(application).associationPersonnelChantierDao
+        val dataSourceAssociationPersonnelChantier =
+            GestionnaireDatabase.getInstance(application).associationPersonnelChantierDao
         val idChantier = CreationChantier1FragmentArgs.fromBundle(arguments!!).idChantier
-        viewModelFactory = CreationChantierViewModelFactory(dataSourceChantier,dataSourcePersonnel,dataSourceAssociationPersonnelChantier, idChantier)
+        viewModelFactory = CreationChantierViewModelFactory(
+            dataSourceChantier,
+            dataSourcePersonnel,
+            dataSourceAssociationPersonnelChantier,
+            idChantier
+        )
 
         //ViewModel
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+
         //Navigation
         viewModel.navigation.observe(viewLifecycleOwner, Observer { navigation ->
+            hideKeyboard(activity as MainActivity)
             when (navigation) {
                 CreationChantierViewModel.gestionNavigation.PASSAGE_ETAPE2 -> {
                     Toast.makeText(activity, "Nouvelle entrée dans la BDD", Toast.LENGTH_SHORT)

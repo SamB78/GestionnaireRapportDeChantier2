@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.example.gestionnairerapportdechantier.R
@@ -24,22 +25,32 @@ class GestionRapportChantierFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val binding = FragmentGestionRapportChantierBinding.inflate(inflater)
-        binding.executePendingBindings()
 
         //ViewModelFactory
         val application = requireNotNull(this.activity).application
         val dataSourceRapportChantier =
             GestionnaireDatabase.getInstance(application).rapportChantierDao
         val dataSourceChantier = GestionnaireDatabase.getInstance(application).chantierDao
-        val dataSourceMateriel= GestionnaireDatabase.getInstance(application).materielDao
+        val dataSourceMateriel = GestionnaireDatabase.getInstance(application).materielDao
+        val dataSourceMaterielLocation =
+            GestionnaireDatabase.getInstance(application).materielLocationDao
+        val dataSourceMateriaux = GestionnaireDatabase.getInstance(application).materiauxDao
+        val dataSourceSousTraitance = GestionnaireDatabase.getInstance(application).sousTraitanceDao
         val idRapportChantier =
             GestionRapportChantierFragmentArgs.fromBundle(arguments!!).idRapportChantier
         val dataSourceAssociationPersonnelChantier =
             GestionnaireDatabase.getInstance(application).associationPersonnelChantierDao
         val dataSourcePersonnel = GestionnaireDatabase.getInstance(application).personnelDao
-        val dataSourceAssociationPersonnelRapportChantier = GestionnaireDatabase.getInstance(application).associationPersonnelRapportChantierDao
-        val dataSourceAssociationMaterielRapportChantierDao = GestionnaireDatabase.getInstance(application).associationMaterielRapportChantierDao
+        val dataSourceAssociationPersonnelRapportChantier =
+            GestionnaireDatabase.getInstance(application).associationPersonnelRapportChantierDao
+        val dataSourceAssociationMaterielRapportChantierDao =
+            GestionnaireDatabase.getInstance(application).associationMaterielRapportChantierDao
+        val dataSourceAssociationMaterielLocationRapportChantierDao =
+            GestionnaireDatabase.getInstance(application).associationMaterielLocationRapportChantierDao
+        val dataSourceAssociationMateriauxRapportChantierDao =
+            GestionnaireDatabase.getInstance(application).associationMateriauxRapportChantierDao
+        val dataSourceAssociationSousTraitanceRapportChantierDao =
+            GestionnaireDatabase.getInstance(application).associationSousTraitanceRapportChantierDao
         val idChantier = GestionRapportChantierFragmentArgs.fromBundle(arguments!!).idChantier
         val dateRapportChantier = GestionRapportChantierFragmentArgs.fromBundle(arguments!!).date
 
@@ -48,9 +59,15 @@ class GestionRapportChantierFragment : Fragment() {
             dataSourceChantier,
             dataSourcePersonnel,
             dataSourceMateriel,
+            dataSourceMaterielLocation,
+            dataSourceMateriaux,
+            dataSourceSousTraitance,
             dataSourceAssociationPersonnelChantier,
             dataSourceAssociationPersonnelRapportChantier,
             dataSourceAssociationMaterielRapportChantierDao,
+            dataSourceAssociationMaterielLocationRapportChantierDao,
+            dataSourceAssociationMateriauxRapportChantierDao,
+            dataSourceAssociationSousTraitanceRapportChantierDao,
             idRapportChantier,
             idChantier,
             dateRapportChantier
@@ -58,7 +75,10 @@ class GestionRapportChantierFragment : Fragment() {
 
         //ViewModel
         val viewModel: GestionRapportChantierViewModel by navGraphViewModels(R.id.gestionRapportChantiers) { viewModelFactory }
-        binding.lifecycleOwner = this
+        val binding = FragmentGestionRapportChantierBinding.inflate(inflater, container, false)
+//        val binding: FragmentGestionRapportChantierBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_gestion_rapport_chantier, container,false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.executePendingBindings()
         binding.viewModel = viewModel
 
         //Navigation
@@ -77,10 +97,23 @@ class GestionRapportChantierFragment : Fragment() {
                     findNavController().navigate(R.id.action_gestionRapportChantierFragment_to_observationsRapportChantier)
                     viewModel.onBoutonClicked()
                 }
-                GestionRapportChantierViewModel.GestionNavigation.PASSAGE_GESTION_MATERIEL-> {
+                GestionRapportChantierViewModel.GestionNavigation.PASSAGE_GESTION_MATERIEL -> {
                     findNavController().navigate(R.id.action_gestionRapportChantierFragment_to_gestionRapportChantierMaterielFragment)
                     viewModel.onBoutonClicked()
                 }
+                GestionRapportChantierViewModel.GestionNavigation.PASSAGE_GESTION_MATERIAUX -> {
+                    findNavController().navigate(R.id.action_gestionRapportChantierFragment_to_gestionRapportChantierMateriauxFragment)
+                    viewModel.onBoutonClicked()
+                }
+                GestionRapportChantierViewModel.GestionNavigation.PASSAGE_GESTION_MATERIEL_LOCATION -> {
+                    findNavController().navigate(R.id.action_gestionRapportChantierFragment_to_gestionRapportChantierMaterielLocationFragment)
+                    viewModel.onBoutonClicked()
+                }
+                GestionRapportChantierViewModel.GestionNavigation.PASSAGE_GESTION_SOUS_TRAITANCE -> {
+                    findNavController().navigate(R.id.action_gestionRapportChantierFragment_to_gestionRapportChantierSousTraitanceFragment)
+                    viewModel.onBoutonClicked()
+                }
+
             }
         })
 

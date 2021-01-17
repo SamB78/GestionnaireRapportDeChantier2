@@ -19,6 +19,9 @@ interface ChantierDao {
     @Query("SELECT * FROM chantier")
     fun getAllFromChantier(): LiveData<List<Chantier>>
 
+    @Query("SELECT * FROM chantier")
+    fun getAllFromChantier2(): List<Chantier>
+
     @Query("SELECT * FROM chantier WHERE chantier_id = :id")
     fun getChantierById(id: Long): Chantier
 

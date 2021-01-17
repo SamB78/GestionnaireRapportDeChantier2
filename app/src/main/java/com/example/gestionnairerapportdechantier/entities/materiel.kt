@@ -2,6 +2,7 @@ package com.example.gestionnairerapportdechantier.entities
 
 import androidx.room.*
 import java.time.LocalDate
+import java.util.*
 
 @Entity(tableName = "materiel")
 data class Materiel (
@@ -43,6 +44,6 @@ data class AssociationMaterielRapportChantier(
     var materielId: Int,
     @ColumnInfo(name = "rapport_chantier_id")
     var rapportChantierID: Int,
-    @ColumnInfo(name = "nb_heures_travaillees")
+    @ColumnInfo(name = "nb_heures_utilisees")
     var NbHeuresUtilisees: Int = 0
 )

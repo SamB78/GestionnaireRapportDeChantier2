@@ -32,13 +32,13 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/prenom"
+                android:id="@+id/numChantier"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="@{item.marque}"
                 android:textSize="24sp"
-                app:layout_constraintBottom_toTopOf="@+id/numero"
+                app:layout_constraintBottom_toTopOf="@+id/adresse"
                 app:layout_constraintStart_toEndOf="@+id/imageViewPersonnel"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Renault" />
@@ -50,18 +50,18 @@
                 android:layout_marginStart="4dp"
                 android:text="@{item.modele}"
                 android:textSize="24sp"
-                app:layout_constraintStart_toEndOf="@+id/prenom"
+                app:layout_constraintStart_toEndOf="@+id/numChantier"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Clio" />
 
 
             <TextView
-                android:id="@+id/role"
+                android:id="@+id/codePostal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@{item.type}"
                 android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@+id/prenom"
+                app:layout_constraintStart_toStartOf="@+id/numChantier"
                 app:layout_constraintTop_toBottomOf="@+id/nom"
                 tools:text="Voiture" />
 

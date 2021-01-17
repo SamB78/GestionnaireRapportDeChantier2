@@ -39,20 +39,19 @@ class CreationChantierViewModel(
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     //Création du chantier avec son adresse
-    var chantier = MutableLiveData<Chantier>()
-    var adresse = MutableLiveData<Adresse>()
+    var chantier = MutableLiveData<Chantier>(Chantier())
 
 
     //Gestion Chefs de chantiers
     val listeChefsDeChantier = dataSourcePersonnel.getChefsdeChantier()
-    private var _chefChantierSelectionne = MutableLiveData<Personnel>()
+    private var _chefChantierSelectionne = MutableLiveData<Personnel>(Personnel())
     val chefChantierSelectionne: LiveData<Personnel>
         get() = this._chefChantierSelectionne
 
     //Gestion du Personnel
     val listePersonnel = dataSourcePersonnel.getAllFromPersonnel()
 
-    var _listePersonnelAAfficher = MutableLiveData<List<Personnel>>()
+    var _listePersonnelAAfficher = MutableLiveData<List<Personnel>>(mutableListOf())
     val listePersonnelAAfficher: LiveData<List<Personnel>>
         get() = this._listePersonnelAAfficher
 
@@ -102,11 +101,9 @@ class CreationChantierViewModel(
         if (id != -1L) {
             uiScope.launch {
                 chantier.value = getChantierValue(id)
-                adresse.value = chantier.value!!.adresseChantier
             }
         } else {
             chantier.value = Chantier()
-            adresse.value = Adresse()
         }
 
     }
@@ -129,40 +126,34 @@ class CreationChantierViewModel(
 
     fun onClickButtonCreationOrModificationEnded() {
 
-        chantier.value?.adresseChantier = adresse.value!!
-        Timber.i("Chantier ready to save in DB = ${chantier.value?.nomChantier}, ${chantier.value?.chantierId}")
+        uiScope.launch {
+        Timber.i("Chantier ready to save in DB = ${chantier.value?.nomChantier}, ${chantier.value?.adresseChantier?.adresseToString()}")
         if (chantier.value?.chantierId == null){
-            Timber.i("Resultat = null")
-            sendNewDataToDB()
+            Timber.i("sendNewDataToDB()")
+
+                sendNewDataToDB()
+
         }
         else updateDataInDB()
 
         _navigation.value = gestionNavigation.ENREGISTREMENT_CHANTIER
+        }
     }
 
-    private fun updateDataInDB() {
+    private suspend fun updateDataInDB() {
         uiScope.launch {
             withContext(Dispatchers.IO) {
                 dataSourceChantier.update(chantier.value!!)
             }
-        }
+        }.join()
     }
 
-    private fun sendNewDataToDB() {
-        val chantierTest = Chantier(
-            null,
-            "123456",
-            "Chantier de Chantilly",
-            Adresse("12 Rue Francis Carco", "78760", "Jouars"),
-            null,
-            "Henri",
-            null,
-            null,
-            1
-        )
-        var chantierId: Long? = null
+    private suspend fun sendNewDataToDB() {
+        Timber.i("sendNewDataToDB()")
+        var chantierId: Long
         uiScope.launch {
             withContext(Dispatchers.IO) {
+                Timber.i("adresse: Chantier = ${chantier.value?.adresseChantier?.ville}")
                 chantierId = dataSourceChantier.insert(chantier.value!!)
                 Timber.i("ChantierId = $chantierId")
 
@@ -171,7 +162,7 @@ class CreationChantierViewModel(
                     dataSourceAssociationPersonnelChantier.insertAssociationPersonnelChantier(associationPersonnelChantier)
                 }
             }
-        }
+        }.join()
     }
 
 
@@ -259,7 +250,7 @@ class CreationChantierViewModel(
     }
 
     fun onClickConfirmationEtapeImage() {
-        sendNewDataToDB()
+//        sendNewDataToDB()
         _navigation.value = gestionNavigation.PASSAGE_ETAPE_RESUME
     }
 

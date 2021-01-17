@@ -8,6 +8,7 @@ import com.example.gestionnairerapportdechantier.entities.Vehicule
 import kotlinx.coroutines.*
 import timber.log.Timber
 import java.time.LocalDate
+import java.util.*
 
 class GestionVehiculeViewModel(private val dataSource: VehiculeDao, id: Long = -1L) : ViewModel() {
 
@@ -25,7 +26,7 @@ class GestionVehiculeViewModel(private val dataSource: VehiculeDao, id: Long = -
 
     var vehicule = MutableLiveData<Vehicule>()
     var imageVehicule = MutableLiveData<String>()
-
+    var date = MutableLiveData<LocalDate>()
     //navigation
     private var _navigation =
         MutableLiveData<gestionNavigation>()
@@ -44,6 +45,9 @@ class GestionVehiculeViewModel(private val dataSource: VehiculeDao, id: Long = -
 
                 vehicule.value?.urlPictureVehicule?.let {
                     imageVehicule.value = it
+                }
+                vehicule.value?.miseEnCirculation?.let{
+                    date.value = it
                 }
             }
         } else {
@@ -113,6 +117,7 @@ class GestionVehiculeViewModel(private val dataSource: VehiculeDao, id: Long = -
     }
 
     fun onDateSelected(date: LocalDate){
+        this.date.value = date
         vehicule.value?.miseEnCirculation = date
         Timber.i("Date enregistre miseEnCirculation : ${vehicule.value?.miseEnCirculation.toString()}")
     }

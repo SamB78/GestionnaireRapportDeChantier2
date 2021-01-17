@@ -11,7 +11,6 @@ import androidx.navigation.navGraphViewModels
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentAutresInformations2Binding
 import com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.GestionRapportChantierViewModel
-import com.example.gestionnairerapportdechantier.rapportChantier.listeRapportsChantier.listeRapportsChantierFragmentDirections
 
 class AutresInformations2Fragment : Fragment() {
 
@@ -36,7 +35,7 @@ class AutresInformations2Fragment : Fragment() {
 
                     val action =
                         AutresInformations2FragmentDirections.actionAutresInformations2FragmentToGestionRapportChantierFragment(
-                            -1L, null
+                            -1L, -1L
                         )
                     findNavController().navigate(action)
 

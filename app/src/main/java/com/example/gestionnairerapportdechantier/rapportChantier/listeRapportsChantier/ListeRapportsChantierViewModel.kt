@@ -13,6 +13,7 @@ class ListeRapportsChantierViewModel(private val dataSourceRapporChantier: Rappo
     enum class navigationMenu {
         CREATION,
         MODIFICATION,
+        CONSULTATION,
         AJOUT,
         SELECTION_DATE,
         EN_ATTENTE

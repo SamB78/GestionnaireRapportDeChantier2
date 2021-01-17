@@ -46,7 +46,9 @@ class MainMenuFragment : Fragment() {
                     viewModel.onBoutonClicked()
                 }
                 MainMenuViewModel.navigationMainMenu.PASSAGE_PAGE_RAPPORTS_CHANTIER -> {
-//                    navController.navigate(R.id.action_mainMenuFragment_to_listeRapportsChantierFragment)
+                    val action = MainMenuFragmentDirections.actionMainMenuFragmentToSelectionChantierFragment()
+                    findNavController().navigate(action)
+
                     viewModel.onBoutonClicked()
                 }
                 MainMenuViewModel.navigationMainMenu.PASSAGE_PAGE_VEHICULES -> {

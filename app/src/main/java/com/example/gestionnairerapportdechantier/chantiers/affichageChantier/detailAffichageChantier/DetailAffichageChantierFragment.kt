@@ -30,11 +30,9 @@ class DetailAffichageChantierFragment : Fragment() {
     ): View? {
 
         val binding = FragmentDetailAffichageChantierBinding.inflate(inflater)
-        binding.executePendingBindings()
-
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-
+        binding.executePendingBindings()
 
         //RecyclerView
         val adapter = ListePersonnelAdapter(

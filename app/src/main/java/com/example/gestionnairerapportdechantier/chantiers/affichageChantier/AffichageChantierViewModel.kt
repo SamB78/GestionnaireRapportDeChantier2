@@ -11,9 +11,9 @@ import com.example.gestionnairerapportdechantier.entities.Adresse
 import com.example.gestionnairerapportdechantier.entities.Chantier
 import com.example.gestionnairerapportdechantier.entities.Personnel
 import com.example.gestionnairerapportdechantier.entities.RapportChantier
-import com.example.gestionnairerapportdechantier.rapportChantier.listeRapportsChantier.ListeRapportsChantierViewModel
 import kotlinx.coroutines.*
 import timber.log.Timber
+import java.util.*
 
 class AffichageChantierViewModel(
     private val dataSourceChantier: ChantierDao,
@@ -25,10 +25,14 @@ class AffichageChantierViewModel(
 
     enum class navigationMenu {
         CREATION,
-        MODIFICATION,
+        MODIFICATION_RAPPORT_CHANTIER,
+        CONSULTATION,
         AJOUT,
         SELECTION_DATE,
-        EN_ATTENTE
+        EN_ATTENTE,
+        EDIT,
+        EXPORT,
+        SELECTION_DATE_EXPORT,
     }
 
     //Coroutines
@@ -40,7 +44,7 @@ class AffichageChantierViewModel(
     var adresse = MutableLiveData<Adresse>()
 
     //Chef de Chantier
-    private var _chefChantierSelectionne = MutableLiveData<Personnel>()
+    private var _chefChantierSelectionne = MutableLiveData<Personnel>(Personnel())
     val chefChantierSelectionne: LiveData<Personnel>
         get() = this._chefChantierSelectionne
 
@@ -60,13 +64,23 @@ class AffichageChantierViewModel(
     val listeRapportsChantiers: LiveData<List<RapportChantier>>
         get() = this._listeRapportsChantiers
 
-    private var _navigation = MutableLiveData<ListeRapportsChantierViewModel.navigationMenu>()
-    val navigation: LiveData<ListeRapportsChantierViewModel.navigationMenu>
+    private var _navigation = MutableLiveData<navigationMenu>()
+    val navigation: LiveData<navigationMenu>
         get() = this._navigation
 
     private var _idRapportChantier = MutableLiveData<Long>()
     val idRapportChantier: LiveData<Long>
         get() = this._idRapportChantier
+
+    // Dates pour export
+
+    private var _dateDebut = MutableLiveData<Long>()
+    val dateDebut: LiveData<Long>
+        get() = this._dateDebut
+
+    private var _dateFin = MutableLiveData<Long>()
+    val dateFin: LiveData<Long>
+        get() = this._dateFin
 
 
     init {
@@ -97,6 +111,7 @@ class AffichageChantierViewModel(
         uiScope.launch {
             _listeRapportsChantiers.value = withContext(Dispatchers.IO) {
                 dataSourceRapporChantier.getAllFromRapportChantierByChantierId(idChantier)
+                    .sortedByDescending { it.dateRapportChantier }
             }
         }
     }
@@ -134,27 +149,50 @@ class AffichageChantierViewModel(
     }
 
     fun onClickBoutonAjoutRapportChantier() {
-        _navigation.value = ListeRapportsChantierViewModel.navigationMenu.SELECTION_DATE
+        _navigation.value = navigationMenu.SELECTION_DATE
     }
 
     fun onDateSelected() {
-        _navigation.value = ListeRapportsChantierViewModel.navigationMenu.CREATION
+        _navigation.value = navigationMenu.CREATION
     }
 
-    fun onRapportChantierClicked(rapportChantier: RapportChantier) {
+    fun onButtonClickEditRapportChantier(rapportChantier: RapportChantier) {
         _idRapportChantier.value = rapportChantier.rapportChantierId!!.toLong()
-        _navigation.value = ListeRapportsChantierViewModel.navigationMenu.MODIFICATION
+        _navigation.value = navigationMenu.MODIFICATION_RAPPORT_CHANTIER
+    }
+
+    fun onButtonClickConsultRapportChantier(rapportChantier: RapportChantier) {
+        _idRapportChantier.value = rapportChantier.rapportChantierId!!.toLong()
+        _navigation.value = navigationMenu.CONSULTATION
+    }
+
+    fun onClickButtonEditChantier() {
+        _navigation.value = navigationMenu.EDIT
+    }
+
+
+    fun onClickButtonExportData() {
+
+        _navigation.value = navigationMenu.SELECTION_DATE_EXPORT
+    }
+
+    fun onDatesToExportSelected(date1: Long, date2: Long) {
+        _dateDebut.value = date1
+        _dateFin.value = date2
+
+        Timber.i("Dates = ${dateDebut.value} ${dateFin.value}")
+
+        _navigation.value = navigationMenu.EXPORT
     }
 
     fun onBoutonClicked() {
-        _navigation.value = ListeRapportsChantierViewModel.navigationMenu.EN_ATTENTE
+        _navigation.value = navigationMenu.EN_ATTENTE
     }
 
     fun onResumeGestionMaterielFragment() {
         RetrieveRapportChantiers(idChantier)
         initializeData(idChantier)
     }
-
 
 
     // onCleared()

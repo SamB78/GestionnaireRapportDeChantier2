@@ -2,6 +2,7 @@ package com.example.gestionnairerapportdechantier.entities
 
 import androidx.room.*
 import com.example.gestionnairerapportdechantier.entities.Chantier
+import timber.log.Timber
 import java.time.LocalDate
 import java.util.*
 
@@ -50,8 +51,14 @@ data class RapportChantier(
     var totalHeuresMaterielLocation: Int = 0,
     var totalHeuresMateriel: Int = 0,
     var totalMateriaux: Int = 0,
-    var totalSousTraitant: Int = 0,
-    var totalRapportChantier: Int = 0
+    var totalSousTraitance: Int = 0,
+    var totalRapportChantier: Int = 0,
+    var entretien: Boolean = false,
+    var chantier: Boolean = false,
+
+    @Embedded
+    var dataSaved: DataSaved = DataSaved()
+
 
 
 )
@@ -80,4 +87,36 @@ data class InfosRapportChantier(
 
     var bonDeCommande: Boolean = false
 
+) {
+    fun sendNumberOfTrueChamps(): Int {
+        var number = 0
+        if (securiteRespectPortEPI) number += 1
+        if (securiteBalisage) number += 1
+        if (environnementProprete) number += 1
+        if (environnementNonPollution) number += 1
+        if (propreteVehicule) number += 1
+        if (entretienMateriel) number += 1
+        if (renduCarnetDeBord) number += 1
+        if (renduBonCarburant) number += 1
+        if (renduBonDecharge) number += 1
+        if (feuillesInterimaires) number += 1
+        if (bonDeCommande) number += 1
+        Timber.i("Numbe value : $number")
+        return number
+    }
+
+    fun sendNumberOfFalseChamps(): Int {
+        return 11 - sendNumberOfTrueChamps()
+
+    }
+}
+
+data class DataSaved(
+    var dataPersonnel: Boolean = false,
+    var dataMateriel: Boolean = false,
+    var dataMaterielLocation: Boolean = false,
+    var dataMateriaux: Boolean = false,
+    var dataSousTraitance: Boolean = false,
+    var dataConformiteChantier: Boolean = false,
+    var dataObservations: Boolean = false
 )

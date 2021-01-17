@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import com.example.gestionnairerapportdechantier.MainActivity
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.chantiers.affichageChantier.AffichageChantierViewModel
 import com.example.gestionnairerapportdechantier.databinding.FragmentGestionRapportChantierPersonnelBinding
 import com.example.gestionnairerapportdechantier.databinding.FragmentObservationsRapportChantierBinding
 import com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.GestionRapportChantierViewModel
+import com.example.gestionnairerapportdechantier.utils.hideKeyboard
 
 class observationsRapportChantierFragment : Fragment() {
 
@@ -30,13 +32,14 @@ class observationsRapportChantierFragment : Fragment() {
         //Navigation
 
         viewModel.navigation.observe(viewLifecycleOwner, Observer { navigation ->
+            hideKeyboard(activity as MainActivity)
             when (navigation) {
 
                 GestionRapportChantierViewModel.GestionNavigation.VALIDATION_OBSERVATIONS -> {
                     val action =
                         observationsRapportChantierFragmentDirections.actionObservationsRapportChantierToGestionRapportChantierFragment(
                             -1L,
-                            null
+                            -1L
                         )
                     findNavController().navigate(action)
                     viewModel.onBoutonClicked()

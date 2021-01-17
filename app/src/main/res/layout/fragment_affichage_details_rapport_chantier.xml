@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.example.gestionnairerapportdechantier.R" />
+
+        <variable
+            name="viewModel"
+            type="com.example.gestionnairerapportdechantier.rapportChantier.affichageRapportChantier.AffichageDetailsRapportChantierViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/tabHeuresTravaillees"
+                    layout="@layout/tableau_heures_travaillees"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:viewModel="@{viewModel}" />
+
+                <include
+                    android:id="@+id/tabMateriel"
+                    layout="@layout/tableau_materiel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:viewModel="@{viewModel}" />
+
+                <include
+                    android:id="@+id/tabMateriaux"
+                    layout="@layout/tableau_materiaux"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:viewModel="@{viewModel}" />
+
+            </LinearLayout>
+
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

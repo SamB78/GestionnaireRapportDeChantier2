@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.example.gestionnairerapportdechantier.R" />
+
+        <variable
+            name="viewModel"
+            type="com.example.gestionnairerapportdechantier.rapportChantier.affichageRapportChantier.AffichageDetailsRapportChantierViewModel" />
+
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:animateLayoutChanges="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="TOTAL QUANTITE MATERIEL:"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textView16"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="15" />
+
+                <ImageButton
+                    android:id="@+id/imageButton3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="2dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:onClick="@{()-> viewModel.onClickButtonVisibilityTotalMateriel()}"
+                    app:srcCompat="@drawable/ic_baseline_keyboard_arrow_down_24" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".personnel.listePersonnel.ListePersonnelFragment"
+                setLayoutVisibility="@{viewModel.showTabMateriel}">
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayoutTableau"
+                    layout_max_width="@{viewModel.numberOfColumns}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:context=".personnel.listePersonnel.ListePersonnelFragment">
+                    <!-- TODO: Update blank fragment layout -->
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/namesList"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        app:items="@{viewModel.listeNomsMateriel}"
+                        app:layoutId="@{R.layout.name_list_item}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:vm="@{viewModel}" />
+
+                    <HorizontalScrollView
+                        android:id="@+id/horiztonalScrollView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/totalListe"
+                        app:layout_constraintStart_toEndOf="@+id/namesList"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/personnelTableau"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clipToPadding="false"
+                            app:items="@{viewModel.tableauMateriel}"
+                            app:layoutId="@{R.layout.table_list_item}"
+                            setGridLayout="@{viewModel.numberOfColumns}"
+                            app:vm="@{viewModel}" />
+
+                    </HorizontalScrollView>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/totalListe"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        app:items="@{viewModel.listeTotalMateriel}"
+                        app:layoutId="@{R.layout.name_list_item}"
+
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:vm="@{viewModel}" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>

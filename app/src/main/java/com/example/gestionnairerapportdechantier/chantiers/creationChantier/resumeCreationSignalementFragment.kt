@@ -59,11 +59,12 @@ class resumeCreationSignalementFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentResumeCreationSignalementBinding.inflate(inflater, container, false)
-        binding.executePendingBindings()
+
 
         //ViewModel Binding
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        binding.executePendingBindings()
 
         //RecyclerView
         val adapter = ListePersonnelAdapter(

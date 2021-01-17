@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.example.gestionnairerapportdechantier.R" />
+
         <variable
             name="viewModel"
             type="com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.GestionRapportChantierViewModel" />
@@ -18,10 +20,15 @@
             android:id="@+id/personnelListe"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/buttonSuivant"
+            android:clipToPadding="false"
+            android:paddingBottom="60dp"
+            app:items="@{viewModel.listePersonnelRapportChantier}"
+            app:layoutId="@{R.layout.personnel_nb_heures_travaillees_item_view}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:vm="@{viewModel}" />
 
         <Button
             android:id="@+id/buttonSuivant"

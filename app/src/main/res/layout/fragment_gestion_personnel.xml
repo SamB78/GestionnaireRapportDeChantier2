@@ -37,7 +37,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/editTextPrenom"
                     android:layout_width="280dp"
-                    android:layout_height="56dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:ems="10"
                     android:hint="Prenom"

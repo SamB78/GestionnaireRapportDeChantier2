@@ -1,21 +1,30 @@
 package com.example.gestionnairerapportdechantier.utils
 
+import android.content.res.Resources
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.DisplayMetrics
 import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
-import androidx.databinding.InverseBindingListener
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.entities.Personnel
+import com.example.gestionnairerapportdechantier.rapportChantier.affichageRapportChantier.AffichageDetailsRapportChantierViewModel
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.textfield.TextInputEditText
 import timber.log.Timber
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.math.roundToInt
 
 
 @BindingAdapter("clickedElement")
@@ -37,7 +46,7 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
         )
 //                .error(R.drawable.ic_broken_image))
         .into(imgView)
-    Timber.e("TEST PASSAGE GLIDE")
+    Timber.i("TEST PASSAGE GLIDE")
 }
 
 @BindingAdapter("imageUrl2")
@@ -52,7 +61,7 @@ fun bindImage2(imgView: ImageView, imgUrl: String?) {
                     .placeholder(R.drawable.ic_person_black_24dp)
             )
             .into(imgView)
-        Timber.e("TEST PASSAGE GLIDE")
+        Timber.i("TEST PASSAGE GLIDE")
     }
 }
 
@@ -67,7 +76,7 @@ fun bindImageItemViewPersonnel(imgView: ImageView, imgUrl: String?) {
                 .placeholder(R.drawable.ic_person_black_24dp)
         )
         .into(imgView)
-    Timber.e("TEST PASSAGE GLIDE")
+    Timber.i("TEST PASSAGE GLIDE")
 }
 
 
@@ -105,6 +114,52 @@ fun setTextDependingPersonnelRole(textView: TextView, personnel: Personnel) {
     }
 }
 
+@BindingAdapter("setCardVisibility")
+fun setCardVisibility(cardView: MaterialCardView, boolean: Boolean) {
+    when (boolean) {
+        true -> {
+            Timber.i(" button.visibility = View.VISIBLE")
+            cardView.visibility = View.VISIBLE
+        }
+        false -> {
+            Timber.i("  button.visibility = View.GONE")
+            cardView.visibility = View.GONE
+
+        }
+    }
+}
+
+
+@BindingAdapter("setLayoutVisibility")
+fun setLayoutVisibility(linearLayout: LinearLayout, boolean: Boolean) {
+    when (boolean) {
+        true -> {
+            Timber.i(" button.visibility = View.VISIBLE")
+            linearLayout.visibility = View.VISIBLE
+        }
+        false -> {
+            Timber.i("  button.visibility = View.GONE")
+            linearLayout.visibility = View.GONE
+
+        }
+    }
+}
+
+@BindingAdapter("setLayoutVisibility")
+fun setLayoutVisibility(layout: ConstraintLayout, boolean: Boolean) {
+    when (boolean) {
+        true -> {
+            Timber.i(" button.visibility = View.VISIBLE")
+            layout.visibility = View.VISIBLE
+        }
+        false -> {
+            Timber.i("  button.visibility = View.GONE")
+            layout.visibility = View.GONE
+
+        }
+    }
+}
+
 @BindingAdapter("setTextFromFunction")
 fun setTextFromFunction(textView: TextView, text: String) {
     textView.text = text
@@ -112,14 +167,17 @@ fun setTextFromFunction(textView: TextView, text: String) {
 
 
 @BindingAdapter("showDate")
-fun setTextFromDate(textView: TextView, date: LocalDate?) {
+fun setTextFromDate(textView: TextView, date: Date?) {
+    val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+
     if (date != null) {
-        textView.text = date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+        calendar.time = date
+        textView.text = calendar.time.toString()
     }
 }
 
 @BindingAdapter("valueToCheckForMaxButton", "valueMax")
-fun disableButtonMax( imageButton: ImageButton, value: Int, valueMax: Int) {
+fun disableButtonMax(imageButton: ImageButton, value: Int, valueMax: Int) {
     if (value >= valueMax) {
         imageButton.isEnabled = false
         imageButton.isClickable = false
@@ -144,9 +202,21 @@ fun disableButtonMin(imageButton: ImageButton, value: Int) {
 // PLUS TARD
 
 
-@BindingAdapter("textRespectingMinAndMax")
-fun setTextRespectingMinAndMax(editText: EditText, value: Int) {
+@BindingAdapter("booleanSaved", "dataEdited")
+fun setBackgroundColor(cardView: MaterialCardView, booleanSaved: Boolean, dataEdited: Boolean) {
+    val vert: Int = R.color.colorDataSavedTrue
+    val rouge: Int = R.color.colorDataSavedFalse
+    val orange: Int = R.color.colorDataEdited
 
+    if (booleanSaved) {
+        if (dataEdited) cardView.setCardBackgroundColor(
+            ContextCompat.getColor(
+                cardView.context,
+                orange
+            )
+        )
+        else cardView.setCardBackgroundColor(ContextCompat.getColor(cardView.context, vert))
+    } else cardView.setCardBackgroundColor(ContextCompat.getColor(cardView.context, rouge))
 }
 
 
@@ -186,9 +256,66 @@ fun bindIntegerInText(
     })
 }
 
-
 @InverseBindingAdapter(attribute = "app:input", event = "app:inputAttrChanged")
 fun bindCountryInverseAdapter(view: AppCompatEditText): Int {
     val string = view.text.toString()
     return if (string.isEmpty()) 0 else string.toInt()
+}
+
+@BindingAdapter("scrollTo")
+fun scrollTo(scrollView: ScrollView, boolean: Boolean) {
+    Timber.i("Entree scrollTo")
+    if (boolean) {
+        Timber.i("scrollTo = True")
+        scrollView.scrollTo(0, R.id.editTextTextMultiLine)
+    } else {
+        Timber.i("scrollTo = False")
+    }
+}
+
+
+@BindingAdapter("date")
+fun convertDateToTexView(textView: TextView, date: LocalDate?) {
+
+    val sdf = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+    textView.text = date?.let { sdf.format(date) }
+}
+
+@BindingAdapter("date")
+fun convertDateToEditTextField(textInputEditText: TextInputEditText, date: Date?) {
+
+    if (date != null) {
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        calendar.time = date
+        textInputEditText.setText(
+            "${calendar.get(Calendar.DAY_OF_MONTH)}-${calendar.get(Calendar.MONTH) + 1}-${
+                calendar.get(
+                    Calendar.YEAR
+                )
+            } "
+        )
+    }
+}
+
+@BindingAdapter("layout_max_width")
+fun setLayoutWidth(
+    constraintLayout: ConstraintLayout,
+    value: Int
+) {
+    val value = 180 + (value * 65)
+    Timber.i("value width = $value")
+
+    constraintLayout.maxWidth = dpToPx(value)
+
+}
+
+fun dpToPx(dp: Int): Int {
+    val metrics = Resources.getSystem().displayMetrics.density
+    return (dp.toFloat() * metrics).roundToInt()
+}
+
+@BindingAdapter("setGridLayout")
+fun setGridLayout(recyclerView: RecyclerView, value: Int){
+    val manager = GridLayoutManager(recyclerView.context, value, GridLayoutManager.VERTICAL, false)
+    recyclerView.layoutManager = manager
 }

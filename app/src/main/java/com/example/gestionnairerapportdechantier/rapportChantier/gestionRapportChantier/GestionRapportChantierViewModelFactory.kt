@@ -9,12 +9,18 @@ class GestionRapportChantierViewModelFactory(
     private val dataSourceChantier: ChantierDao,
     private val dataSourcePersonnel: PersonnelDao,
     private val dataSourceMateriel: MaterielDao,
+    private val dataSourceMaterielLocation: MaterielLocationDao,
+    private val dataSourceMateriaux: MateriauxDao,
+    private val dataSourceSousTraitance: SousTraitanceDao,
     private val dataSourceAssociationPersonnelChantier: AssociationPersonnelChantierDao,
     private val associationPersonnelRapportChantierDao: AssociationPersonnelRapportChantierDao,
     private val associationMaterielRapportChantierDao: AssociationMaterielRapportChantierDao,
+    private val associationMaterielLocationRapportChantierDao: AssociationMaterielLocationRapportChantierDao,
+    private val dataSourceAssociationMateriauxRapportChantierDao: AssociationMateriauxRapportChantierDao,
+    private val dataSourceAssociationSousTraitanceRapportChantierDao: AssociationSousTraitanceRapportChantierDao,
     private val idRapportChantier: Long,
     private val idChantier: Int,
-    private val dateRapportChantier: String?
+    private val dateRapportChantier: Long
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(GestionRapportChantierViewModel::class.java)) {
@@ -23,9 +29,15 @@ class GestionRapportChantierViewModelFactory(
                 dataSourceChantier,
                 dataSourcePersonnel,
                 dataSourceMateriel,
+                dataSourceMaterielLocation,
+                dataSourceMateriaux,
+                dataSourceSousTraitance,
                 dataSourceAssociationPersonnelChantier,
                 associationPersonnelRapportChantierDao,
                 associationMaterielRapportChantierDao,
+                associationMaterielLocationRapportChantierDao,
+                dataSourceAssociationMateriauxRapportChantierDao,
+                dataSourceAssociationSousTraitanceRapportChantierDao,
                 idRapportChantier,
                 idChantier,
                 dateRapportChantier

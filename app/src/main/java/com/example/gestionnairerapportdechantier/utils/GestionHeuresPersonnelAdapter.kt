@@ -1,4 +1,4 @@
-package com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.gestionPersonnel
+package com.example.gestionnairerapportdechantier.utils
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -50,8 +50,8 @@ class ViewHolder private constructor(val binding: PersonnelNbHeuresTravailleesIt
         personnel: Personnel,
         clickListener: GestionHeuresPersonnelListener
     ) {
-        binding.clickListener = clickListener
-        binding.personnel = personnel
+//        binding.clickListener = clickListener
+        binding.item = personnel
     }
 
 }

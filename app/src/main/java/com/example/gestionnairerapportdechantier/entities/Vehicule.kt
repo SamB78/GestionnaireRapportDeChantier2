@@ -3,6 +3,7 @@ package com.example.gestionnairerapportdechantier.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDate
+import java.util.*
 
 @Entity(tableName = "vehicule")
 data class Vehicule (

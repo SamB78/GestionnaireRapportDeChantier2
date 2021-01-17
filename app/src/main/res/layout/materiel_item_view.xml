@@ -33,13 +33,13 @@
             android:onClick="@{() -> clickListener.onClick(materiel)}">
 
             <TextView
-                android:id="@+id/prenom"
+                android:id="@+id/numChantier"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:textSize="24sp"
-                app:layout_constraintBottom_toTopOf="@+id/numero"
+                app:layout_constraintBottom_toTopOf="@+id/adresse"
                 app:layout_constraintStart_toEndOf="@+id/imageViewmateriel"
                 app:layout_constraintTop_toTopOf="parent"
                 android:text="@{materiel.modele}"
@@ -47,23 +47,23 @@
 
 
             <TextView
-                android:id="@+id/numero"
+                android:id="@+id/adresse"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@{materiel.numeroSerie}"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toTopOf="@+id/role"
-                app:layout_constraintStart_toStartOf="@+id/prenom"
+                app:layout_constraintBottom_toTopOf="@+id/codePostal"
+                app:layout_constraintStart_toStartOf="@+id/numChantier"
                 app:layout_constraintTop_toBottomOf="@+id/nom"
                 tools:text="06 51 84 33 15" />
 
             <TextView
-                android:id="@+id/role"
+                android:id="@+id/codePostal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@+id/numero"
-                app:layout_constraintTop_toBottomOf="@+id/numero"
+                app:layout_constraintStart_toStartOf="@+id/adresse"
+                app:layout_constraintTop_toBottomOf="@+id/adresse"
                 tools:text="Chef d'équipe"
                 android:text="@{materiel.type}"/>
 

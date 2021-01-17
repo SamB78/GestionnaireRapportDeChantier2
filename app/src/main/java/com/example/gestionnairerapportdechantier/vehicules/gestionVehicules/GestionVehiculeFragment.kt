@@ -27,7 +27,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.datepicker.MaterialDatePicker
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 class GestionVehiculeFragment : Fragment() {
@@ -71,12 +74,24 @@ class GestionVehiculeFragment : Fragment() {
                     val localDate = LocalDate.of(year, month, day)
                     date = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                     Timber.i("Date pre VM = $date")
-                    viewModel.onDateSelected(localDate)
+//                    viewModel.onDateSelected(localDate)
                     binding.invalidateAll()
 
                 }, year, month, day)
             }
         dpd?.datePicker?.maxDate = System.currentTimeMillis()
+
+        // Create the date picker builder and set the title
+        val builder = MaterialDatePicker.Builder.datePicker()
+        // create the date picker
+        val datePicker = builder.build()
+        // set listener when date is selected
+        datePicker.addOnPositiveButtonClickListener {
+            val date2 = Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
+            Timber.i("Long to date = $it, ${Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()}, ${date2.toEpochDay()}")
+
+            viewModel.onDateSelected(Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate())
+        }
 
         viewModel.navigation.observe(viewLifecycleOwner, Observer { navigation ->
             when (navigation) {
@@ -94,7 +109,7 @@ class GestionVehiculeFragment : Fragment() {
                 }
                 GestionVehiculeViewModel.gestionNavigation.CHOIX_DATE_IMMAT -> {
                     viewModel.onBoutonClicked()
-                    dpd?.show()
+                    datePicker.show(activity?.supportFragmentManager!!, "MyTAG")
                 }
             }
 

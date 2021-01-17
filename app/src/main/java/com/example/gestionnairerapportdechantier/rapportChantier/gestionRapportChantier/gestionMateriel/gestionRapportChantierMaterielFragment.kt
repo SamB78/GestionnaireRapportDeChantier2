@@ -56,6 +56,7 @@ class gestionRapportChantierMaterielFragment : Fragment() {
         viewModel.navigation.observe(viewLifecycleOwner, Observer { navigation ->
             when (navigation) {
                 GestionRapportChantierViewModel.GestionNavigation.PASSAGE_AJOUT_MATERIEL -> {
+                    Timber.i("rapportChantierId in fragment: ${viewModel.rapportChantier.value?.rapportChantierId} ")
                     val action =
                         gestionRapportChantierMaterielFragmentDirections.actionGestionRapportChantierMaterielFragmentToGestionRapportChantierAjoutMaterielFragment(
                             viewModel.rapportChantier.value?.rapportChantierId!!.toLong()
@@ -67,7 +68,7 @@ class gestionRapportChantierMaterielFragment : Fragment() {
                     Timber.i("VALIDATION_GESTION_PERSONNEL")
                     val action =
                         gestionRapportChantierMaterielFragmentDirections.actionGestionRapportChantierMaterielFragmentToGestionRapportChantierFragment(
-                            -1L, null
+                            -1L, -1L
                         )
                     findNavController().navigate(action)
                     viewModel.onBoutonClicked()

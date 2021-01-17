@@ -85,7 +85,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPersonName"
-                        android:text="@={viewModel.adresse.rue}" />
+                        android:text="@={viewModel.chantier.adresseChantier.rue}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -103,7 +103,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@={viewModel.adresse.codePostal}" />
+                        android:text="@={viewModel.chantier.adresseChantier.codePostal}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -123,7 +123,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPersonName"
-                        android:text="@={viewModel.adresse.ville}" />
+                        android:text="@={viewModel.chantier.adresseChantier.ville}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

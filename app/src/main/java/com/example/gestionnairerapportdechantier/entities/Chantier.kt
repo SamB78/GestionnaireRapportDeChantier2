@@ -38,6 +38,4 @@ data class Chantier(
 
     var chefChantierId: Int? = null
 
-
-
     )

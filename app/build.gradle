@@ -8,6 +8,9 @@ apply plugin: 'kotlin-kapt'
 
 apply plugin: "androidx.navigation.safeargs.kotlin"
 
+apply plugin: 'com.google.gms.google-services'
+
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -104,6 +107,20 @@ dependencies {
     //FloxBoxLayout
     implementation 'com.google.android:flexbox:2.0.1'
 
+
+    //Expandable CardViews
+    implementation 'com.alespero:expandable-cardview:0.8'
+
+    implementation "com.github.SUPERCILEX.poi-android:poi:$poiVersion"
+
+    compileOnly "org.apache.poi:poi-ooxml:$poiVersion"
+
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:26.2.0')
+
+    // Declare the dependency for the Firebase Authentication library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-auth-ktx'
 
 }
 

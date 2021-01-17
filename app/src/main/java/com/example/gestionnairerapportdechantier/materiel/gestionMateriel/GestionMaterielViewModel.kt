@@ -8,6 +8,7 @@ import com.example.gestionnairerapportdechantier.entities.Materiel
 import kotlinx.coroutines.*
 import timber.log.Timber
 import java.time.LocalDate
+import java.util.*
 
 class GestionMaterielViewModel(private val dataSource: MaterielDao, id: Long = -1L) : ViewModel() {
 
@@ -25,6 +26,7 @@ class GestionMaterielViewModel(private val dataSource: MaterielDao, id: Long = -
 
     var materiel = MutableLiveData<Materiel>()
     var imageMateriel = MutableLiveData<String>()
+    var date = MutableLiveData<LocalDate>()
 
     //navigation
     private var _navigation =
@@ -44,6 +46,9 @@ class GestionMaterielViewModel(private val dataSource: MaterielDao, id: Long = -
 
                 materiel.value?.urlPictureMateriel?.let {
                     imageMateriel.value = it
+                }
+                materiel.value?.miseEnCirculation?.let{
+                    date.value = it
                 }
             }
         } else {
@@ -113,6 +118,7 @@ class GestionMaterielViewModel(private val dataSource: MaterielDao, id: Long = -
     }
 
     fun onDateSelected(date: LocalDate){
+        this.date.value = date
         materiel.value?.miseEnCirculation = date
         Timber.i("Date enregistre miseEnCirculation : ${materiel.value?.miseEnCirculation.toString()}")
     }

@@ -6,17 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.databinding.FragmentGestionRapportChantierAjoutMaterielBinding
+import timber.log.Timber
 
 
 class GestionRapportChantierAjoutMaterielFragment : Fragment() {
 
     private lateinit var viewModelFactory: GestionRapportChantierAjoutMaterielViewModelFactory
-    val viewModel: GestionRapportChantierAjoutMaterielViewModel by activityViewModels { viewModelFactory }
+    val viewModel: GestionRapportChantierAjoutMaterielViewModel by viewModels { viewModelFactory }
 
 
     override fun onCreateView(
@@ -27,7 +29,8 @@ class GestionRapportChantierAjoutMaterielFragment : Fragment() {
 
         //ViewModelFactory
         val application = requireNotNull(this.activity).application
-        val rapportChantierId: Long = GestionRapportChantierAjoutMaterielFragmentArgs.fromBundle(arguments!!).idRapportChantier
+        val rapportChantierId: Long =
+            GestionRapportChantierAjoutMaterielFragmentArgs.fromBundle(arguments!!).idRapportChantier
         val dataSourceMateriel = GestionnaireDatabase.getInstance(application).materielDao
         val dataSourceAssociationMaterielRapportChantier =
             GestionnaireDatabase.getInstance(application).associationMaterielRapportChantierDao
@@ -36,6 +39,8 @@ class GestionRapportChantierAjoutMaterielFragment : Fragment() {
             dataSourceMateriel,
             dataSourceAssociationMaterielRapportChantier
         )
+
+        Timber.i("rapportChantierId in fragment: $rapportChantierId ")
 
         //ViewModel
 
@@ -62,8 +67,4 @@ class GestionRapportChantierAjoutMaterielFragment : Fragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.initializeData(viewModel.rapportChantierId)
-    }
 }

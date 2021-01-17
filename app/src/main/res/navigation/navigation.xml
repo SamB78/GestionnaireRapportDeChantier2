@@ -23,6 +23,9 @@
         <action
             android:id="@+id/action_mainMenuFragment_to_listeMaterielFragment"
             app:destination="@id/listeMaterielFragment" />
+        <action
+            android:id="@+id/action_mainMenuFragment_to_selectionChantierFragment"
+            app:destination="@id/AffichageRapportsChantierNavGraph" />
     </fragment>
     <fragment
         android:id="@+id/listePersonnelFragment"
@@ -162,10 +165,26 @@
                     android:defaultValue="-1L" />
                 <argument
                     android:name="date"
-                    app:nullable="true" />
+                    android:defaultValue="-1L"/>
                 <argument
                     android:name="idChantier"
                     android:defaultValue="-1" />
+            </action>
+            <action
+                android:id="@+id/action_affichageChantierFragment_to_AffichageRapportsChantierNavGraph"
+                app:destination="@id/AffichageRapportsChantierNavGraph" >
+            <argument
+                android:name="idChantier"
+                android:defaultValue="-1L"
+                app:argType="long" />
+            <argument
+                android:name="dateDebut"
+                android:defaultValue="-1L"
+                app:argType="long"/>
+            <argument
+                android:name="dateFin"
+                android:defaultValue="-1L"
+                app:argType="long"/>
             </action>
         </fragment>
         <fragment
@@ -185,7 +204,7 @@
                     android:defaultValue="-1L" />
                 <argument
                     android:name="date"
-                    app:nullable="true" />
+                    android:defaultValue="-1L" />
                 <argument
                     android:name="idChantier"
                     android:defaultValue="-1" />
@@ -210,9 +229,8 @@
                 app:argType="long" />
             <argument
                 android:name="date"
-                android:defaultValue='""'
-                app:argType="string"
-                app:nullable="true" />
+                android:defaultValue="-1L"
+                app:argType="long" />
             <argument
                 android:name="idChantier"
                 android:defaultValue="-1"
@@ -229,6 +247,16 @@
             <action
                 android:id="@+id/action_gestionRapportChantierFragment_to_gestionRapportChantierMaterielFragment"
                 app:destination="@id/gestionRapportChantierMaterielFragment" />
+            <action
+                android:id="@+id/action_gestionRapportChantierFragment_to_gestionRapportChantierMateriauxFragment"
+                app:destination="@id/gestionRapportChantierMateriauxFragment" />
+            <action
+                android:id="@+id/action_gestionRapportChantierFragment_to_gestionRapportChantierMaterielLocationFragment"
+                app:destination="@id/gestionRapportChantierMaterielLocationFragment" />
+            <action
+                android:id="@+id/action_gestionRapportChantierFragment_to_gestionRapportChantierSousTraitanceFragment"
+                app:destination="@id/gestionRapportChantierSousTraitanceFragment"
+                app:popUpTo="@id/gestionRapportChantierFragment" />
         </fragment>
         <fragment
             android:id="@+id/gestionRapportChantierPersonnelFragment"
@@ -240,6 +268,9 @@
                 app:destination="@id/gestionRapportChantierFragment"
                 app:popUpTo="@id/gestionRapportChantierFragment"
                 app:popUpToInclusive="true" />
+            <action
+                android:id="@+id/action_gestionRapportChantierPersonnelFragment_to_gestionRapportChantierAjoutPersonnelFragment"
+                app:destination="@id/gestionRapportChantierAjoutPersonnelFragment" />
         </fragment>
         <fragment
             android:id="@+id/autresInformationsFragment"
@@ -304,6 +335,53 @@
                 android:defaultValue="-1L"
                 app:argType="long" />
         </fragment>
+        <fragment
+            android:id="@+id/gestionRapportChantierMateriauxFragment"
+            android:name="com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.gestionMateriaux.GestionRapportChantierMateriauxFragment"
+            android:label="Gestion des matériaux"
+            tools:layout="@layout/fragment_gestion_rapport_chantier_materiaux">
+            <action
+                android:id="@+id/action_gestionRapportChantierMateriauxFragment_to_gestionRapportChantierFragment"
+                app:destination="@id/gestionRapportChantierFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+        <fragment
+            android:id="@+id/gestionRapportChantierAjoutPersonnelFragment"
+            android:name="com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.gestionPersonnel.ajoutPersonnel.GestionRapportChantierAjoutPersonnelFragment"
+            android:label="fragment_gestion_rapport_chantier_ajout_personnel"
+            tools:layout="@layout/fragment_gestion_rapport_chantier_ajout_personnel" >
+            <action
+                android:id="@+id/action_gestionRapportChantierAjoutPersonnelFragment_to_gestionRapportChantierPersonnelFragment"
+                app:destination="@id/gestionRapportChantierPersonnelFragment"
+                app:popUpTo="@id/gestionRapportChantierPersonnelFragment"
+                app:popUpToInclusive="true" />
+            <argument
+                android:name="idRapportChantier"
+                app:argType="long"
+                android:defaultValue="-1L" />
+        </fragment>
+        <fragment
+            android:id="@+id/gestionRapportChantierMaterielLocationFragment"
+            android:name="com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.gestionMaterielLocation.GestionRapportChantierMaterielLocationFragment"
+            android:label="fragment_gestion_rapport_chantier_materiel_location"
+            tools:layout="@layout/fragment_gestion_rapport_chantier_materiel_location" >
+            <action
+                android:id="@+id/action_gestionRapportChantierMaterielLocationFragment_to_gestionRapportChantierFragment"
+                app:destination="@id/gestionRapportChantierFragment"
+                app:popUpTo="@id/gestionRapportChantierMaterielLocationFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+        <fragment
+            android:id="@+id/gestionRapportChantierSousTraitanceFragment"
+            android:name="com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.sousTraitance.GestionRapportChantierSousTraitanceFragment"
+            android:label="fragment_gestion_rapport_chantier_sous_traitance"
+            tools:layout="@layout/fragment_gestion_rapport_chantier_sous_traitance" >
+            <action
+                android:id="@+id/action_gestionRapportChantierSousTraitanceFragment_to_gestionRapportChantierFragment"
+                app:destination="@id/gestionRapportChantierFragment"
+                app:popUpTo="@id/gestionRapportChantierSousTraitanceFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
     </navigation>
     <fragment
         android:id="@+id/listeVehiculesFragment"
@@ -353,4 +431,37 @@
             android:defaultValue="-1L"
             app:argType="long" />
     </fragment>
+    <navigation android:id="@+id/AffichageRapportsChantierNavGraph"
+        app:startDestination="@id/affichageDetailsRapportChantierFragment">
+        <fragment
+            android:id="@+id/affichageDetailsRapportChantierFragment"
+            android:name="com.example.gestionnairerapportdechantier.rapportChantier.affichageRapportChantier.AffichageDetailsRapportChantierFragment"
+            android:label="fragment_affichage_details_rapport_chantier"
+            tools:layout="@layout/fragment_affichage_details_rapport_chantier">
+            <argument
+                android:name="idChantier"
+                android:defaultValue="-1L"
+                app:argType="long" />
+            <action
+                android:id="@+id/action_affichageDetailsRapportChantierFragment_to_selectionChantierFragment"
+                app:destination="@id/selectionChantierFragment" />
+            <argument
+                android:name="dateDebut"
+                app:argType="long"
+                android:defaultValue="-1L" />
+            <argument
+                android:name="dateFin"
+                app:argType="long"
+                android:defaultValue="-1L" />
+        </fragment>
+        <fragment
+            android:id="@+id/selectionChantierFragment"
+            android:name="com.example.gestionnairerapportdechantier.rapportChantier.affichageRapportChantier.SelectionChantierFragment"
+            android:label="fragment_selection_chantier"
+            tools:layout="@layout/fragment_selection_chantier">
+            <action
+                android:id="@+id/action_selectionChantierFragment_to_affichageDetailsRapportChantierFragment"
+                app:destination="@id/affichageDetailsRapportChantierFragment" />
+        </fragment>
+    </navigation>
 </navigation>
