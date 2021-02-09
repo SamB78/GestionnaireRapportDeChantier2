@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.gestionnairerapportdechantier.CreationChantierNavGraphDirections
 import com.example.gestionnairerapportdechantier.database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentListeChantiersBinding
@@ -73,7 +74,8 @@ class ListeChantiersFragment : Fragment() {
                     Toast.makeText(activity, "Passage creation Chantier", Toast.LENGTH_SHORT)
                         .show()
 
-                    findNavController().navigate(R.id.action_listeChantiersFragment_to_creationChantierNavGraph)
+                    val action = CreationChantierNavGraphDirections.actionGlobalCreationChantierNavGraph()
+                    findNavController().navigate(action)
                     viewModel.onBoutonClicked()
                 }
                 ListeChantiersViewModel.navigationMenu.MODIFICATION -> {

@@ -3,21 +3,18 @@ package com.example.gestionnairerapportdechantier.chantiers.creationChantier
 
 import android.Manifest
 import android.app.Activity
-import android.app.PendingIntent.getActivity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.os.Handler
 import android.view.*
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
-import com.example.gestionnairerapportdechantier.MainActivity
+import com.example.gestionnairerapportdechantier.CreationChantierNavGraphDirections
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentCreationChantier4Binding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -83,16 +80,17 @@ class CreationChantier4Fragment : Fragment() {
 
         viewModel.navigation.observe(viewLifecycleOwner, Observer { navigation ->
             when (navigation) {
-                CreationChantierViewModel.gestionNavigation.AJOUT_IMAGE -> {
+                CreationChantierViewModel.GestionNavigation.AJOUT_IMAGE -> {
                     selectImage()
                     viewModel.onBoutonClicked()
                 }
-                CreationChantierViewModel.gestionNavigation.PASSAGE_ETAPE_RESUME -> {
+                CreationChantierViewModel.GestionNavigation.PASSAGE_ETAPE_RESUME -> {
                     findNavController().navigate(R.id.action_creationChantier4Fragment_to_resumeCreationSignalementFragment)
                     viewModel.onBoutonClicked()
                 }
-                CreationChantierViewModel.gestionNavigation.ANNULATION -> {
-                    findNavController().navigate(R.id.action_creationChantier4Fragment_to_listeChantiersFragment)
+                CreationChantierViewModel.GestionNavigation.ANNULATION -> {
+                    val action = CreationChantierNavGraphDirections.actionCreationChantierNavGraphPop()
+                    findNavController().navigate(action)
                     viewModel.onBoutonClicked()
                 }
             }

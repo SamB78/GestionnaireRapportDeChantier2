@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.gestionnairerapportdechantier.CreationChantierNavGraphDirections
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentResumeCreationSignalementBinding
 import com.example.gestionnairerapportdechantier.personnel.listePersonnel.ListePersonnelAdapter
@@ -76,7 +77,7 @@ class resumeCreationSignalementFragment : Fragment() {
         val manager = GridLayoutManager(activity, 1, GridLayoutManager.VERTICAL, false)
         binding.personnelListeResume.layoutManager = manager
 
-        viewModel._listePersonnelChantierValide.observe(viewLifecycleOwner, Observer { listePersonnel ->
+        viewModel.listePersonnelChantierValide.observe(viewLifecycleOwner, Observer { listePersonnel ->
             listePersonnel?.let {
                 adapter.submitList(it)
                 Timber.i("valeurs listePersonnelChantier: $it")
@@ -87,16 +88,18 @@ class resumeCreationSignalementFragment : Fragment() {
 
         viewModel.navigation.observe(viewLifecycleOwner, Observer { navigation ->
             when (navigation){
-                CreationChantierViewModel.gestionNavigation.ENREGISTREMENT_CHANTIER->{
-                    findNavController().navigate(R.id.action_resumeCreationSignalementFragment_to_listeChantiersFragment)
+                CreationChantierViewModel.GestionNavigation.ENREGISTREMENT_CHANTIER->{
+                        val action = CreationChantierNavGraphDirections.actionCreationChantierNavGraphPop()
+                        findNavController().navigate(action)
                     viewModel.onBoutonClicked()
                 }
-                CreationChantierViewModel.gestionNavigation.MODIFICATION->{
+                CreationChantierViewModel.GestionNavigation.MODIFICATION->{
                     findNavController().navigate(R.id.action_resumeCreationSignalementFragment_to_creationChantier1Fragment)
                     viewModel.onBoutonClicked()
                 }
-                CreationChantierViewModel.gestionNavigation.ANNULATION->{
-                    findNavController().navigate(R.id.action_resumeCreationSignalementFragment_to_listeChantiersFragment)
+                CreationChantierViewModel.GestionNavigation.ANNULATION->{
+                    val action = CreationChantierNavGraphDirections.actionCreationChantierNavGraphPop()
+                    findNavController().navigate(action)
                     viewModel.onBoutonClicked()
                 }
 

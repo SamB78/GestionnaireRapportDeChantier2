@@ -6,12 +6,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import com.example.gestionnairerapportdechantier.CreationChantierNavGraphDirections
 import com.example.gestionnairerapportdechantier.database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.chantiers.affichageChantier.detailAffichageChantier.DetailAffichageChantierFragment
 import com.example.gestionnairerapportdechantier.databinding.FragmentAffichageChantierBinding
-import com.example.gestionnairerapportdechantier.rapportChantier.affichageRapportChantier.AffichageDetailsRapportChantierViewModel
-import com.example.gestionnairerapportdechantier.rapportChantier.affichageRapportChantier.SelectionChantierFragmentDirections
 import com.example.gestionnairerapportdechantier.rapportChantier.listeRapportsChantier.listeRapportsChantierFragment
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.tabs.TabLayoutMediator
@@ -128,6 +127,8 @@ class AffichageChantierFragment : Fragment() {
                 }
                 AffichageChantierViewModel.navigationMenu.EDIT ->{
 
+                    val action = CreationChantierNavGraphDirections.actionGlobalCreationChantierNavGraph(viewModel.idChantier)
+                    findNavController().navigate(action)
                     viewModel.onBoutonClicked()
                 }
             }
@@ -135,5 +136,10 @@ class AffichageChantierFragment : Fragment() {
         )
 
         return binding.root
+    }
+
+    override fun onResume() {
+        viewModel.onResumeAfterEditChantier()
+        super.onResume()
     }
 }

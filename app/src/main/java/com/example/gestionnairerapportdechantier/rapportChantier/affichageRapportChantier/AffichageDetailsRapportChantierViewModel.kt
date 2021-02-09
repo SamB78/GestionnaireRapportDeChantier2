@@ -11,7 +11,8 @@ import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.database.*
 import com.example.gestionnairerapportdechantier.entities.*
 import kotlinx.coroutines.*
-import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.apache.poi.hssf.util.HSSFColor
+import org.apache.poi.ss.usermodel.*
 import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
@@ -24,6 +25,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.WeekFields
 import java.util.*
+
 
 class AffichageDetailsRapportChantierViewModel(
     application: Application,
@@ -200,6 +202,7 @@ class AffichageDetailsRapportChantierViewModel(
     var showTabMateriel = MutableLiveData<Boolean>(false)
     var showTabMateriaux = MutableLiveData<Boolean>(false)
 
+
     init {
         loadChantiers()
         if (dateBeginning != -1L && dateEnd != -1L) {
@@ -287,7 +290,7 @@ class AffichageDetailsRapportChantierViewModel(
         }
     }
 
-    private suspend fun loadChantierFromId(chantierId: Int){
+    private suspend fun loadChantierFromId(chantierId: Int) {
         uiScope.launch {
             selectedChantier.value = withContext(Dispatchers.IO) {
                 dataSourceChantier.getChantierById(chantierId.toLong())
@@ -686,6 +689,11 @@ class AffichageDetailsRapportChantierViewModel(
         val inputStream = context.resources.openRawResource(R.raw.classeur1)
 
         val xlwb = WorkbookFactory.create(inputStream)
+
+        val style: CellStyle = xlwb.createCellStyle()
+        val font: Font = xlwb.createFont()
+        font.color = IndexedColors.BLUE.index
+        style.setFont(font)
 
         //Row index specifies the row in the worksheet (starting at 0):
         val rowNumber = 0
@@ -1192,6 +1200,65 @@ class AffichageDetailsRapportChantierViewModel(
             val value = rapportChantier.observations ?: ""
 
             when (rapportChantier.dateRapportChantier?.dayOfWeek) {
+
+                DayOfWeek.MONDAY -> {
+                    xlWs.getRow(20).getCell(12).setCellValue(value)
+                    fillMeteoField(rapportChantier.meteo, DayOfWeek.MONDAY, xlWs, style)
+                }
+
+                DayOfWeek.TUESDAY -> {
+                    xlWs.getRow(26).getCell(12).setCellValue(value)
+                    fillMeteoField(rapportChantier.meteo, DayOfWeek.TUESDAY, xlWs, style)
+                }
+
+                DayOfWeek.WEDNESDAY -> {
+                    xlWs.getRow(32).getCell(12).setCellValue(value)
+                    fillMeteoField (rapportChantier.meteo, DayOfWeek.WEDNESDAY, xlWs, style)
+                }
+
+                DayOfWeek.THURSDAY ->{ xlWs.getRow(38).getCell(12).setCellValue(value)
+                    fillMeteoField(rapportChantier.meteo, DayOfWeek.THURSDAY, xlWs, style )
+                }
+
+                DayOfWeek.FRIDAY ->{ xlWs.getRow(44).getCell(12).setCellValue(value)
+                    fillMeteoField(rapportChantier.meteo, DayOfWeek.FRIDAY, xlWs, style )
+                }
+
+                DayOfWeek.SATURDAY -> { xlWs.getRow(50).getCell(12).setCellValue(value)
+                    fillMeteoField(rapportChantier.meteo, DayOfWeek.SATURDAY, xlWs, style )
+                }
+
+                else -> Timber.i("ERROR")
+            }
+
+        }
+
+
+        // COMMENTAIRES ET NOM REPONSABLE
+        sheetToEdit = 0
+        xlWs = xlwb.getSheetAt(sheetToEdit)
+        var chefChantierName2 =
+            _listePersonnelRapportChantier.value?.find { it.personnelId == selectedChantier.value!!.chefChantierId }?.nom
+                ?: "ERREUR"
+        xlWs.getRow(56).getCell(6).setCellValue("Etabli par $chefChantierName")
+
+
+        _listRapportsChantier.value?.forEachIndexed { index, rapportChantier ->
+            if (index > 0) {
+                if (_listRapportsChantier.value!![index - 1].dateRapportChantier!!.dayOfWeek.value >= rapportChantier.dateRapportChantier!!.dayOfWeek.value) {
+                    sheetToEdit++
+                    Timber.i("sheetToEdit = $sheetToEdit")
+                    xlWs = xlwb.getSheetAt(sheetToEdit)
+                    xlWs.getRow(56).getCell(6).setCellValue("Etabli par $chefChantierName")
+
+                }
+            }
+//            xlWs = xlwb.getSheetAt(sheetToEdit)
+            val value = rapportChantier.observations ?: ""
+
+
+
+            when (rapportChantier.dateRapportChantier?.dayOfWeek) {
                 DayOfWeek.MONDAY -> xlWs.getRow(20).getCell(12).setCellValue(value)
 
                 DayOfWeek.TUESDAY -> xlWs.getRow(26).getCell(12).setCellValue(value)
@@ -1249,4 +1316,28 @@ class AffichageDetailsRapportChantierViewModel(
             )
         return uri
     }
+
+
+    private fun fillMeteoField(meteo: Meteo, dayOfWeek: DayOfWeek, xlWs: Sheet, style: CellStyle) {
+
+
+        val row = when (dayOfWeek) {
+            DayOfWeek.MONDAY -> 20
+            DayOfWeek.TUESDAY -> 26
+            DayOfWeek.WEDNESDAY -> 32
+            DayOfWeek.THURSDAY -> 38
+            DayOfWeek.FRIDAY -> 44
+            DayOfWeek.SATURDAY -> 50
+            else -> 0
+        }
+
+        if (meteo.soleil) xlWs.getRow(row).getCell(13).cellStyle = style
+        if (meteo.pluie) xlWs.getRow(row).getCell(14).cellStyle = style
+        if (meteo.vent) xlWs.getRow(row).getCell(15).cellStyle = style
+        if (meteo.gel) xlWs.getRow(row).getCell(16).cellStyle = style
+        if (meteo.neige) xlWs.getRow(row).getCell(17).cellStyle = style
+    }
+    .
+
+
 }

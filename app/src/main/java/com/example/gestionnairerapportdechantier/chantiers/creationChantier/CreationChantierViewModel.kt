@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.example.gestionnairerapportdechantier.database.AssociationPersonnelChantierDao
 import com.example.gestionnairerapportdechantier.database.ChantierDao
 import com.example.gestionnairerapportdechantier.database.PersonnelDao
-import com.example.gestionnairerapportdechantier.entities.Adresse
 import com.example.gestionnairerapportdechantier.entities.AssociationPersonnelChantier
 import com.example.gestionnairerapportdechantier.entities.Chantier
 import com.example.gestionnairerapportdechantier.entities.Personnel
@@ -17,11 +16,11 @@ class CreationChantierViewModel(
     private val dataSourceChantier: ChantierDao,
     private val dataSourcePersonnel: PersonnelDao,
     private val dataSourceAssociationPersonnelChantier: AssociationPersonnelChantierDao,
-    id: Long = -1L
+    val id: Long = -1L
 ) :
     ViewModel() {
 
-    enum class gestionNavigation {
+    enum class GestionNavigation {
         ANNULATION,
         PASSAGE_ETAPE2,
         PASSAGE_ETAPE3,
@@ -34,6 +33,7 @@ class CreationChantierViewModel(
         EN_ATTENTE
     }
 
+
     //Coroutines
     private val viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -41,30 +41,39 @@ class CreationChantierViewModel(
     //Création du chantier avec son adresse
     var chantier = MutableLiveData<Chantier>(Chantier())
 
+//
+//    val listePersonnel = dataSourcePersonnel.getAllFromPersonnel()
 
     //Gestion Chefs de chantiers
-    val listeChefsDeChantier = dataSourcePersonnel.getChefsdeChantier()
+    private var _listeChefsDeChantier = MutableLiveData<MutableList<Personnel>>(mutableListOf())
+    val listeChefsDeChantier: LiveData<MutableList<Personnel>>
+        get() = this._listeChefsDeChantier
+
+    //    val listeChefsDeChantier = dataSourcePersonnel.getChefsdeChantier()
     private var _chefChantierSelectionne = MutableLiveData<Personnel>(Personnel())
     val chefChantierSelectionne: LiveData<Personnel>
         get() = this._chefChantierSelectionne
 
-    //Gestion du Personnel
-    val listePersonnel = dataSourcePersonnel.getAllFromPersonnel()
 
-    var _listePersonnelAAfficher = MutableLiveData<List<Personnel>>(mutableListOf())
-    val listePersonnelAAfficher: LiveData<List<Personnel>>
-        get() = this._listePersonnelAAfficher
+    //Liste du Personnel
+    private var _listePersonnel = MutableLiveData<List<Personnel>>(mutableListOf())
+    val listePersonnel: LiveData<List<Personnel>>
+        get() = this._listePersonnel
 
     //Liste personnel selectionné pour le chantier
-    var _listePersonnelChantier = mutableListOf<Personnel>()
-    var _listePersonnelChantierValide = MutableLiveData<List<Personnel>>()
+    private var _listePersonnelChantierValide = MutableLiveData<List<Personnel>>()
     val listePersonnelChantierValide: LiveData<List<Personnel>>
         get() = this._listePersonnelChantierValide
 
 
     //list Association Personnel - chantier
 
-    var associationPersonnelChantier = AssociationPersonnelChantier(0, 0)
+    private var _listAssociationsPersonnelChantier =
+        MutableLiveData<MutableList<AssociationPersonnelChantier>>(
+            mutableListOf()
+        )
+    val listAssociationPersonnelChantier: LiveData<MutableList<AssociationPersonnelChantier>>
+        get() = this._listAssociationsPersonnelChantier
 
 
     //Image Chantier
@@ -72,28 +81,35 @@ class CreationChantierViewModel(
 
 
     //Navigation
-    private var _navigation = MutableLiveData<gestionNavigation>()
-    val navigation: LiveData<gestionNavigation>
+    private var _navigation = MutableLiveData<GestionNavigation>()
+    val navigation: LiveData<GestionNavigation>
         get() = _navigation
 
     init {
+        initializeListsPersonnel()
         initializeData(id)
-        Timber.i("Chantier initialisé  = ${chantier.value?.numeroChantier}")
         onBoutonClicked()
-        initializeDataPersonnel()
+
 
     }
 
-    private fun initializeDataPersonnel() {
+    private fun initializeListsPersonnel() {
         uiScope.launch {
-            _listePersonnelAAfficher.value = getPersonnelAAfficher()
+            _listePersonnel.value = getPersonnelAAfficher()
+
+            _listePersonnel.value!!.forEach {
+                if (it.chefEquipe) {
+                    val chef = it.copy()
+                    _listeChefsDeChantier.value?.add(chef)
+                }
+            }
+
         }
     }
 
     private suspend fun getPersonnelAAfficher(): List<Personnel> {
         return withContext(Dispatchers.IO) {
-            var listePersonnel = dataSourcePersonnel.getAllFromPersonnel2()
-            listePersonnel
+            dataSourcePersonnel.getAllFromPersonnel2()
         }
     }
 
@@ -101,6 +117,17 @@ class CreationChantierViewModel(
         if (id != -1L) {
             uiScope.launch {
                 chantier.value = getChantierValue(id)
+                _chefChantierSelectionne.value =
+                    getChefChantier(chantier.value!!.chefChantierId!!.toLong())
+                _listeChefsDeChantier.value!!.find { it.personnelId == chefChantierSelectionne.value!!.personnelId }?.isChecked =
+                    true
+                _listAssociationsPersonnelChantier.value = loadAssociationsChantierPersonnel(id)  as MutableList<AssociationPersonnelChantier>
+                _listAssociationsPersonnelChantier.value?.forEach {  associationPersonnelChantier ->
+                    _listePersonnel.value?.find { it.personnelId == associationPersonnelChantier.personnelID }?.isChecked = true
+                }
+                imageChantier.value = chantier.value!!.urlPictureChantier
+
+
             }
         } else {
             chantier.value = Chantier()
@@ -109,34 +136,42 @@ class CreationChantierViewModel(
     }
 
 
-    private suspend fun getChantierValue(id: Long): Chantier? {
+    private suspend fun getChantierValue(id: Long): Chantier {
         return withContext(Dispatchers.IO) {
-            var chantier = dataSourceChantier.getChantierById(id)
-            chantier
+            dataSourceChantier.getChantierById(id)
+        }
+    }
+
+    private suspend fun getChefChantier(id: Long): Personnel {
+        return withContext(Dispatchers.IO) {
+            dataSourcePersonnel.getPersonnelById(id)
+        }
+    }
+
+    private suspend fun loadAssociationsChantierPersonnel(id: Long): List<AssociationPersonnelChantier> {
+        return withContext(Dispatchers.IO) {
+            dataSourceAssociationPersonnelChantier.getAssociationPersonnelChantierByChantierId(id.toInt())
         }
     }
 
     fun onBoutonClicked() {
-        _navigation.value = gestionNavigation.EN_ATTENTE
+        _navigation.value = GestionNavigation.EN_ATTENTE
     }
 
     fun onClickButtonPassageEtape2() {
-        _navigation.value = gestionNavigation.PASSAGE_ETAPE2
+        _navigation.value = GestionNavigation.PASSAGE_ETAPE2
     }
 
     fun onClickButtonCreationOrModificationEnded() {
 
         uiScope.launch {
-        Timber.i("Chantier ready to save in DB = ${chantier.value?.nomChantier}, ${chantier.value?.adresseChantier?.adresseToString()}")
-        if (chantier.value?.chantierId == null){
-            Timber.i("sendNewDataToDB()")
-
+            Timber.i("Chantier ready to save in DB = ${chantier.value?.nomChantier}, ${chantier.value?.adresseChantier?.adresseToString()}")
+            if (chantier.value?.chantierId == null) {
+                Timber.i("sendNewDataToDB()")
                 sendNewDataToDB()
+            } else updateDataInDB()
 
-        }
-        else updateDataInDB()
-
-        _navigation.value = gestionNavigation.ENREGISTREMENT_CHANTIER
+            _navigation.value = GestionNavigation.ENREGISTREMENT_CHANTIER
         }
     }
 
@@ -144,6 +179,17 @@ class CreationChantierViewModel(
         uiScope.launch {
             withContext(Dispatchers.IO) {
                 dataSourceChantier.update(chantier.value!!)
+
+                dataSourceAssociationPersonnelChantier.deleteAssociationPersonnelChantierIdByChantierId(chantier.value!!.chantierId!!)
+
+                listePersonnelChantierValide.value?.forEach {
+                    dataSourceAssociationPersonnelChantier.insertAssociationPersonnelChantier(
+                        AssociationPersonnelChantier(it.personnelId!!, chantier.value!!.chantierId!!)
+                    )
+                }
+
+
+
             }
         }.join()
     }
@@ -153,13 +199,13 @@ class CreationChantierViewModel(
         var chantierId: Long
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                Timber.i("adresse: Chantier = ${chantier.value?.adresseChantier?.ville}")
-                chantierId = dataSourceChantier.insert(chantier.value!!)
-                Timber.i("ChantierId = $chantierId")
 
-                listePersonnelChantierValide.value?.forEach{
-                    associationPersonnelChantier = AssociationPersonnelChantier(it.personnelId!!, chantierId!!.toInt())
-                    dataSourceAssociationPersonnelChantier.insertAssociationPersonnelChantier(associationPersonnelChantier)
+                chantierId = dataSourceChantier.insert(chantier.value!!)
+
+                listePersonnelChantierValide.value?.forEach {
+                    dataSourceAssociationPersonnelChantier.insertAssociationPersonnelChantier(
+                        AssociationPersonnelChantier(it.personnelId!!, chantierId.toInt())
+                    )
                 }
             }
         }.join()
@@ -172,7 +218,11 @@ class CreationChantierViewModel(
 
         listeChefsDeChantier.value!!.forEach { event ->
             if (event.personnelId!! == id.toInt()) {
-                _chefChantierSelectionne.value = event
+                _chefChantierSelectionne.value = event.copy(isChecked = false)
+                event.isChecked = true
+            }
+            else{
+                event.isChecked = false
             }
         }
         //_chefChantierSelectionne.value = listeChefsDeChantier.value!!.first { it.personnelId!!.equals(id) }
@@ -180,42 +230,41 @@ class CreationChantierViewModel(
 
     fun onClickChefChantierValide() {
         chantier.value?.chefChantierId = _chefChantierSelectionne.value!!.personnelId
-        _navigation.value = gestionNavigation.PASSAGE_ETAPE3
+        _navigation.value = GestionNavigation.PASSAGE_ETAPE3
     }
 
     fun onSelectionPersonnel(id: Long) {
         Timber.i("PASSAGE DANS onSelectionPersonnel id = $id ")
-        _listePersonnelAAfficher.value!!.forEach {
+        _listePersonnel.value!!.forEach {
             if (it.personnelId!! == id.toInt()) {
                 if (it.isChecked) {
                     it.isChecked = false
-                    _listePersonnelChantier.remove(it)
+                    // listePersonnelChantier.remove(it)
 
 
                 } else {
                     it.isChecked = true
-                    _listePersonnelChantier.add(it)
+                    //listePersonnelChantier.add(it)
                     Timber.i("Personnel = $it")
 
                 }
             }
         }
 
-        _listePersonnelChantier.forEach {
-            Timber.i("Element _listePersonnelChantier = $it ")
-        }
-        _listePersonnelAAfficher.value = _listePersonnelAAfficher.value
+        _listePersonnel.value = _listePersonnel.value
     }
 
 
     fun onClickChoixEquipeValide() {
-        _listePersonnelChantierValide.value = _listePersonnelChantier
-
-        Timber.i("Element _listePersonnelChantierValide dans le Timber suivant ")
-        _listePersonnelChantier.forEach {
-            Timber.i("Element _listePersonnelChantierValide = $it ")
+        val listePersonnelChantier = mutableListOf<Personnel>()
+        _listePersonnel.value!!.forEach {
+            if (it.isChecked) {
+                listePersonnelChantier.add(it.copy(isChecked = false))
+            }
         }
-        _navigation.value = gestionNavigation.CONFIRMATION_ETAPE3
+        _listePersonnelChantierValide.value = listePersonnelChantier
+
+        _navigation.value = GestionNavigation.CONFIRMATION_ETAPE3
 
     }
 
@@ -225,7 +274,7 @@ class CreationChantierViewModel(
 
 
     fun onClickButtonAnnuler() {
-        _navigation.value = gestionNavigation.ANNULATION
+        _navigation.value = GestionNavigation.ANNULATION
     }
 
     // onCleared()
@@ -236,11 +285,11 @@ class CreationChantierViewModel(
     }
 
     fun onClickChoixEquipeConfirmationValidation() {
-        _navigation.value = gestionNavigation.PASSAGE_ETAPE4
+        _navigation.value = GestionNavigation.PASSAGE_ETAPE4
     }
 
     fun onClickAjoutImage() {
-        _navigation.value = gestionNavigation.AJOUT_IMAGE
+        _navigation.value = GestionNavigation.AJOUT_IMAGE
     }
 
     fun ajoutPathImage(imagePath: String) {
@@ -251,11 +300,11 @@ class CreationChantierViewModel(
 
     fun onClickConfirmationEtapeImage() {
 //        sendNewDataToDB()
-        _navigation.value = gestionNavigation.PASSAGE_ETAPE_RESUME
+        _navigation.value = GestionNavigation.PASSAGE_ETAPE_RESUME
     }
 
     fun onClickButtonModifier() {
-        _navigation.value = gestionNavigation.MODIFICATION
+        _navigation.value = GestionNavigation.MODIFICATION
     }
 
     fun onClickDeletePicture() {

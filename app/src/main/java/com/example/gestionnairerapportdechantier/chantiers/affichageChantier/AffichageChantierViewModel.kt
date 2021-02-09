@@ -20,7 +20,7 @@ class AffichageChantierViewModel(
     private val dataSourceAssociationPersonnelChantier: AssociationPersonnelChantierDao,
     private val dataSourcePersonnel: PersonnelDao,
     private val dataSourceRapporChantier: RapportChantierDao,
-    private val idChantier: Long = -1
+    val idChantier: Long = -1
 ) : ViewModel() {
 
     enum class navigationMenu {
@@ -166,8 +166,18 @@ class AffichageChantierViewModel(
         _navigation.value = navigationMenu.CONSULTATION
     }
 
+    var needToActualizeData= false
     fun onClickButtonEditChantier() {
         _navigation.value = navigationMenu.EDIT
+        needToActualizeData = true
+    }
+
+    fun onResumeAfterEditChantier(){
+        if(needToActualizeData){
+            onResumeGestionMaterielFragment()
+            needToActualizeData = false
+        }
+
     }
 
 

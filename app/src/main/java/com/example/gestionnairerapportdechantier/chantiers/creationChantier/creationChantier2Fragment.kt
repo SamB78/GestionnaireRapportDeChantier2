@@ -9,13 +9,13 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.gestionnairerapportdechantier.CreationChantierNavGraphDirections
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentCreationChantier2Binding
 import com.example.gestionnairerapportdechantier.databinding.PersonnelItemViewBinding
 import com.example.gestionnairerapportdechantier.personnel.listePersonnel.ListePersonnelAdapter
 import com.example.gestionnairerapportdechantier.personnel.listePersonnel.ListePersonnelListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.android.synthetic.main.personnel_item_view.view.*
 import timber.log.Timber
 
 /**
@@ -131,13 +131,13 @@ class creationChantier2Fragment : Fragment() {
 
         viewModel.navigation.observe(viewLifecycleOwner, Observer { navigation ->
             when (navigation) {
-                CreationChantierViewModel.gestionNavigation.PASSAGE_ETAPE3 -> {
+                CreationChantierViewModel.GestionNavigation.PASSAGE_ETAPE3 -> {
                     findNavController().navigate(R.id.action_creationChantier2Fragment_to_creationChantier3Fragment)
                     viewModel.onBoutonClicked()
                 }
-                CreationChantierViewModel.gestionNavigation.ANNULATION -> {
-                    Toast.makeText(activity, "Saisie annulée", Toast.LENGTH_SHORT)
-                    findNavController().navigate(R.id.action_creationChantier2Fragment_to_listeChantiersFragment)
+                CreationChantierViewModel.GestionNavigation.ANNULATION -> {
+                    val action = CreationChantierNavGraphDirections.actionCreationChantierNavGraphPop()
+                    findNavController().navigate(action)
                     viewModel.onBoutonClicked()
                 }
 

@@ -21,5 +21,8 @@ interface AssociationPersonnelChantierDao {
     @Query("SELECT personnelID FROM AssociationPersonnelChantier WHERE chantierID  = :id")
     fun getAssociationPersonnelChantierIdByChantierId(id: Int): List<Int>
 
+    @Query("DELETE FROM AssociationPersonnelCHantier WHERE chantierID  = :id")
+    fun deleteAssociationPersonnelChantierIdByChantierId(id: Int)
+
 
 }

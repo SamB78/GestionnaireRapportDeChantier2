@@ -1,16 +1,14 @@
 package com.example.gestionnairerapportdechantier.chantiers.creationChantier
 
 
-import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.view.*
-import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import com.example.gestionnairerapportdechantier.CreationChantierNavGraphDirections
 import com.example.gestionnairerapportdechantier.MainActivity
 import com.example.gestionnairerapportdechantier.database.GestionnaireDatabase
 import com.example.gestionnairerapportdechantier.R
@@ -88,14 +86,14 @@ class CreationChantier1Fragment : Fragment() {
         viewModel.navigation.observe(viewLifecycleOwner, Observer { navigation ->
             hideKeyboard(activity as MainActivity)
             when (navigation) {
-                CreationChantierViewModel.gestionNavigation.PASSAGE_ETAPE2 -> {
+                CreationChantierViewModel.GestionNavigation.PASSAGE_ETAPE2 -> {
                     Toast.makeText(activity, "Nouvelle entrée dans la BDD", Toast.LENGTH_SHORT)
                     findNavController().navigate(R.id.action_creationChantier1Fragment_to_creationChantier2Fragment)
                     viewModel.onBoutonClicked()
                 }
-                CreationChantierViewModel.gestionNavigation.ANNULATION -> {
-                    Toast.makeText(activity, "Saisie annulée", Toast.LENGTH_SHORT)
-                    findNavController().navigate(R.id.action_creationChantier1Fragment_to_listeChantiersFragment)
+                CreationChantierViewModel.GestionNavigation.ANNULATION -> {
+                    val action = CreationChantierNavGraphDirections.actionCreationChantierNavGraphPop()
+                    findNavController().navigate(action)
                     viewModel.onBoutonClicked()
                 }
             }
