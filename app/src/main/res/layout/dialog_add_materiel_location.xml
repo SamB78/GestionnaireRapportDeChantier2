@@ -38,24 +38,24 @@
             android:layout_marginTop="24dp"
             android:ems="10"
             android:layout_marginHorizontal="8dp"
-            android:hint="Description"
+            android:hint="Numéro de bon"
             android:inputType="textPersonName">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@={viewModel.newMaterielLocation.designation}" />
+                android:text="@={viewModel.newMaterielLocation.numBonCommande}" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/editNDeBon"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:ems="10"
-            android:layout_marginHorizontal="8dp"
-            android:hint="Numéro de bon"
-            android:inputType="textPersonName"/>
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/editNDeBon"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="24dp"-->
+<!--            android:ems="10"-->
+<!--            android:layout_marginHorizontal="8dp"-->
+<!--            android:hint="Numéro de bon"-->
+<!--            android:inputType="textPersonName"/>-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

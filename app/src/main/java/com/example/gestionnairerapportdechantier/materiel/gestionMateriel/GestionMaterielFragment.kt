@@ -47,17 +47,19 @@ class GestionMaterielFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val binding = FragmentGestionMaterielBinding.inflate(inflater, container, false)
-        binding.executePendingBindings()
-
         //ViewModelFactory
         val application = requireNotNull(this.activity).application
         val dataSource = GestionnaireDatabase.getInstance(application).materielDao
         val idMateriel = GestionMaterielFragmentArgs.fromBundle(arguments!!).idMateriel
         viewModelFactory = GestionMaterielViewModelFactory(dataSource, idMateriel)
 
-        binding.lifecycleOwner = viewLifecycleOwner
+        val binding = FragmentGestionMaterielBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.executePendingBindings()
+
+
+
 
         // Calendrier
         var date = ""

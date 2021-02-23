@@ -38,7 +38,7 @@ class creationChantier2Fragment : Fragment() {
     //Menu Option
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_favorite -> {
-            MaterialAlertDialogBuilder(context)
+            MaterialAlertDialogBuilder(context!!)
                 .setTitle("Annulation")
                 .setMessage("Souhaitez vous annuler la création du nouveau chantier ?")
                 .setNegativeButton("QUITTER") { dialog, which ->
@@ -72,7 +72,7 @@ class creationChantier2Fragment : Fragment() {
 
 
         //DialogConfirmation
-        val confirmationDialog = MaterialAlertDialogBuilder(context)
+        val confirmationDialog = MaterialAlertDialogBuilder(context!!)
             .setTitle("Vous avez sélectionné:")
             .setNegativeButton("Annuler") { dialog, which ->
                 dialog.dismiss()

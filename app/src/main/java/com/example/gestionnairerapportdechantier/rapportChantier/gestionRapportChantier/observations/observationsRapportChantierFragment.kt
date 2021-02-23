@@ -22,12 +22,12 @@ class observationsRapportChantierFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentObservationsRapportChantierBinding.inflate(inflater, container, false)
-        binding.executePendingBindings()
         //ViewModel
         val viewModel: GestionRapportChantierViewModel by navGraphViewModels(R.id.gestionRapportChantiers)
-        binding.lifecycleOwner = this
+        val binding = FragmentObservationsRapportChantierBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+        binding.executePendingBindings()
 
         //Navigation
 

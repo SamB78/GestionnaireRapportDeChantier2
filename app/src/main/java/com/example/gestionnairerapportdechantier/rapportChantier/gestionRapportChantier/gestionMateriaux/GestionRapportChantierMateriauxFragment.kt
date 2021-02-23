@@ -61,7 +61,7 @@ class GestionRapportChantierMateriauxFragment : Fragment() {
                     val customLayout = DialogAddMateriauxBinding.inflate(inflater)
                     customLayout.viewModel = viewModel
 
-                    MaterialAlertDialogBuilder(context)
+                    MaterialAlertDialogBuilder(context!!)
                         .setTitle("Ajouter des Matériaux")
                         .setView(customLayout.root)
                         .setNegativeButton("Annuler") { dialog, which ->

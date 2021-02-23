@@ -22,13 +22,68 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/buttonSuivant"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintVertical_bias="1.0"
             tools:layout_editor_absoluteX="0dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayoutChamps"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardLayoutTypeChantier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintEnd_toEndOf="@+id/editTextNumChantier"
+                    app:layout_constraintStart_toStartOf="@+id/editTextNumChantier"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:id="@+id/linearLayoutTypeChantier"
+                        android:layout_width="280dp"
+                        android:layout_height="wrap_content"
+                        android:background="#E0E0E0"
+                        android:orientation="vertical"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:text="Type Chantier"
+                            android:textSize="18sp" />
+
+                        <RadioGroup
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:onCheckedChanged="@{(_,i) -> viewModel.onRadioGroupClicked(i)}"
+                            android:checkedButton="@{viewModel.defaultCheckedButton}"
+                            >
+
+
+                            <RadioButton
+                                android:id="@+id/radio_button_chantier"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Chantier" />
+
+                            <RadioButton
+                                android:id="@+id/radio_button_entretien"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Entretien" />
+
+
+                        </RadioGroup>
+
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/editTextNumChantier"
@@ -40,7 +95,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/end_guideline"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/imageView"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@+id/cardLayoutTypeChantier">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
@@ -49,6 +104,7 @@
                         android:text="@={viewModel.chantier.numeroChantier}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
+
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/editTextNomChantier"
@@ -83,7 +139,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:inputType="textPersonName"
                         android:text="@={viewModel.chantier.adresseChantier.rue}" />
 
@@ -197,11 +253,11 @@
                     android:id="@+id/imageView"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/editTextNumChantier"
+                    app:layout_constraintBottom_toBottomOf="@+id/cardLayoutTypeChantier"
                     app:layout_constraintEnd_toStartOf="@+id/editTextNumChantier"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/editTextNumChantier"
+                    app:layout_constraintTop_toTopOf="@+id/cardLayoutTypeChantier"
                     app:srcCompat="@drawable/ic_business_black_24dp" />
 
                 <ImageView

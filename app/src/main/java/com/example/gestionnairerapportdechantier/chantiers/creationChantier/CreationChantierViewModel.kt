@@ -2,7 +2,9 @@ package com.example.gestionnairerapportdechantier.chantiers.creationChantier
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.database.AssociationPersonnelChantierDao
 import com.example.gestionnairerapportdechantier.database.ChantierDao
 import com.example.gestionnairerapportdechantier.database.PersonnelDao
@@ -79,6 +81,13 @@ class CreationChantierViewModel(
     //Image Chantier
     var imageChantier = MutableLiveData<String>()
 
+    // Default Checked Button
+
+    val defaultCheckedButton: LiveData<Int> = Transformations.map(chantier)  { chantier ->
+        if(chantier.typeChantier == 1)  R.id.radio_button_chantier
+        else R.id.radio_button_entretien
+    }
+
 
     //Navigation
     private var _navigation = MutableLiveData<GestionNavigation>()
@@ -89,8 +98,6 @@ class CreationChantierViewModel(
         initializeListsPersonnel()
         initializeData(id)
         onBoutonClicked()
-
-
     }
 
     private fun initializeListsPersonnel() {
@@ -121,17 +128,22 @@ class CreationChantierViewModel(
                     getChefChantier(chantier.value!!.chefChantierId!!.toLong())
                 _listeChefsDeChantier.value!!.find { it.personnelId == chefChantierSelectionne.value!!.personnelId }?.isChecked =
                     true
-                _listAssociationsPersonnelChantier.value = loadAssociationsChantierPersonnel(id)  as MutableList<AssociationPersonnelChantier>
-                _listAssociationsPersonnelChantier.value?.forEach {  associationPersonnelChantier ->
-                    _listePersonnel.value?.find { it.personnelId == associationPersonnelChantier.personnelID }?.isChecked = true
+                _listAssociationsPersonnelChantier.value =
+                    loadAssociationsChantierPersonnel(id) as MutableList<AssociationPersonnelChantier>
+                _listAssociationsPersonnelChantier.value?.forEach { associationPersonnelChantier ->
+                    _listePersonnel.value?.find { it.personnelId == associationPersonnelChantier.personnelID }?.isChecked =
+                        true
                 }
                 imageChantier.value = chantier.value!!.urlPictureChantier
+
+
 
 
             }
         } else {
             chantier.value = Chantier()
         }
+
 
     }
 
@@ -180,14 +192,18 @@ class CreationChantierViewModel(
             withContext(Dispatchers.IO) {
                 dataSourceChantier.update(chantier.value!!)
 
-                dataSourceAssociationPersonnelChantier.deleteAssociationPersonnelChantierIdByChantierId(chantier.value!!.chantierId!!)
+                dataSourceAssociationPersonnelChantier.deleteAssociationPersonnelChantierIdByChantierId(
+                    chantier.value!!.chantierId!!
+                )
 
                 listePersonnelChantierValide.value?.forEach {
                     dataSourceAssociationPersonnelChantier.insertAssociationPersonnelChantier(
-                        AssociationPersonnelChantier(it.personnelId!!, chantier.value!!.chantierId!!)
+                        AssociationPersonnelChantier(
+                            it.personnelId!!,
+                            chantier.value!!.chantierId!!
+                        )
                     )
                 }
-
 
 
             }
@@ -211,6 +227,12 @@ class CreationChantierViewModel(
         }.join()
     }
 
+    fun onRadioGroupClicked(id: Int) {
+        if(id == R.id.radio_button_chantier ) chantier.value!!.typeChantier = 1
+        else chantier.value!!.typeChantier = 2
+
+    }
+
 
     fun onClickChefChantier(id: Long) {
 
@@ -220,8 +242,7 @@ class CreationChantierViewModel(
             if (event.personnelId!! == id.toInt()) {
                 _chefChantierSelectionne.value = event.copy(isChecked = false)
                 event.isChecked = true
-            }
-            else{
+            } else {
                 event.isChecked = false
             }
         }

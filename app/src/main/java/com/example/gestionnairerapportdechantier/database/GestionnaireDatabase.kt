@@ -5,7 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.gestionnairerapportdechantier.entities.*
+import com.google.samples.apps.sunflower.workers.SeedDatabaseWorker
 
 
 @Database(
@@ -13,6 +17,7 @@ import com.example.gestionnairerapportdechantier.entities.*
         Personnel::class,
         AssociationPersonnelRapportChantier::class,
         RapportChantier::class,
+        TraitementPhytosanitaire::class,
         AssociationPersonnelChantier::class,
         AssociationMaterielRapportChantier::class,
         AssociationMaterielLocationRapportChantier::class,
@@ -22,8 +27,12 @@ import com.example.gestionnairerapportdechantier.entities.*
         Materiel::class,
         MaterielLocation::class,
         Materiaux::class,
-        SousTraitance::class],
-    version = 39, exportSchema = false
+        SousTraitance::class,
+        TacheEntretien::class,
+        AssociationTacheEntretienRapportChantier::
+        class
+    ],
+    version = 48, exportSchema = false
 )
 
 @TypeConverters(LocalDateTimeConverter::class)
@@ -48,26 +57,28 @@ abstract class GestionnaireDatabase : RoomDatabase() {
 
     companion object {
 
-        @Volatile
-        private var INSTANCE: GestionnaireDatabase? = null
+        @Volatile private var instance: GestionnaireDatabase? = null
 
         fun getInstance(context: Context): GestionnaireDatabase {
-            synchronized(this) {
-                var instance = INSTANCE
-
-                if (instance == null) {
-                    instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        GestionnaireDatabase::class.java,
-                        "sleep_history_database"
-                    )
-                        .fallbackToDestructiveMigration()
-                        .build()
-                    INSTANCE = instance
-                }
-                return instance
+            return instance ?: synchronized(this) {
+                instance ?: buildDatabase(context).also { instance = it }
             }
-
         }
+
+        private fun buildDatabase(context: Context): GestionnaireDatabase {
+            return Room.databaseBuilder(context, GestionnaireDatabase::class.java, "gestionnaire_chantier_database")
+                .fallbackToDestructiveMigration()
+                .addCallback(
+                    object : RoomDatabase.Callback() {
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            val request = OneTimeWorkRequestBuilder<SeedDatabaseWorker>().build()
+                            WorkManager.getInstance(context).enqueue(request)
+                        }
+                    }
+                )
+                .build()
+        }
+
     }
 }

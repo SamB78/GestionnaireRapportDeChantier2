@@ -37,71 +37,60 @@
                 android:id="@+id/nomChantier"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:singleLine="false"
                 android:text="chantier St Martin"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageViewChantier"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/textViewChantierNum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Chantier N°"
                 android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@+id/nomChantier"
-                app:layout_constraintTop_toBottomOf="@+id/nomChantier" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/typeChantier"
+                app:layout_constraintTop_toBottomOf="@+id/typeChantier" />
 
             <TextView
                 android:id="@+id/numeroChantier"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text='@{"N°" + chantier.numeroChantier}'
+                android:textSize="24sp"
+                app:layout_constraintStart_toEndOf="@+id/imageViewChantier"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="N°1234" />
+
+            <TextView
+                android:id="@+id/typeChantier"
+                typeChantier="@{chantier.typeChantier}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:textSize="18sp"
-                android:text="@{chantier.numeroChantier}"
-                app:layout_constraintStart_toEndOf="@+id/textViewChantierNum"
-                app:layout_constraintTop_toTopOf="@+id/textViewChantierNum"
-                tools:text="1234" />
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/numeroChantier"
+                app:layout_constraintTop_toBottomOf="@+id/numeroChantier"
+                tools:text="ENTRETIEN" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{chantier.adresseChantier.codePostal+' '+ chantier.adresseChantier.ville}"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+
+
+                app:layout_constraintStart_toStartOf="@+id/nomChantier"
+                app:layout_constraintTop_toBottomOf="@+id/nomChantier"
+                tools:text="7860 Jouars Pontchartrain" />
 
             <ImageView
                 android:id="@+id/imageViewChantier"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@drawable/ic_business_black_24dp"
                 imageUrl="@{chantier.urlPictureChantier}"/>
 
-            <TextView
-                android:id="@+id/textViewNomRue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{chantier.adresseChantier.rue}"
-                app:layout_constraintStart_toStartOf="@+id/textViewChantierNum"
-                app:layout_constraintTop_toBottomOf="@+id/textViewChantierNum"
-                tools:text="182 Rue de la Galetterie" />
-
-            <TextView
-                android:id="@+id/textViewCodePostal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{chantier.adresseChantier.codePostal}"
-                app:layout_constraintStart_toStartOf="@+id/textViewNomRue"
-                app:layout_constraintTop_toBottomOf="@+id/textViewNomRue"
-                tools:text="78760" />
-
-            <TextView
-                android:id="@+id/textViewVille"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:layout_marginLeft="2dp"
-                android:text="@{chantier.adresseChantier.ville}"
-                app:layout_constraintStart_toEndOf="@+id/textViewCodePostal"
-                app:layout_constraintTop_toTopOf="@+id/textViewCodePostal"
-                tools:text="Jouars Pontchartrain" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 

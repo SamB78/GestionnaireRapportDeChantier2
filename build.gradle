@@ -42,4 +42,7 @@ ext {
     navigationVersion = '1.0.0-rc02'
     coroutine_version = '1.0.0'
     poiVersion = '3.17'
+    workVersion = '2.1.0'
+    gsonVersion = '2.8.2'
+
 }

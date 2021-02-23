@@ -5,15 +5,18 @@ import java.time.LocalDate
 import java.util.*
 
 @Entity(tableName = "materiel")
-data class Materiel (
+data class Materiel(
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null,
     var marque: String? = null,
-    var modele:String? = null,
+    var modele: String? = null,
     var numeroSerie: String? = null,
     var type: String? = null,
+    var enService: Boolean = true,
+    var materielEntretien: Boolean = true,
+    var materielChantier: Boolean = false,
     var miseEnCirculation: LocalDate? = null,
-    var urlPictureMateriel : String? = null,
+    var urlPictureMateriel: String? = null,
     @Ignore
     var isChecked: Boolean = false,
     @Ignore
@@ -47,3 +50,12 @@ data class AssociationMaterielRapportChantier(
     @ColumnInfo(name = "nb_heures_utilisees")
     var NbHeuresUtilisees: Int = 0
 )
+
+data class TypeMateriel(
+    @PrimaryKey(autoGenerate = true)
+    var id: Int,
+    var typeMateriel: String
+
+)
+
+

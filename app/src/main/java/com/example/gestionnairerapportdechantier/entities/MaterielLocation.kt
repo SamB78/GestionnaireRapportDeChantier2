@@ -10,7 +10,7 @@ data class MaterielLocation(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
     var fournisseur: String = "",
-    var designation: String = "",
+    var numBonCommande: String = "",
     var quantite: Int = 0
 )
 

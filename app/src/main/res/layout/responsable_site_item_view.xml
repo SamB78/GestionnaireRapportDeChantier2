@@ -53,17 +53,19 @@
                 android:id="@+id/codePostal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@{chantier.mailContactResponsableSite}"
                 android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/adresse"
                 app:layout_constraintTop_toBottomOf="@+id/adresse"
-                tools:text="abc@gmail.com"
-                android:text="@{chantier.mailContactResponsableSite}"/>
+                tools:text="abc@gmail.com" />
 
             <ImageView
                 android:id="@+id/imageViewPersonnel"
 
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

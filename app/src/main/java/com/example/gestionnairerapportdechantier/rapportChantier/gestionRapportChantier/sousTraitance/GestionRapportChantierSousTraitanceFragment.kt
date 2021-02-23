@@ -61,7 +61,7 @@ class GestionRapportChantierSousTraitanceFragment : Fragment() {
                     val customLayout = DialogAddSousTraitanceBinding.inflate(inflater)
                     customLayout.viewModel = viewModel
 
-                    MaterialAlertDialogBuilder(context)
+                    MaterialAlertDialogBuilder(context!!)
                         .setTitle("Ajouter un matériel de location")
                         .setView(customLayout.root)
                         .setNegativeButton("Annuler") { dialog, which ->

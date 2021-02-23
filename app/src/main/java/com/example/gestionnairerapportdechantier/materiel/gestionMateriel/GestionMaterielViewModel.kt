@@ -24,6 +24,9 @@ class GestionMaterielViewModel(private val dataSource: MaterielDao, id: Long = -
     private val viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
+
+    val listTest = listOf("Camions/Utilitaires", "Remorques", "Tondeuses", "Tracteurs", "Engins","Aspirateurs","Divers")
+
     var materiel = MutableLiveData<Materiel>()
     var imageMateriel = MutableLiveData<String>()
     var date = MutableLiveData<LocalDate>()

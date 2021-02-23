@@ -35,7 +35,7 @@ data class Chantier(
     var identiteResponsableSite: String? = null,
     var numContactResponsableSite: String? = null,
     var mailContactResponsableSite: String? = null,
-
-    var chefChantierId: Int? = null
+    var chefChantierId: Int? = null,
+    var typeChantier: Int = 1 // 1 = Chantier 2 = Entretien
 
     )

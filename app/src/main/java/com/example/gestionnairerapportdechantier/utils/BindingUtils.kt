@@ -6,8 +6,11 @@ import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.view.View
 import android.widget.*
+import androidx.annotation.IdRes
+import androidx.annotation.LayoutRes
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
@@ -51,7 +54,7 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
 
 @BindingAdapter("imageUrl2")
 fun bindImage2(imgView: ImageView, imgUrl: String?) {
-    imgView.visibility = View.GONE
+    imgView.visibility = View.INVISIBLE
     imgUrl?.let {
         imgView.visibility = View.VISIBLE
         Glide.with(imgView.context)
@@ -115,13 +118,13 @@ fun setTextDependingPersonnelRole(textView: TextView, personnel: Personnel) {
 }
 
 @BindingAdapter("setCardVisibility")
-fun setCardVisibility(cardView: MaterialCardView, boolean: Boolean) {
-    when (boolean) {
-        true -> {
+fun setCardVisibility(cardView: MaterialCardView, value: Int) {
+    when (value) {
+        1 -> {
             Timber.i(" button.visibility = View.VISIBLE")
             cardView.visibility = View.VISIBLE
         }
-        false -> {
+        2 -> {
             Timber.i("  button.visibility = View.GONE")
             cardView.visibility = View.GONE
 
@@ -131,13 +134,13 @@ fun setCardVisibility(cardView: MaterialCardView, boolean: Boolean) {
 
 
 @BindingAdapter("setLayoutVisibility")
-fun setLayoutVisibility(linearLayout: LinearLayout, boolean: Boolean) {
-    when (boolean) {
-        true -> {
+fun setLayoutVisibility(linearLayout: LinearLayout, value: Int) {
+    when (value) {
+        2 -> {
             Timber.i(" button.visibility = View.VISIBLE")
             linearLayout.visibility = View.VISIBLE
         }
-        false -> {
+        1 -> {
             Timber.i("  button.visibility = View.GONE")
             linearLayout.visibility = View.GONE
 
@@ -318,4 +321,18 @@ fun dpToPx(dp: Int): Int {
 fun setGridLayout(recyclerView: RecyclerView, value: Int){
     val manager = GridLayoutManager(recyclerView.context, value, GridLayoutManager.VERTICAL, false)
     recyclerView.layoutManager = manager
+}
+
+
+@BindingAdapter("typeChantier")
+fun setTextTypeChantier(textView: TextView, value: Int){
+    if(value == 1) textView.text = "CHANTIER"
+    else textView.text = "ENTRETIEN"
+}
+
+
+@BindingAdapter("adapter")
+fun setAdapter(autoCompleteTextView: AutoCompleteTextView, items: List<String>){
+    val adapter = ArrayAdapter(autoCompleteTextView.context, R.layout.list_item, items)
+    autoCompleteTextView.setAdapter(adapter)
 }

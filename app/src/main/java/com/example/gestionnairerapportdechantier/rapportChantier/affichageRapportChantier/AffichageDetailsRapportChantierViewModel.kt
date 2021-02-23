@@ -11,7 +11,6 @@ import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.database.*
 import com.example.gestionnairerapportdechantier.entities.*
 import kotlinx.coroutines.*
-import org.apache.poi.hssf.util.HSSFColor
 import org.apache.poi.ss.usermodel.*
 import timber.log.Timber
 import java.io.File
@@ -685,6 +684,8 @@ class AffichageDetailsRapportChantierViewModel(
 
         Timber.i("onClickGenerateXlsxFile")
 
+        val weekFiled: WeekFields = WeekFields.of(Locale.FRANCE)
+
         val context = getApplication<Application>().applicationContext
         val inputStream = context.resources.openRawResource(R.raw.classeur1)
 
@@ -692,7 +693,12 @@ class AffichageDetailsRapportChantierViewModel(
 
         val style: CellStyle = xlwb.createCellStyle()
         val font: Font = xlwb.createFont()
+        style.setAlignment(HorizontalAlignment.CENTER)
+        style.setVerticalAlignment(VerticalAlignment.CENTER)
+        font.bold = true
         font.color = IndexedColors.BLUE.index
+       // font.color = Color.parseColor("#305496").toShort()
+
         style.setFont(font)
 
         //Row index specifies the row in the worksheet (starting at 0):
@@ -701,15 +707,24 @@ class AffichageDetailsRapportChantierViewModel(
         val columnNumber = 0
 
         var firstSheet = true
+        var currentDateOfSheet = ""
         var firstDateOfSheet = ""
+        var lastDateOfSheet = ""
+        var firstWeekOfTableau = 0
 
         //Boucle creation Sheets avec dates et données en-tête
         totalDates.forEachIndexed { index, date ->
             val sdf = DateTimeFormatter.ofPattern("dd-MM")
-            val weekFiled: WeekFields = WeekFields.of(Locale.FRANCE)
-            if (firstSheet) {
+
+            if(index == 0) {
                 firstDateOfSheet = sdf.format(date)
-                Timber.i("firstDateOfSheet = $firstDateOfSheet")
+                firstWeekOfTableau = date.get(weekFiled.weekOfWeekBasedYear())
+                Timber.i("firstWeekOfTableau = $firstWeekOfTableau")
+            }
+
+            if (firstSheet) {
+                currentDateOfSheet = sdf.format(date)
+                Timber.i("firstDateOfSheet = $currentDateOfSheet")
                 xlwb.setSheetName(
                     xlwb.numberOfSheets - 1,
                     "SEMAINE ${date.get(weekFiled.weekOfWeekBasedYear())}"
@@ -719,23 +734,23 @@ class AffichageDetailsRapportChantierViewModel(
 
             if (index > 0 && index < totalDates.size - 1) {
                 if (totalDates[index - 1].dayOfWeek.value >= date.dayOfWeek.value) {
-                    val lastDateOfSheet = sdf.format(
+                    lastDateOfSheet = sdf.format(
                         totalDates[index - 1].with(
                             WeekFields.of(Locale.FRANCE).dayOfWeek(), 5L
                         )
                     )
                     val xlWs = xlwb.getSheetAt(xlwb.numberOfSheets - 1)
-                    Timber.i("firstDateOfSheet 2 = $firstDateOfSheet")
+                    Timber.i("currentDateOfSheet 2 = $currentDateOfSheet")
                     xlWs.getRow(0).getCell(0)
-                        .setCellValue("RAPPORT HEBDOMADAIRE du $firstDateOfSheet au $lastDateOfSheet")
-                    xlWs.getRow(1).getCell(3).setCellValue("du $firstDateOfSheet")
+                        .setCellValue("RAPPORT HEBDOMADAIRE du $currentDateOfSheet au $lastDateOfSheet")
+                    xlWs.getRow(1).getCell(3).setCellValue("du $currentDateOfSheet")
                     xlWs.getRow(1).getCell(6).setCellValue("au $lastDateOfSheet")
                     xlWs.getRow(1).getCell(13)
                         .setCellValue("Chantier n° ${selectedChantier.value!!.numeroChantier}")
                     xlWs.getRow(1).getCell(15)
                         .setCellValue(selectedChantier.value!!.adresseChantier.adresseToString())
-                    firstDateOfSheet = sdf.format(date)
-                    Timber.i("firstDateOfSheet 3 = $firstDateOfSheet")
+                    currentDateOfSheet = sdf.format(date)
+                    Timber.i("firstDateOfSheet 3 = $currentDateOfSheet")
                     xlwb.cloneSheet(0)
                     // GENERATION TITRE SHEET
                     xlwb.setSheetName(
@@ -746,30 +761,29 @@ class AffichageDetailsRapportChantierViewModel(
                 }
             } else if (index == totalDates.size - 1) {
                 Timber.i("Dernier index")
-                val lastDateOfSheet = sdf.format(
-                    totalDates[index - 1].with(
-                        WeekFields.of(Locale.FRANCE).dayOfWeek(),
-                        5L
-                    )
-                )
+                lastDateOfSheet =  sdf.format(totalDates[index])
+//                val lastDateOfSheet = sdf.format(
+//                    totalDates[index - 1].with(
+//                        WeekFields.of(Locale.FRANCE).dayOfWeek(),
+//                        5L
+//                    )
+//                )
                 val xlWs = xlwb.getSheetAt(xlwb.numberOfSheets - 1)
-                Timber.i("firstDateOfSheet 2 = $firstDateOfSheet")
+                Timber.i("firstDateOfSheet 2 = $currentDateOfSheet")
                 xlWs.getRow(0).getCell(0)
-                    .setCellValue("RAPPORT HEBDOMADAIRE du $firstDateOfSheet au $lastDateOfSheet")
-                xlWs.getRow(1).getCell(3).setCellValue("du $firstDateOfSheet")
+                    .setCellValue("RAPPORT HEBDOMADAIRE du $currentDateOfSheet au $lastDateOfSheet")
+                xlWs.getRow(1).getCell(3).setCellValue("du $currentDateOfSheet")
                 xlWs.getRow(1).getCell(6).setCellValue("au $lastDateOfSheet")
             }
         }
 
-        // Remplissage Heures PERSONNEL
+        //////////////////////////////////////// Remplissage Heures PERSONNEL ////////////////////////////////////////
 
         val listePersonnel: MutableList<Personnel> = mutableListOf()
         val listePersonnelInterimaire: MutableList<Personnel> = mutableListOf()
 
-        Timber.i("Passage boucle alpha")
         // Generation liste Personnel et Personnel Interimaire
         _listePersonnelRapportChantier.value?.forEach { personnel ->
-            Timber.i("Passage boucle personnel 0 ${personnel.nom}")
             if (!personnel.interimaire) {
                 listePersonnel.add(personnel)
             } else listePersonnelInterimaire.add(personnel)
@@ -779,20 +793,21 @@ class AffichageDetailsRapportChantierViewModel(
         var rowToEdit = 3
         listePersonnel.forEach { personnel ->
             var sheetToEdit = 0
+            var compteurSemaines = 0
             var xlWs = xlwb.getSheetAt(sheetToEdit)
             xlWs.getRow(rowToEdit).getCell(0)
                 .setCellValue(personnel.prenom + " " + personnel.nom)
-            _listRapportsChantier.value?.forEachIndexed { index, rapportChantier ->
 
-                if (index > 0) {
-                    if (_listRapportsChantier.value!![index - 1].dateRapportChantier!!.dayOfWeek.value >= rapportChantier.dateRapportChantier!!.dayOfWeek.value) {
+            _listRapportsChantier.value?.forEach { rapportChantier ->
+
+                    if (firstWeekOfTableau + compteurSemaines < rapportChantier.dateRapportChantier!!.get(weekFiled.weekOfWeekBasedYear())) {
+                        compteurSemaines += 1
                         sheetToEdit += 1
                         xlWs = xlwb.getSheetAt(sheetToEdit)
                         xlWs.getRow(rowToEdit).getCell(0)
                             .setCellValue(personnel.prenom + " " + personnel.nom)
                     }
-                }
-                //xlWs = xlwb.getSheetAt(sheetToEdit)
+
                 val value =
                     listeAssociationsPersonnelRapportChantier.value?.find { it.personnelId == personnel.personnelId && it.rapportChantierID == rapportChantier.rapportChantierId }
                         ?.NbHeuresTravaillees?.toDouble()
@@ -840,24 +855,25 @@ class AffichageDetailsRapportChantierViewModel(
             rowToEdit++
         }
 
-        // PERSONNEL INTERIMAIRE
+        //////////////////////////////////////// PERSONNEL INTERIMAIRE ////////////////////////////////////////
+
         rowToEdit = 14
         listePersonnelInterimaire.forEach { personnel ->
             var sheetToEdit = 0
+            val compteurSemaines = 0
             var xlWs = xlwb.getSheetAt(sheetToEdit)
             xlWs.getRow(rowToEdit).getCell(0)
                 .setCellValue(personnel.prenom + " " + personnel.nom)
-            _listRapportsChantier.value?.forEachIndexed { index, rapportChantier ->
-                if (index > 0) {
-                    if (_listRapportsChantier.value!![index - 1].dateRapportChantier!!.dayOfWeek.value >= rapportChantier.dateRapportChantier!!.dayOfWeek.value) {
-                        sheetToEdit++
-                        Timber.i("sheetToEdit = $sheetToEdit")
+            _listRapportsChantier.value?.forEach { rapportChantier ->
+
+                    if (firstWeekOfTableau + compteurSemaines < rapportChantier.dateRapportChantier!!.get(weekFiled.weekOfWeekBasedYear())) {
+                        compteurSemaines.plus(1)
+                        sheetToEdit =+ 1
                         xlWs = xlwb.getSheetAt(sheetToEdit)
                         xlWs.getRow(rowToEdit).getCell(0)
                             .setCellValue(personnel.prenom + " " + personnel.nom)
                     }
-                }
-                xlWs = xlwb.getSheetAt(sheetToEdit)
+
                 val value =
                     listeAssociationsPersonnelRapportChantier.value?.find { it.personnelId == personnel.personnelId && it.rapportChantierID == rapportChantier.rapportChantierId }
                         ?.NbHeuresTravaillees?.toDouble()
@@ -905,24 +921,25 @@ class AffichageDetailsRapportChantierViewModel(
             rowToEdit++
         }
 
-        // MATERIEL
+        //////////////////////////////////////// MATERIEL ////////////////////////////////////////
         rowToEdit = 20
         listeMaterielRapportChantier.value?.forEach { materiel ->
             var sheetToEdit = 0
+            var compteurSemaines = 0
             var xlWs = xlwb.getSheetAt(sheetToEdit)
             xlWs.getRow(rowToEdit).getCell(0)
                 .setCellValue(materiel.marque + " " + materiel.modele)
-            _listRapportsChantier.value?.forEachIndexed { index, rapportChantier ->
-                if (index > 0) {
-                    if (_listRapportsChantier.value!![index - 1].dateRapportChantier!!.dayOfWeek.value >= rapportChantier.dateRapportChantier!!.dayOfWeek.value) {
+            _listRapportsChantier.value?.forEach { rapportChantier ->
+
+                    if (firstWeekOfTableau + compteurSemaines < rapportChantier.dateRapportChantier!!.get(weekFiled.weekOfWeekBasedYear())) {
+                        compteurSemaines += 1
                         sheetToEdit++
                         Timber.i("sheetToEdit = $sheetToEdit")
                         xlWs = xlwb.getSheetAt(sheetToEdit)
                         xlWs.getRow(rowToEdit).getCell(0)
                             .setCellValue(materiel.marque + " " + materiel.modele)
                     }
-                }
-                xlWs = xlwb.getSheetAt(sheetToEdit)
+
                 val value =
                     listeAssociationsMaterielRapportChantier.value?.find { it.materielId == materiel.id && it.rapportChantierID == rapportChantier.rapportChantierId }
                         ?.NbHeuresUtilisees?.toDouble()
@@ -973,24 +990,25 @@ class AffichageDetailsRapportChantierViewModel(
         rowToEdit = 35
         listeMaterielLocationRapportChantier.value?.forEach { materielLocation ->
             var sheetToEdit = 0
+            var compteurSemaines = 0
             var xlWs = xlwb.getSheetAt(sheetToEdit)
             xlWs.getRow(rowToEdit).getCell(0)
                 .setCellValue(materielLocation.fournisseur)
             xlWs.getRow(rowToEdit).getCell(1)
-                .setCellValue(materielLocation.designation)
+                .setCellValue(materielLocation.numBonCommande)
 
-            _listRapportsChantier.value?.forEachIndexed { index, rapportChantier ->
-                if (index > 0) {
-                    if (_listRapportsChantier.value!![index - 1].dateRapportChantier!!.dayOfWeek.value >= rapportChantier.dateRapportChantier!!.dayOfWeek.value) {
+            _listRapportsChantier.value?.forEach { rapportChantier ->
+
+                    if (firstWeekOfTableau + compteurSemaines < rapportChantier.dateRapportChantier!!.get(weekFiled.weekOfWeekBasedYear())) {
+                        compteurSemaines += 1
                         sheetToEdit++
-                        Timber.i("sheetToEdit = $sheetToEdit")
                         xlWs = xlwb.getSheetAt(sheetToEdit)
                         xlWs.getRow(rowToEdit).getCell(0)
                             .setCellValue(materielLocation.fournisseur)
                         xlWs.getRow(rowToEdit).getCell(1)
-                            .setCellValue(materielLocation.designation)
+                            .setCellValue(materielLocation.numBonCommande)
                     }
-                }
+
                 xlWs = xlwb.getSheetAt(sheetToEdit)
                 val value =
                     listeAssociationsMaterielLocationRapportChantier.value?.find { it.materielLocationId == materielLocation.id && it.rapportChantierID == rapportChantier.rapportChantierId }
@@ -1043,13 +1061,15 @@ class AffichageDetailsRapportChantierViewModel(
         rowToEdit = 43
         listeMateriauxRapportChantier.value?.forEach { materiaux ->
             var sheetToEdit = 0
+            var compteurSemaines = 0
             var xlWs = xlwb.getSheetAt(sheetToEdit)
             xlWs.getRow(rowToEdit).getCell(0).setCellValue(materiaux.fournisseur)
             xlWs.getRow(rowToEdit).getCell(1).setCellValue(materiaux.description)
             xlWs.getRow(rowToEdit).getCell(2).setCellValue(materiaux.nDeBon)
-            _listRapportsChantier.value?.forEachIndexed { index, rapportChantier ->
-                if (index > 0) {
-                    if (_listRapportsChantier.value!![index - 1].dateRapportChantier!!.dayOfWeek.value >= rapportChantier.dateRapportChantier!!.dayOfWeek.value) {
+            _listRapportsChantier.value?.forEach {  rapportChantier ->
+
+                    if (firstWeekOfTableau + compteurSemaines < rapportChantier.dateRapportChantier!!.get(weekFiled.weekOfWeekBasedYear())) {
+                        compteurSemaines += 1
                         sheetToEdit++
                         Timber.i("sheetToEdit = $sheetToEdit")
                         xlWs = xlwb.getSheetAt(sheetToEdit)
@@ -1057,8 +1077,7 @@ class AffichageDetailsRapportChantierViewModel(
                         xlWs.getRow(rowToEdit).getCell(1).setCellValue(materiaux.description)
                         xlWs.getRow(rowToEdit).getCell(2).setCellValue(materiaux.nDeBon)
                     }
-                }
-                xlWs = xlwb.getSheetAt(sheetToEdit)
+
                 val value =
                     listeAssociationsMateriauxRapportChantier.value?.find { it.materiauxId == materiaux.id && it.rapportChantierID == rapportChantier.rapportChantierId }
                         ?.quantite?.toDouble()
@@ -1106,30 +1125,30 @@ class AffichageDetailsRapportChantierViewModel(
             rowToEdit++
         }
 
-        // MATERIEL LOCATION
+        // SOUS TRAITANCE
         rowToEdit = 52
         listeSousTraitanceRapportChantier.value?.forEach { SousTraitance ->
             var sheetToEdit = 0
+            var compteurSemaines = 0
             var xlWs = xlwb.getSheetAt(sheetToEdit)
             xlWs.getRow(rowToEdit).getCell(0)
                 .setCellValue(SousTraitance.societe)
             xlWs.getRow(rowToEdit).getCell(1)
-                .setCellValue(SousTraitance.prestations)
+                .setCellValue(SousTraitance.numeroDevis)
 
 
-            _listRapportsChantier.value?.forEachIndexed { index, rapportChantier ->
-                if (index > 0) {
-                    if (_listRapportsChantier.value!![index - 1].dateRapportChantier!!.dayOfWeek.value >= rapportChantier.dateRapportChantier!!.dayOfWeek.value) {
+            _listRapportsChantier.value?.forEach { rapportChantier ->
+
+                    if (firstWeekOfTableau + compteurSemaines < rapportChantier.dateRapportChantier!!.get(weekFiled.weekOfWeekBasedYear())) {
+                        compteurSemaines += 1
                         sheetToEdit++
                         Timber.i("sheetToEdit = $sheetToEdit")
                         xlWs = xlwb.getSheetAt(sheetToEdit)
                         xlWs.getRow(rowToEdit).getCell(0)
                             .setCellValue(SousTraitance.societe)
                         xlWs.getRow(rowToEdit).getCell(1)
-                            .setCellValue(SousTraitance.prestations)
+                            .setCellValue(SousTraitance.numeroDevis)
                     }
-                }
-                xlWs = xlwb.getSheetAt(sheetToEdit)
                 val value =
                     listeAssociationsSousTraitanceRapportChantier.value?.find { it.sousTraitanceId == SousTraitance.id && it.rapportChantierID == rapportChantier.rapportChantierId }
                         ?.quantite?.toDouble()
@@ -1177,8 +1196,9 @@ class AffichageDetailsRapportChantierViewModel(
         }
 
 
-        // COMMENTAIRES ET NOM REPONSABLE
+        // COMMENTAIRES ET NOM RESPONSABLE
         var sheetToEdit = 0
+        var compteurSemaines = 0
         var xlWs = xlwb.getSheetAt(sheetToEdit)
         val chefChantierName =
             _listePersonnelRapportChantier.value?.find { it.personnelId == selectedChantier.value!!.chefChantierId }?.nom
@@ -1186,17 +1206,13 @@ class AffichageDetailsRapportChantierViewModel(
         xlWs.getRow(56).getCell(6).setCellValue("Etabli par $chefChantierName")
 
 
-        _listRapportsChantier.value?.forEachIndexed { index, rapportChantier ->
-            if (index > 0) {
-                if (_listRapportsChantier.value!![index - 1].dateRapportChantier!!.dayOfWeek.value >= rapportChantier.dateRapportChantier!!.dayOfWeek.value) {
+        _listRapportsChantier.value?.forEach { rapportChantier ->
+                if (firstWeekOfTableau + compteurSemaines < rapportChantier.dateRapportChantier!!.get(weekFiled.weekOfWeekBasedYear())) {
                     sheetToEdit++
-                    Timber.i("sheetToEdit = $sheetToEdit")
+                    compteurSemaines += 1
                     xlWs = xlwb.getSheetAt(sheetToEdit)
-                    xlWs.getRow(56).getCell(6).setCellValue("Etabli par $chefChantierName")
-
                 }
-            }
-//            xlWs = xlwb.getSheetAt(sheetToEdit)
+
             val value = rapportChantier.observations ?: ""
 
             when (rapportChantier.dateRapportChantier?.dayOfWeek) {
@@ -1237,6 +1253,7 @@ class AffichageDetailsRapportChantierViewModel(
         // COMMENTAIRES ET NOM REPONSABLE
         sheetToEdit = 0
         xlWs = xlwb.getSheetAt(sheetToEdit)
+        compteurSemaines = 0
         var chefChantierName2 =
             _listePersonnelRapportChantier.value?.find { it.personnelId == selectedChantier.value!!.chefChantierId }?.nom
                 ?: "ERREUR"
@@ -1244,19 +1261,15 @@ class AffichageDetailsRapportChantierViewModel(
 
 
         _listRapportsChantier.value?.forEachIndexed { index, rapportChantier ->
-            if (index > 0) {
-                if (_listRapportsChantier.value!![index - 1].dateRapportChantier!!.dayOfWeek.value >= rapportChantier.dateRapportChantier!!.dayOfWeek.value) {
+                if (firstWeekOfTableau + compteurSemaines < rapportChantier.dateRapportChantier!!.get(weekFiled.weekOfWeekBasedYear())) {
                     sheetToEdit++
-                    Timber.i("sheetToEdit = $sheetToEdit")
+                    compteurSemaines += 1
                     xlWs = xlwb.getSheetAt(sheetToEdit)
                     xlWs.getRow(56).getCell(6).setCellValue("Etabli par $chefChantierName")
 
                 }
-            }
-//            xlWs = xlwb.getSheetAt(sheetToEdit)
+
             val value = rapportChantier.observations ?: ""
-
-
 
             when (rapportChantier.dateRapportChantier?.dayOfWeek) {
                 DayOfWeek.MONDAY -> xlWs.getRow(20).getCell(12).setCellValue(value)
@@ -1276,8 +1289,9 @@ class AffichageDetailsRapportChantierViewModel(
 
         }
 
+//        val randomNumber = Random().nextInt(99)
+        val fileName = "${selectedChantier.value!!.nomChantier} $firstDateOfSheet $lastDateOfSheet.xlsx"
 
-        val fileName = "FileName.xlsx"
 
         val extStorageDirectory: String =
             context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
@@ -1296,6 +1310,7 @@ class AffichageDetailsRapportChantierViewModel(
             file.createNewFile() // creating the file inside the folder
         } catch (e1: IOException) {
             e1.printStackTrace()
+            Timber.i("Cannot create new file")
         }
 
         try {
@@ -1322,22 +1337,40 @@ class AffichageDetailsRapportChantierViewModel(
 
 
         val row = when (dayOfWeek) {
-            DayOfWeek.MONDAY -> 20
-            DayOfWeek.TUESDAY -> 26
-            DayOfWeek.WEDNESDAY -> 32
-            DayOfWeek.THURSDAY -> 38
-            DayOfWeek.FRIDAY -> 44
-            DayOfWeek.SATURDAY -> 50
+            DayOfWeek.MONDAY -> 19
+            DayOfWeek.TUESDAY -> 25
+            DayOfWeek.WEDNESDAY -> 31
+            DayOfWeek.THURSDAY -> 37
+            DayOfWeek.FRIDAY -> 43
+            DayOfWeek.SATURDAY -> 49
             else -> 0
         }
 
-        if (meteo.soleil) xlWs.getRow(row).getCell(13).cellStyle = style
-        if (meteo.pluie) xlWs.getRow(row).getCell(14).cellStyle = style
-        if (meteo.vent) xlWs.getRow(row).getCell(15).cellStyle = style
-        if (meteo.gel) xlWs.getRow(row).getCell(16).cellStyle = style
-        if (meteo.neige) xlWs.getRow(row).getCell(17).cellStyle = style
+        Timber.i("fillMeteoField")
+
+        if (meteo.soleil){
+            xlWs.getRow(row).getCell(13).cellStyle = style
+            Timber.i("fillMeteoField soleil")
+        }
+        if (meteo.pluie){
+            xlWs.getRow(row).getCell(14).cellStyle = style
+            Timber.i("fillMeteoField pluie")
+        }
+        if (meteo.vent){
+            xlWs.getRow(row).getCell(15).cellStyle = style
+            Timber.i("fillMeteoField vent")
+        }
+        if (meteo.gel) {
+            xlWs.getRow(row).getCell(16).cellStyle = style
+            Timber.i("fillMeteoField gel")
+        }
+        if (meteo.neige){
+            xlWs.getRow(row).getCell(17).cellStyle = style
+            Timber.i("fillMeteoField neige")
+        }
+        Timber.i("fillMeteoField")
     }
-    .
+
 
 
 }

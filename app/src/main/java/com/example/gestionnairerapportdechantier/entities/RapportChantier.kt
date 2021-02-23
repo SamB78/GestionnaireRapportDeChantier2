@@ -8,22 +8,24 @@ import java.util.*
 
 
 @Entity(
-    tableName = "rappport_chantier",
+    tableName = "rapport_chantier",
 
-    foreignKeys = arrayOf(
-        ForeignKey(
-            entity = Chantier::class,
-            parentColumns = arrayOf("chantier_id"),
-            childColumns = arrayOf("chantier_id"),
-            onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = Personnel::class,
-            parentColumns = arrayOf("personnel_id"),
-            childColumns = arrayOf("chef_chantier_id"),
-            onDelete = ForeignKey.CASCADE
-        )
-    )
+    foreignKeys = [ForeignKey(
+        entity = Chantier::class,
+        parentColumns = arrayOf("chantier_id"),
+        childColumns = arrayOf("chantier_id"),
+        onDelete = ForeignKey.CASCADE
+    ), ForeignKey(
+        entity = Personnel::class,
+        parentColumns = arrayOf("personnel_id"),
+        childColumns = arrayOf("chef_chantier_id"),
+        onDelete = ForeignKey.NO_ACTION
+    ), ForeignKey(
+        entity = TraitementPhytosanitaire::class,
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("traitement_phytosanitaire_id"),
+        onDelete = ForeignKey.NO_ACTION
+    )]
 )
 data class RapportChantier(
 
@@ -55,12 +57,13 @@ data class RapportChantier(
     var totalRapportChantier: Int = 0,
     var entretien: Boolean = false,
     var chantier: Boolean = false,
+    var typeChantier: Int = 1, // 1 = Chantier 2 = Entretien
 
     @Embedded
-    var dataSaved: DataSaved = DataSaved()
+    var dataSaved: DataSaved = DataSaved(),
 
-
-
+    @ColumnInfo(name = "traitement_phytosanitaire_id")
+    var traitementPhytosanitaireId: Int? = null
 )
 
 data class InfosRapportChantier(
@@ -120,3 +123,53 @@ data class DataSaved(
     var dataConformiteChantier: Boolean = false,
     var dataObservations: Boolean = false
 )
+
+@Entity(
+    tableName = "traitement_phytosanitaire"
+)
+data class TraitementPhytosanitaire(
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
+    var nomsOperateurs: String = "",
+    var nomProduit: String = "",
+    var surfaceTraite: String = "",
+    var qteProduit: String = "",
+    var pulverisateurMule: Boolean = false,
+    var pulverisateurDos: Boolean = false,
+    var tracteurCuve: Boolean = false
+)
+
+@Entity(
+    tableName = "tache_entretien"
+)
+data class TacheEntretien(
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
+    var type: String = "",
+    var description: String = "",
+    @Ignore
+    var checked: Boolean = false
+
+)
+
+@Entity(
+    primaryKeys = ["rapportChantierId", "tacheEntretienId"],
+    foreignKeys =
+    [ForeignKey(
+        entity = RapportChantier::class,
+        parentColumns = arrayOf("rapport_chantier_id"),
+        childColumns = arrayOf("rapportChantierId"),
+        onDelete = ForeignKey.CASCADE
+    ), ForeignKey(
+        entity = TacheEntretien::class,
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("tacheEntretienId"),
+        onDelete = ForeignKey.CASCADE
+    )]
+)
+
+data class AssociationTacheEntretienRapportChantier(
+    var rapportChantierId: Int,
+    var tacheEntretienId: Int
+)
+

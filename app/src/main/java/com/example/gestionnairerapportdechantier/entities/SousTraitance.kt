@@ -11,6 +11,7 @@ data class SousTraitance (
     var id: Int = 0,
     var societe: String = "",
     var prestations: String = "",
+    var numeroDevis: String = "",
     var quantite: Int = 0
         )
 

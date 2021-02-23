@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View"/>
+        <import type="com.example.gestionnairerapportdechantier.R" />
         <variable
             name="viewModel"
             type="com.example.gestionnairerapportdechantier.rapportChantier.gestionRapportChantier.GestionRapportChantierViewModel" />
@@ -13,7 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainConstraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/backgroundColor">
 
         <ScrollView
@@ -31,16 +32,17 @@
                 <LinearLayout
                     android:id="@+id/linearLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:animateLayoutChanges="true"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardObservations"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        app:layout_constraintTop_toTopOf="parent">
+                        android:layout_margin="8dp">
 
                         <LinearLayout
                             android:id="@+id/linearObservations"
@@ -55,24 +57,33 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
-                                android:layout_marginTop="32dp"
+                                android:layout_marginTop="16dp"
                                 android:text="Observations"
                                 android:textSize="24sp" />
 
-                            <EditText
+                            <com.google.android.material.textfield.TextInputLayout
                                 android:id="@+id/editTextTextMultiLine"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@id/textView9"
-                                android:layout_marginTop="8dp"
-                                android:layout_marginBottom="8dp"
+                                android:layout_margin="8dp"
                                 android:ems="10"
-                                android:gravity="start|top"
-                                android:inputType="textMultiLine"
-                                android:lines="8"
-                                android:minLines="6"
+                                android:hint="Commentaires"
                                 android:scrollbars="vertical"
-                                android:text="@={viewModel.observations}" />
+
+
+                                android:textSize="24sp">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="start|top"
+                                    android:inputType="textMultiLine"
+                                    android:lines="8"
+                                    android:minLines="6"
+                                    android:text="@={viewModel.observations}" />
+
+
+                            </com.google.android.material.textfield.TextInputLayout>
 
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -81,8 +92,7 @@
                         android:id="@+id/cardSecurite"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        app:layout_constraintTop_toTopOf="parent">
+                        android:layout_margin="8dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -97,9 +107,7 @@
                                 android:layout_marginStart="8dp"
                                 android:layout_marginTop="16dp"
                                 android:text="Météo"
-                                android:textSize="24sp"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                android:textSize="24sp" />
 
                             <com.google.android.flexbox.FlexboxLayout
                                 android:id="@+id/flexboxLayout"
@@ -157,85 +165,199 @@
                     </com.google.android.material.card.MaterialCardView>
 
                     <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cardEntretien"
+                        android:id="@+id/cardTraitementPhyto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        app:layout_constraintTop_toTopOf="parent">
+                        android:layout_margin="8dp">
 
                         <LinearLayout
-                            android:id="@+id/linearLayoutEntretien"
-                            setLayoutVisibility="@{viewModel.rapportChantier.entretien}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:layout_marginTop="32dp"
-                                android:text="Entretien"
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switch1"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginHorizontal="8dp"
+                                android:checked="@={viewModel.traitementPhytosanitaireBoolean}"
+                                android:text="Traitement Phytosanitaire"
+                                android:textColor="#8A000000"
                                 android:textSize="24sp" />
 
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal">
+                                android:animateLayoutChanges="true"
+                                android:orientation="vertical"
+                                android:visibility="@{viewModel.traitementPhytosanitaireBoolean ? View.VISIBLE : View.GONE}">
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:id="@+id/editTextNomsOperateurs"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="8dp"
+                                    android:ems="10"
+                                    android:hint="Opérateurs"
+                                    android:scrollbars="vertical"
+                                    android:textSize="24sp">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="start|top"
+                                        android:inputType="textMultiLine"
+                                        android:lines="3"
+                                        android:minLines="5"
+                                        android:text="@={viewModel.traitementPhytosanitaire.nomsOperateurs}" />
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:id="@+id/editTextNomProduit"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="8dp"
+                                    android:ems="10"
+                                    android:hint="Nom du produit"
+                                    android:scrollbars="vertical"
+                                    android:textSize="24sp">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="@={viewModel.traitementPhytosanitaire.nomProduit}" />
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:id="@+id/editTextSurface"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="8dp"
+                                    android:ems="10"
+                                    android:hint="Surface traitée"
+                                    android:scrollbars="vertical"
+                                    android:textSize="24sp"
+                                    app:suffixText="m²">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="@={viewModel.traitementPhytosanitaire.surfaceTraite}" />
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:id="@+id/editQuantite"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="8dp"
+                                    android:ems="10"
+                                    android:hint="Quantité produit utilisée"
+                                    android:scrollbars="vertical"
+                                    android:textSize="24sp"
+                                    app:suffixText="Litres">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="@={viewModel.traitementPhytosanitaire.qteProduit}" />
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginHorizontal="8dp"
+                                    android:text="Type pulverisateur"
+                                    android:textSize="18sp" />
+
+                                <com.google.android.flexbox.FlexboxLayout
+                                    android:id="@+id/flexboxLayoutPulverisateur"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_marginEnd="8dp"
+                                    app:alignContent="flex_start"
+                                    app:flexDirection="column"
+
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/textView8">
+
+                                    <CheckBox
+                                        android:id="@+id/checkBoxPulverisateurMule"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:checked="@={viewModel.traitementPhytosanitaire.pulverisateurDos}"
+                                        android:text="Pulvérisateur à dos" />
+
+                                    <CheckBox
+                                        android:id="@+id/checkBoxPulverisateurDos"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:checked="@={viewModel.traitementPhytosanitaire.pulverisateurMule}"
+                                        android:text="Pulvérisateur mule" />
+
+                                    <CheckBox
+                                        android:id="@+id/checkBoxTracteurCuve"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:checked="@={viewModel.traitementPhytosanitaire.tracteurCuve}"
+                                        android:text="Tracteur + Cuve" />
+
+                                </com.google.android.flexbox.FlexboxLayout>
+
 
                             </LinearLayout>
 
-                            <com.google.android.flexbox.FlexboxLayout
-                                android:id="@+id/flexboxLayout2"
+                        </LinearLayout>
+
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardEntretien"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp">
+
+                        <LinearLayout
+                            android:id="@+id/linearLayoutEntretien"
+                            setLayoutVisibility="@{viewModel.rapportChantier.typeChantier}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/ConstraintLayoutEntretien"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:layout_marginEnd="8dp"
-                                app:alignContent="flex_start"
-                                app:flexDirection="column"
+                                android:orientation="vertical">
 
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/textView8">
-
-                                <CheckBox
-                                    android:id="@+id/checkBoxEntretien1"
+                                <TextView
+                                    android:id="@+id/textViewEntretien"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Tonte" />
+                                    android:layout_marginStart="8dp"
+                                    android:text="Entretien"
+                                    android:textSize="24sp"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
 
-                                <CheckBox
-                                    android:id="@+id/checkBoxEntretien2"
-                                    android:layout_width="wrap_content"
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/tachesListe"
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:text="Ramassage Feuilles" />
+                                    android:layout_marginTop="8dp"
+                                    android:clipToPadding="false"
+                                    app:items="@{viewModel.listeTachesEntretien}"
+                                    app:layoutId="@{R.layout.tache_entretien_item_view}"
+                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/textViewEntretien"
+                                    app:vm="@{viewModel}" />
 
-                                <CheckBox
-                                    android:id="@+id/checkBoxEntretien3"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Taille arbres" />
-
-                                <CheckBox
-                                    android:id="@+id/checkBoxEntretien4"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Elaguage" />
-
-                                <CheckBox
-                                    android:id="@+id/checkBoxEntretien5"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Autre" />
-
-                                <CheckBox
-                                    android:id="@+id/checkBoxEntretien6"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:checked="@={viewModel.meteo.neige}"
-                                    android:text="Autre 2" />
-                            </com.google.android.flexbox.FlexboxLayout>
-
+                            </androidx.constraintlayout.widget.ConstraintLayout>
                         </LinearLayout>
 
                     </com.google.android.material.card.MaterialCardView>

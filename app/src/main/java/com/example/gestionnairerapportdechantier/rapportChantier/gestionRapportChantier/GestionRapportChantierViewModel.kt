@@ -127,6 +127,18 @@ class GestionRapportChantierViewModel(
     val listeSousTraitanceRapportChantier: LiveData<MutableList<SousTraitance>>
         get() = this._listeSousTraitanceRapportChantier
 
+    // TraitementPhytosanitaire
+
+    var traitementPhytosanitaire =
+        MutableLiveData<TraitementPhytosanitaire>(TraitementPhytosanitaire())
+    var traitementPhytosanitaireBoolean = MutableLiveData<Boolean>(false)
+
+    // var taches Entretien
+
+    var listeTachesEntretien = MutableLiveData<List<TacheEntretien>>(listOf())
+    var listeAssociationTacheEntretienRapportChantier =
+        MutableLiveData<List<AssociationTacheEntretienRapportChantier>>()
+
 
     // Associations avec le Rapport de chantier
     private var listeAssociationsPersonnelRapportChantier =
@@ -187,6 +199,7 @@ class GestionRapportChantierViewModel(
                 uiScope.launch {
                     _rapportChantier.value = getRapportChantierValue(rapportChantierId)
                     _chantier.value = getChantier(_rapportChantier.value?.chantierId)
+                    updateRapportChantierInDB()
                     loadData()
                 }
             }
@@ -200,13 +213,18 @@ class GestionRapportChantierViewModel(
                         _rapportChantier.value = RapportChantier(
                             null,
                             chantierId,
-                            _chantier.value!!.chefChantierId,
-                            date2
+                            chantier.value!!.chefChantierId,
+                            date2,
+                            typeChantier = chantier.value!!.typeChantier
                         )
                         _rapportChantier.value!!.rapportChantierId = sendNewRapportChantierToDB()
                         initializeDataPersonnelForNewRapportChantier(_rapportChantier.value!!.rapportChantierId!!.toLong())
+                    } else {
+                        // Update au cas ou le typeChantier a été modifié
+                        Timber.i("Update")
+                        updateRapportChantierInDB()
                     }
-                    _chantier.value = getChantier(chantierId)
+
                     loadData()
                 }
             }
@@ -222,9 +240,15 @@ class GestionRapportChantierViewModel(
         loadDataPersonnel(_rapportChantier.value!!.rapportChantierId!!.toLong())
         loadDataMaterielFromRapportChantier(_rapportChantier.value!!.rapportChantierId!!.toLong())
         loadDataMaterielLocationFromRapportChantier(_rapportChantier.value!!.rapportChantierId!!.toLong())
-        loadDataMateriauxFromRapportChantier(_rapportChantier.value!!.rapportChantierId!!.toLong())
         loadDataSousTraitanceFromRapportChantier(_rapportChantier.value!!.rapportChantierId!!.toLong())
         loadDataInfosRapportChantier()
+
+        if (rapportChantier.value!!.typeChantier == 1) {
+            loadDataMateriauxFromRapportChantier(_rapportChantier.value!!.rapportChantierId!!.toLong())
+        } else {
+            loadDataTraitementPhyto()
+            loadTachesEntretien()
+        }
     }
 
 
@@ -584,6 +608,66 @@ class GestionRapportChantierViewModel(
             }
             listeSousTraitance
 
+        }
+    }
+
+
+    ///// TRAITEMENT PHYTOSANITAIRE /////
+
+    private fun loadDataTraitementPhyto() {
+        uiScope.launch {
+            if (_rapportChantier.value!!.traitementPhytosanitaireId != null) {
+                traitementPhytosanitaire.value =
+                    initializeTraitementPhytosanitaire(_rapportChantier.value!!.traitementPhytosanitaireId!!)
+                traitementPhytosanitaireBoolean.value = true
+            }
+        }
+    }
+
+    private suspend fun initializeTraitementPhytosanitaire(id: Int): TraitementPhytosanitaire {
+        return withContext(Dispatchers.IO) {
+            dataSourceRapportChantier.getTraitementPhytosanitaireById(id.toLong())
+        }
+    }
+
+    ///// TACHES ENTRETIEN /////
+
+    private fun loadTachesEntretien() {
+        uiScope.launch {
+            loadDataTachesEntretien()
+            listeAssociationTacheEntretienRapportChantier.value!!.forEach { association ->
+                listeTachesEntretien.value!!.find { it.id == association.tacheEntretienId }?.checked =
+                    true
+            }
+        }
+    }
+
+    private suspend fun loadDataTachesEntretien() {
+        uiScope.launch {
+            listeTachesEntretien.value = initializeTachesEntretien()
+            listeAssociationTacheEntretienRapportChantier.value =
+                initializeListAssociationsTacheEntretienRapportChantier(rapportChantier.value!!.rapportChantierId!!)
+        }.join()
+
+        Timber.i("Liste tache entretien")
+        listeTachesEntretien.value!!.forEach {
+            Timber.i("tache: $it")
+        }
+
+
+    }
+
+    private suspend fun initializeTachesEntretien(): List<TacheEntretien> {
+        return withContext(Dispatchers.IO) {
+            dataSourceRapportChantier.getAllFromTacheEntretien()
+        }
+    }
+
+    private suspend fun initializeListAssociationsTacheEntretienRapportChantier(id: Int): List<AssociationTacheEntretienRapportChantier> {
+        return withContext(Dispatchers.IO) {
+            dataSourceRapportChantier.getAllAssociationsTacheEntretienRapportChantierFromRapportChantierId(
+                id
+            )
         }
     }
 
@@ -1092,6 +1176,13 @@ class GestionRapportChantierViewModel(
         //OPTIMISATION POSSIBLE AVEC LES PRIVATE SUSPEND FUN
     }
 
+    private suspend fun sendNewRapportChantierToDB(): Int {
+        return withContext(Dispatchers.IO) {
+            val value = dataSourceRapportChantier.insert(_rapportChantier.value!!)
+            value.toInt()
+        }
+    }
+
     private fun updateRapportChantierInDB() {
 
         _rapportChantier.value!!.totalHeuresMateriel =
@@ -1100,6 +1191,8 @@ class GestionRapportChantierViewModel(
         _rapportChantier.value!!.totalRapportChantier =
             _rapportChantier.value!!.totalHeuresMateriel + _rapportChantier.value!!.totalMO
 
+        rapportChantier.value!!.typeChantier = chantier.value!!.typeChantier
+        Timber.i("Update = ${rapportChantier.value!!.typeChantier} ")
 
         uiScope.launch {
             withContext(Dispatchers.IO) {
@@ -1108,10 +1201,71 @@ class GestionRapportChantierViewModel(
         }
     }
 
-    private suspend fun sendNewRapportChantierToDB(): Int {
-        return withContext(Dispatchers.IO) {
-            val value = dataSourceRapportChantier.insert(_rapportChantier.value!!)
-            value.toInt()
+    private fun updateTraitementPhytosanitaire() {
+        uiScope.launch {
+            if (traitementPhytosanitaireBoolean.value!!) {
+
+                if (_rapportChantier.value!!.traitementPhytosanitaireId == null) {
+                    _rapportChantier.value!!.traitementPhytosanitaireId =
+                        withContext(Dispatchers.IO) {
+                            dataSourceRapportChantier.insertTraitementPhytosanitaire(
+                                traitementPhytosanitaire.value!!
+                            ).toInt()
+                        }
+                    withContext(Dispatchers.IO) {
+                        dataSourceRapportChantier.updateRapportChantierTraitementPhytosanitaire(
+                            _rapportChantier.value!!.rapportChantierId!!,
+                            _rapportChantier.value!!.traitementPhytosanitaireId!!
+                        )
+                    }
+                } else withContext(Dispatchers.IO) {
+                    dataSourceRapportChantier.updateTraitementPhytosanitaire(
+                        traitementPhytosanitaire.value!!
+                    )
+                }
+            } else {
+                if (_rapportChantier.value!!.traitementPhytosanitaireId != null) {
+                    _rapportChantier.value!!.traitementPhytosanitaireId = null
+                    withContext(Dispatchers.IO) {
+                        dataSourceRapportChantier.deleteTraitementPhytosanitaire(
+                            traitementPhytosanitaire.value!!
+                        )
+                        dataSourceRapportChantier.updateRapportChantierTraitementPhytosanitaire(
+                            _rapportChantier.value!!.rapportChantierId!!,
+                            null
+                        )
+                    }
+
+                }
+            }
+        }
+    }
+
+    private fun updateTachesEntretien() {
+        val listeAssociationsToAdd = mutableListOf<AssociationTacheEntretienRapportChantier>()
+        val listeAssociationsToDelete = mutableListOf<AssociationTacheEntretienRapportChantier>()
+
+        listeTachesEntretien.value!!.forEach { tacheEntretien ->
+            if (tacheEntretien.checked) {
+                Timber.i("${tacheEntretien.description} checked")
+                val association = AssociationTacheEntretienRapportChantier(rapportChantier.value!!.rapportChantierId!!, tacheEntretien.id )
+                        listeAssociationsToAdd.add(association)
+            } else {
+                Timber.i("${tacheEntretien.description} not checked")
+                listeAssociationTacheEntretienRapportChantier.value!!.find { it.tacheEntretienId == tacheEntretien.id }
+                    ?.let {
+                        Timber.i("${it.tacheEntretienId} listeAssociationsToDelete")
+                        listeAssociationsToDelete.add(it)
+                    }
+            }
+        }
+        uiScope.launch {
+            dataSourceRapportChantier.insertAssociationsTacheEntretienRapportChantier(
+                listeAssociationsToAdd
+            )
+            dataSourceRapportChantier.deleteAssociationsTacheEntretienRapportChantier(
+                listeAssociationsToDelete
+            )
         }
     }
 
@@ -1134,8 +1288,10 @@ class GestionRapportChantierViewModel(
 
     fun radioGroupsEnvironnement(id: Int) {
         when (id) {
-            R.id.radioButtonProprete1 -> infosRapportChantier.value?.environnementProprete = true
-            R.id.radioButtonProprete2 -> infosRapportChantier.value?.environnementProprete = false
+            R.id.radioButtonProprete1 -> infosRapportChantier.value?.environnementProprete =
+                true
+            R.id.radioButtonProprete2 -> infosRapportChantier.value?.environnementProprete =
+                false
             R.id.radioButtonNonPollution1 -> infosRapportChantier.value?.environnementNonPollution =
                 true
             R.id.radioButtonNonPollution2 -> infosRapportChantier.value?.environnementNonPollution =
@@ -1157,7 +1313,8 @@ class GestionRapportChantierViewModel(
                 false
 
             R.id.radioButtonRenduCarnet1 -> infosRapportChantier.value?.renduCarnetDeBord = true
-            R.id.radioButtonRenduCarnet2 -> infosRapportChantier.value?.renduCarnetDeBord = false
+            R.id.radioButtonRenduCarnet2 -> infosRapportChantier.value?.renduCarnetDeBord =
+                false
 
             R.id.radioButtonRenduBonDecharge1 -> infosRapportChantier.value?.renduBonDecharge =
                 true
@@ -1174,7 +1331,8 @@ class GestionRapportChantierViewModel(
             R.id.radioButtonRenduFeuillesInterimaire2 -> infosRapportChantier.value?.feuillesInterimaires =
                 false
 
-            R.id.radioButtonRenduBonDeCommande1 -> infosRapportChantier.value?.bonDeCommande = true
+            R.id.radioButtonRenduBonDeCommande1 -> infosRapportChantier.value?.bonDeCommande =
+                true
             R.id.radioButtonRenduBonDeCommande2 -> infosRapportChantier.value?.bonDeCommande =
                 false
 
@@ -1188,7 +1346,8 @@ class GestionRapportChantierViewModel(
 
     fun onClickButtonValidationAutresInformations() {
         _rapportChantier.value!!.infosRapportChantier = infosRapportChantier.value!!
-        quantiteInformationsConformes.value = infosRapportChantier.value!!.sendNumberOfTrueChamps()
+        quantiteInformationsConformes.value =
+            infosRapportChantier.value!!.sendNumberOfTrueChamps()
         quantiteInformationsNonConformes.value =
             infosRapportChantier.value!!.sendNumberOfFalseChamps()
         uiScope.launch {
@@ -1220,6 +1379,8 @@ class GestionRapportChantierViewModel(
             _rapportChantier.value?.meteo = meteo.value!!
             _rapportChantier.value?.observations = observations.value
             _rapportChantier.value!!.dataSaved.dataObservations = true
+            updateTraitementPhytosanitaire()
+            updateTachesEntretien()
             updateRapportChantierInDB()
             dataChangedWithoutSave.value!!.dataObservations = false
             _navigation.value = GestionNavigation.VALIDATION_OBSERVATIONS

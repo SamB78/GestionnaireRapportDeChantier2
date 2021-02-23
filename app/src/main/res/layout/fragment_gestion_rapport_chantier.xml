@@ -37,13 +37,11 @@
 
                     <TextView
                         android:id="@+id/textViewNomChantier"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="@{viewModel.chantier.nomChantier}"
-                        android:textSize="30sp"
-
-                        android:textStyle="bold"
+                        android:textSize="24sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
@@ -51,66 +49,67 @@
                         tools:text="Chantier de la gare" />
 
                     <TextView
-                        android:id="@+id/textViewDate"
-                        date="@{viewModel.rapportChantier.dateRapportChantier}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="24sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/textViewTextDate"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/textViewTextDate"
-                        tools:text="12 Janvier 2020" />
-
-                    <TextView
-                        android:id="@+id/textViewTextDate"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/typeChantier"
+                        typeChantier="@{viewModel.rapportChantier.typeChantier}"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Rapport du "
-                        android:textSize="24sp"
-                        app:layout_constraintEnd_toStartOf="@+id/textViewDate"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintHorizontal_chainStyle="packed"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textViewNomChantier" />
-
-                    <com.google.android.flexbox.FlexboxLayout
-                        android:id="@+id/flexboxLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
-                        app:alignContent="stretch"
-                        app:alignItems="stretch"
-                        app:justifyContent="space_evenly"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textViewDate">
+                        app:layout_constraintTop_toBottomOf="@+id/textViewNomChantier"
+                        tools:text="ENTRETIEN" />
 
-                        <CheckBox
-                            android:id="@+id/checkBox6"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="@={viewModel.rapportChantier.entretien}"
-                            android:onClick="@{() -> viewModel.onClickCheckBoxEntretien()}"
-                            android:text="Entretien"
-                            android:textColor="?android:attr/textColorSecondary"
-                            android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/textViewDate"
+                        date='@{viewModel.rapportChantier.dateRapportChantier}'
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textAlignment="center"
+                        android:textSize="24sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/typeChantier"
+                        tools:text="Rapport du 12 Janvier 2020" />
 
-                        <CheckBox
-                            android:id="@+id/checkBox7"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="@={viewModel.rapportChantier.chantier}"
-                            android:onClick="@{() -> viewModel.onClickCheckBoxChantier()}"
-                            android:text="Chantier"
-                            android:textColor="?android:attr/textColorSecondary"
-                            android:textSize="14sp" />
-                    </com.google.android.flexbox.FlexboxLayout>
+                    <!--                    <com.google.android.flexbox.FlexboxLayout-->
+<!--                        android:id="@+id/flexboxLayout"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginStart="8dp"-->
+<!--                        android:layout_marginTop="16dp"-->
+<!--                        android:layout_marginEnd="8dp"-->
+<!--                        android:layout_marginBottom="8dp"-->
+<!--                        app:alignContent="stretch"-->
+<!--                        app:alignItems="stretch"-->
+<!--                        app:justifyContent="space_evenly"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/textViewDate">-->
+
+<!--                        <CheckBox-->
+<!--                            android:id="@+id/checkBox6"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:checked="@={viewModel.rapportChantier.entretien}"-->
+<!--                            android:onClick="@{() -> viewModel.onClickCheckBoxEntretien()}"-->
+<!--                            android:text="Entretien"-->
+<!--                            android:textColor="?android:attr/textColorSecondary"-->
+<!--                            android:textSize="14sp" />-->
+
+<!--                        <CheckBox-->
+<!--                            android:id="@+id/checkBox7"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:checked="@={viewModel.rapportChantier.chantier}"-->
+<!--                            android:onClick="@{() -> viewModel.onClickCheckBoxChantier()}"-->
+<!--                            android:text="Chantier"-->
+<!--                            android:textColor="?android:attr/textColorSecondary"-->
+<!--                            android:textSize="14sp" />-->
+<!--                    </com.google.android.flexbox.FlexboxLayout>-->
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -378,7 +377,7 @@
                     booleanSaved="@{viewModel.rapportChantier.dataSaved.dataMateriaux}"
                     dataEdited="@{viewModel.dataChangedWithoutSave.dataMateriaux}"
                     android:onClick="@{()-> viewModel.onClickButtonGestionMateriaux()}"
-                    setCardVisibility="@{viewModel.rapportChantier.chantier}">
+                    setCardVisibility="@{viewModel.rapportChantier.typeChantier}">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
