@@ -1,10 +1,11 @@
-package com.example.gestionnairerapportdechantier.mainMenu
+package com.example.gestionnairerapportdechantier
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class MainMenuViewModel: ViewModel() {
+class MainActivityViewModel: ViewModel() {
+
 
     enum class navigationMainMenu{
         EN_ATTENTE,
@@ -46,5 +47,4 @@ class MainMenuViewModel: ViewModel() {
     fun onBoutonClicked(){
         _navigation.value = navigationMainMenu.EN_ATTENTE
     }
-
 }

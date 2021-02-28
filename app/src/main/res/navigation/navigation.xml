@@ -18,9 +18,6 @@
             android:id="@+id/action_mainMenuFragment_to_listeChantiersFragment"
             app:destination="@id/listeChantiersFragment" />
         <action
-            android:id="@+id/action_mainMenuFragment_to_listeVehiculesFragment"
-            app:destination="@id/listeVehiculesFragment" />
-        <action
             android:id="@+id/action_mainMenuFragment_to_listeMaterielFragment"
             app:destination="@id/listeMaterielFragment" />
     </fragment>
@@ -446,4 +443,6 @@
             android:name="idChantier"
             android:defaultValue="-1L" />
     </action>
+    <action android:id="@+id/action_global_listePersonnelFragment" app:destination="@id/listePersonnelFragment" />
+    <action android:id="@+id/action_global_listeMaterielFragment" app:destination="@id/listeMaterielFragment" />
 </navigation>

@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.gestionnairerapportdechantier.R
 import com.example.gestionnairerapportdechantier.databinding.FragmentMainMenuBinding
+import timber.log.Timber
 
 /**
  * A simple [Fragment] subclass.
@@ -52,8 +53,7 @@ class MainMenuFragment : Fragment() {
                     viewModel.onBoutonClicked()
                 }
                 MainMenuViewModel.navigationMainMenu.PASSAGE_PAGE_VEHICULES -> {
-                    navController.navigate(R.id.action_mainMenuFragment_to_listeVehiculesFragment)
-                    viewModel.onBoutonClicked()
+                    Timber.i("BITE")
                 }
                 MainMenuViewModel.navigationMainMenu.PASSAGE_PAGE_MATERIEL -> {
                     navController.navigate(R.id.action_mainMenuFragment_to_listeMaterielFragment)
