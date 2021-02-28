@@ -9,7 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.gestionnairerapportdechantier.entities.*
-import com.google.samples.apps.sunflower.workers.SeedDatabaseWorker
+import com.example.gestionnairerapportdechantier.workers.SeedDatabaseWorker
 
 
 @Database(
@@ -32,7 +32,7 @@ import com.google.samples.apps.sunflower.workers.SeedDatabaseWorker
         AssociationTacheEntretienRapportChantier::
         class
     ],
-    version = 48, exportSchema = false
+    version = 49, exportSchema = false
 )
 
 @TypeConverters(LocalDateTimeConverter::class)

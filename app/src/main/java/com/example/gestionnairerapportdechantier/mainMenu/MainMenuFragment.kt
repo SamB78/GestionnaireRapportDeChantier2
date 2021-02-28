@@ -36,32 +36,32 @@ class MainMenuFragment : Fragment() {
 
         val navController = findNavController()
 
-        viewModel.navigation.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                MainMenuViewModel.navigationMainMenu.PASSAGE_PAGE_PERSONNEL -> {
-                    navController.navigate(R.id.action_mainMenuFragment_to_listePersonnelFragment)
-                    viewModel.onBoutonClicked()
-                }
-                MainMenuViewModel.navigationMainMenu.PASSAGE_PAGE_CHANTIERS -> {
-                    navController.navigate(R.id.action_mainMenuFragment_to_listeChantiersFragment)
-                    viewModel.onBoutonClicked()
-                }
-                MainMenuViewModel.navigationMainMenu.PASSAGE_PAGE_RAPPORTS_CHANTIER -> {
-//                    val action = MainMenuFragmentDirections.actionMainMenuFragmentToSelectionChantierFragment()
-//                    findNavController().navigate(action)
-
-                    viewModel.onBoutonClicked()
-                }
-                MainMenuViewModel.navigationMainMenu.PASSAGE_PAGE_VEHICULES -> {
-                    Timber.i("BITE")
-                }
-                MainMenuViewModel.navigationMainMenu.PASSAGE_PAGE_MATERIEL -> {
-                    navController.navigate(R.id.action_mainMenuFragment_to_listeMaterielFragment)
-                    viewModel.onBoutonClicked()
-                }
-            }
-
-        })
+//        viewModel.navigation.observe(viewLifecycleOwner, Observer {
+//            when (it) {
+//                MainMenuViewModel.navigationMainMenu.PASSAGE_PAGE_PERSONNEL -> {
+//                    navController.navigate(R.id.action_mainMenuFragment_to_listePersonnelFragment)
+//                    viewModel.onBoutonClicked()
+//                }
+//                MainMenuViewModel.navigationMainMenu.PASSAGE_PAGE_CHANTIERS -> {
+//                    navController.navigate(R.id.action_mainMenuFragment_to_listeChantiersFragment)
+//                    viewModel.onBoutonClicked()
+//                }
+//                MainMenuViewModel.navigationMainMenu.PASSAGE_PAGE_RAPPORTS_CHANTIER -> {
+////                    val action = MainMenuFragmentDirections.actionMainMenuFragmentToSelectionChantierFragment()
+////                    findNavController().navigate(action)
+//
+//                    viewModel.onBoutonClicked()
+//                }
+//                MainMenuViewModel.navigationMainMenu.PASSAGE_PAGE_VEHICULES -> {
+//                    Timber.i("BITE")
+//                }
+//                MainMenuViewModel.navigationMainMenu.PASSAGE_PAGE_MATERIEL -> {
+//                    navController.navigate(R.id.action_mainMenuFragment_to_listeMaterielFragment)
+//                    viewModel.onBoutonClicked()
+//                }
+//            }
+//
+//        })
 
         // Inflate the layout for this fragment
         return binding.root

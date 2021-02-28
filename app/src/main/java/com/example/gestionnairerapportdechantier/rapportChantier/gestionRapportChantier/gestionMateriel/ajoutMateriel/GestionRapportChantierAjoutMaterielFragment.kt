@@ -34,10 +34,12 @@ class GestionRapportChantierAjoutMaterielFragment : Fragment() {
         val dataSourceMateriel = GestionnaireDatabase.getInstance(application).materielDao
         val dataSourceAssociationMaterielRapportChantier =
             GestionnaireDatabase.getInstance(application).associationMaterielRapportChantierDao
+        val dataSourceRapportChantierDao = GestionnaireDatabase.getInstance(application).rapportChantierDao
         viewModelFactory = GestionRapportChantierAjoutMaterielViewModelFactory(
             rapportChantierId,
             dataSourceMateriel,
-            dataSourceAssociationMaterielRapportChantier
+            dataSourceAssociationMaterielRapportChantier,
+            dataSourceRapportChantierDao
         )
 
         Timber.i("rapportChantierId in fragment: $rapportChantierId ")

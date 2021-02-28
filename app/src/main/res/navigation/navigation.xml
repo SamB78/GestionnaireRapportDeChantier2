@@ -3,24 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/mainMenuFragment">
+    app:startDestination="@id/listeChantiersFragment">
 
     <fragment
         android:id="@+id/mainMenuFragment"
         android:name="com.example.gestionnairerapportdechantier.mainMenu.MainMenuFragment"
         android:label="Menu principal"
-        tools:layout="@layout/fragment_main_menu">
-        <action
-            android:id="@+id/action_mainMenuFragment_to_listePersonnelFragment"
-            app:destination="@id/listePersonnelFragment"
-            app:enterAnim="@anim/nav_default_enter_anim" />
-        <action
-            android:id="@+id/action_mainMenuFragment_to_listeChantiersFragment"
-            app:destination="@id/listeChantiersFragment" />
-        <action
-            android:id="@+id/action_mainMenuFragment_to_listeMaterielFragment"
-            app:destination="@id/listeMaterielFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_main_menu"/>
     <fragment
         android:id="@+id/listePersonnelFragment"
         android:name="com.example.gestionnairerapportdechantier.personnel.listePersonnel.ListePersonnelFragment"

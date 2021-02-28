@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -13,10 +14,12 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.gestionnairerapportdechantier.databinding.ActivityMainBinding
+import com.example.gestionnairerapportdechantier.materiel.listeMateriel.ListeMaterielFragmentDirections
 import com.example.gestionnairerapportdechantier.personnel.gestionPersonnel.GestionPersonnelViewModel
 import com.example.gestionnairerapportdechantier.personnel.listePersonnel.ListePersonnelFragment
 import com.example.gestionnairerapportdechantier.personnel.listePersonnel.ListePersonnelFragmentDirections
 import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
@@ -71,25 +74,51 @@ class MainActivity : AppCompatActivity() {
         findViewById<NavigationView>(R.id.activity_main_nav_view)
             .setupWithNavController(navController)
 
-    }
+        activity_main_nav_view.setNavigationItemSelectedListener {
+            Timber.i("TEST")
+            when (it.itemId) {
+                R.id.itemPersonnel -> {
+                    Timber.i("itemPersonnel")
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                    val action = ListePersonnelFragmentDirections.actionGlobalListePersonnelFragment()
+                    findNavController(R.id.navHostFragment).navigate(action)
+                    true
+                }
+                R.id.itemMateriel -> {
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                    val action = ListeMaterielFragmentDirections.actionGlobalListeMaterielFragment()
+                    findNavController(R.id.navHostFragment).navigate(action)
+                    true
+                }
+                else -> {
+                    false
+                }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+            }
 
-        Timber.i("TEST")
-        return when (item.itemId) {
-            R.id.itemPersonnel -> {
-                Timber.i("itemPersonnel")
-                val action = ListePersonnelFragmentDirections.actionGlobalListePersonnelFragment()
-                findNavController(R.id.navHostFragment).navigate(action)
-                true
-            }
-            R.id.itemMateriel -> {
-                true
-            }
-            else -> {
-                false
-            }
+
+
         }
+
     }
+
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//
+//        Timber.i("TEST")
+//        return when (item.itemId) {
+//            R.id.itemPersonnel -> {
+//                Timber.i("itemPersonnel")
+//                val action = ListePersonnelFragmentDirections.actionGlobalListePersonnelFragment()
+//                findNavController(R.id.navHostFragment).navigate(action)
+//                true
+//            }
+//            R.id.itemMateriel -> {
+//                true
+//            }
+//            else -> {
+//                false
+//            }
+//        }
+//    }
 
 }

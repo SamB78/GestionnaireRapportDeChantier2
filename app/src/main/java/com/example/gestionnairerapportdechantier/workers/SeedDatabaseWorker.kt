@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.samples.apps.sunflower.workers
+package com.example.gestionnairerapportdechantier.workers
 
 import android.content.Context
 import androidx.work.CoroutineWorker
@@ -32,6 +32,7 @@ class SeedDatabaseWorker(
     workerParams: WorkerParameters
 ) : CoroutineWorker(context, workerParams) {
     override suspend fun doWork(): Result = coroutineScope {
+        Timber.i("Entree do Work")
         try {
             applicationContext.assets.open("tache_entretien.json").use { inputStream ->
                 JsonReader(inputStream.reader()).use { jsonReader ->
@@ -40,6 +41,7 @@ class SeedDatabaseWorker(
 
                     val database = GestionnaireDatabase.getInstance(applicationContext)
                     database.rapportChantierDao.insertAllTachesEntretien(plantList)
+                    Timber.i("Success")
 
                     Result.success()
                 }

@@ -18,15 +18,41 @@
         android:layout_height="match_parent"
         tools:context=".rapportChantier.gestionRapportChantier.gestionMateriel.ajoutMateriel.GestionRapportChantierAjoutMaterielFragment">
 
+        <CheckBox
+            android:id="@+id/checkBox13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Matériel Entretien"
+            android:checked="@={viewModel.searchMaterielEntretien}"
+            app:layout_constraintEnd_toStartOf="@+id/checkBox15"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/checkBox15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Matériel Chantier"
+            android:checked="@={viewModel.searchMaterielChantier}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/checkBox13"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="16dp"
             app:items="@{viewModel.listeMaterielAjoutable}"
             app:layoutId="@{R.layout.materiel_ajout_item_view}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkBox13"
             app:vm="@{viewModel}" />
 
         <Button
@@ -34,9 +60,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
+            android:onClick="@{()-> viewModel.onClickEnregistrer() }"
             android:text="Enregistrer"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:onClick="@{()-> viewModel.onClickEnregistrer() }"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent" />

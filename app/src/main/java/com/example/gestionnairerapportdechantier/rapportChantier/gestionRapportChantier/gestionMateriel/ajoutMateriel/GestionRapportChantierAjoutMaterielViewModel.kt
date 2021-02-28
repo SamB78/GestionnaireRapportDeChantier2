@@ -2,11 +2,14 @@ package com.example.gestionnairerapportdechantier.rapportChantier.gestionRapport
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.gestionnairerapportdechantier.database.AssociationMaterielRapportChantierDao
 import com.example.gestionnairerapportdechantier.database.MaterielDao
+import com.example.gestionnairerapportdechantier.database.RapportChantierDao
 import com.example.gestionnairerapportdechantier.entities.AssociationMaterielRapportChantier
 import com.example.gestionnairerapportdechantier.entities.Materiel
+import com.example.gestionnairerapportdechantier.entities.RapportChantier
 import kotlinx.coroutines.*
 import timber.log.Timber
 
@@ -14,7 +17,8 @@ import timber.log.Timber
 class GestionRapportChantierAjoutMaterielViewModel(
     val rapportChantierId: Long,
     private val dataSourceMateriel: MaterielDao,
-    private val dataSourceAssociationMaterielRapportChantierDao: AssociationMaterielRapportChantierDao
+    private val dataSourceAssociationMaterielRapportChantierDao: AssociationMaterielRapportChantierDao,
+    private val dataSourceRapportChantier: RapportChantierDao
 ) : ViewModel() {
 
     enum class navigationMenu {
@@ -31,27 +35,48 @@ class GestionRapportChantierAjoutMaterielViewModel(
     private val viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
+    private val rapportChantier = MutableLiveData<RapportChantier>()
+
 
     var listeMateriel = MutableLiveData<List<Materiel>>(emptyList())
     var listeMaterielAjoutable = MutableLiveData<MutableList<Materiel>>(mutableListOf<Materiel>())
+    var listeMaterielToShow = MutableLiveData<MutableList<Materiel>>(mutableListOf<Materiel>())
+
+    var searchMaterielEntretien = MutableLiveData<Boolean>(false)
+    var searchMaterielChantier = MutableLiveData<Boolean>(false)
 
     init {
         Timber.i("Passage Init")
         onBoutonClicked()
         initializeData(rapportChantierId)
+
+        Transformations.map(searchMaterielChantier){
+            Timber.i("search Materiel Chantier")
+            generateListeMaterielToShow()
+        }
+
+        Transformations.map(searchMaterielEntretien){
+            Timber.i("search Materiel Entretien")
+            generateListeMaterielToShow()
+        }
     }
 
-    fun initializeData(rapportChantierId: Long) {
-        var mutableListOfListeMateriel: MutableList<Materiel> = mutableListOf<Materiel>()
+    private fun initializeData(rapportChantierId: Long) {
+        val mutableListOfListeMateriel: MutableList<Materiel> = mutableListOf<Materiel>()
         uiScope.launch {
+            rapportChantier.value = getRapportChantier(rapportChantierId)
+
+            rapportChantier.value?.let {
+                if (it.typeChantier == 1) searchMaterielEntretien.value = true
+                else if (it.typeChantier == 2) searchMaterielChantier.value = true
+            }
+
             listeMateriel.value = getListeMaterielWithReturn()
             mutableListOfListeMateriel.addAll(listeMateriel.value as MutableList<Materiel>)
 
             mutableListOfListeMateriel.removeAll(getListeMaterielDejaAjoute(rapportChantierId))
             listeMaterielAjoutable.value = mutableListOfListeMateriel
-
-            Timber.i("RapportChantierId: $rapportChantierId")
-
+            generateListeMaterielToShow()
 
             listeMaterielAjoutable.value!!.forEach {
                 Timber.i("listeMaterielAjoutable = $it")
@@ -61,12 +86,16 @@ class GestionRapportChantierAjoutMaterielViewModel(
 
     }
 
-    private suspend fun getListeMaterielWithReturn(): List<Materiel> {
-        return withContext(Dispatchers.IO) {
-            var listeMateriel = dataSourceMateriel.getAllFromMateriel()
-            listeMateriel
+    private suspend fun getRapportChantier(id: Long) =
+        withContext(Dispatchers.IO) {
+            dataSourceRapportChantier.getRapportChantierById(id)
         }
-    }
+
+    private suspend fun getListeMaterielWithReturn() =
+        withContext(Dispatchers.IO) {
+            dataSourceMateriel.getAllFromMateriel()
+
+        }
 
     private suspend fun getListeMaterielDejaAjoute(rapportChantierId: Long): List<Materiel> {
         return withContext(Dispatchers.IO) {
@@ -120,6 +149,22 @@ class GestionRapportChantierAjoutMaterielViewModel(
     fun onBoutonClicked() {
         _navigation.value = navigationMenu.EN_ATTENTE
     }
+
+
+    fun generateListeMaterielToShow() {
+        listeMaterielToShow.value!!.clear()
+
+
+        listeMaterielAjoutable.value!!.forEach {
+            if (it.materielChantier && searchMaterielChantier.value!!) listeMaterielToShow.value!!.add(
+                it
+            )
+            if (it.materielEntretien && searchMaterielEntretien.value!!) listeMaterielToShow.value!!.add(
+                it
+            )
+        }
+    }
+
 
     // onCleared()
     override fun onCleared() {
